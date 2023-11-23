@@ -102,6 +102,7 @@ def tune():
     def objective(trial: optuna.trial.Trial):
         seed = 42
         dataset = "ZINC"
+        data_path = "datasets/ZINC"
         num_heads = 8
         num_layers = trial.suggest_categorical("num_layers", [2, 4, 6])
         dim_hidden = 64
@@ -118,13 +119,15 @@ def tune():
         edge_dim = 32
         gnn_type = trial.suggest_categorical("gnn_type", ["graphsage", "gcn"])
         k_hop = trial.suggest_categorical("k_hop", [2, 8, 16, 32])
-        global_pool = True
+        global_pool = "mean"
         se = "gnn"
+        batch_norm = False
         gradient_gating_p = trial.suggest_categorical("gradient_gating_p", [0., 1., 2.])
 
         args = {
             "seed": seed,
             "dataset": dataset,
+            "data_path": data_path,
             "num_heads": num_heads,
             "num_layers": num_layers,
             "dim_hidden": dim_hidden,
@@ -143,9 +146,11 @@ def tune():
             "k_hop": k_hop,
             "global_pool": global_pool,
             "se": se,
+            "batch_norm": batch_norm,
             "gradient_gating_p": gradient_gating_p
         }
          
+        print(args)
         return run(args)
 
     study = optuna.create_study(
