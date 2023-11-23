@@ -5,6 +5,7 @@ from functools import partial
 import torch
 from torch import nn, optim
 import torch.nn.functional as F
+
 from torch_geometric.data import DataLoader
 from torch_geometric import datasets
 from torch_geometric.utils import degree
@@ -18,13 +19,12 @@ from data import GraphDataset
 from net import GraphTransformerWrapper
 from model.position_encoding import POSENCODINGS
 from model.gnn_layers import GNN_TYPES
-from timeit import default_timer as timer
 import wandb
 
 import optuna
 from optuna.samplers import TPESampler
 
-os.environ["WANDB_API_KEY"] = ""
+os.environ["WANDB_API_KEY"] = "8f17d7bd011da005a1f4e9a75469497e3236f0b8" # anisha
 
 def load_args():
     parser = argparse.ArgumentParser(
@@ -98,10 +98,12 @@ def load_args():
     return args
 
 def tune():
-    
+    print("Start tuning...")
+
     def objective(trial: optuna.trial.Trial):
         seed = 42
         dataset = "ZINC"
+        data_path = "datasets/ZINC"
         num_heads = 8
         num_layers = trial.suggest_categorical("num_layers", [2, 4, 6])
         dim_hidden = 64
@@ -118,13 +120,15 @@ def tune():
         edge_dim = 32
         gnn_type = trial.suggest_categorical("gnn_type", ["graphsage", "gcn"])
         k_hop = trial.suggest_categorical("k_hop", [2, 8, 16, 32])
-        global_pool = True
+        global_pool = "mean"
         se = "gnn"
+        batch_norm = False
         gradient_gating_p = trial.suggest_categorical("gradient_gating_p", [0., 1., 2.])
 
         args = {
             "seed": seed,
             "dataset": dataset,
+            "data_path": data_path,
             "num_heads": num_heads,
             "num_layers": num_layers,
             "dim_hidden": dim_hidden,
@@ -143,9 +147,11 @@ def tune():
             "k_hop": k_hop,
             "global_pool": global_pool,
             "se": se,
+            "batch_norm": batch_norm,
             "gradient_gating_p": gradient_gating_p
         }
          
+        print(args)
         return run(args)
 
     study = optuna.create_study(
@@ -158,8 +164,8 @@ def tune():
     print(best_params)
 
 def run(args):
-    seed_everything(args["seed"])
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    seed_everything(args["seed"])
 
     # ZINC Experiment
     if args["dataset"] == "ZINC":
@@ -289,6 +295,8 @@ def run(args):
         check_val_every_n_epoch=20,
     )
 
+    if device == 'cuda':
+        torch.use_deterministic_algorithms(False)
     trainer.fit(wrapper, train_loader, val_loader)
     trainer.test(wrapper, test_loader)
     wandb.finish()

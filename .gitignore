@@ -2,3 +2,6 @@
 __pycache__/
 datasets/
 wandb/
+.err
+.out
+checkpoints

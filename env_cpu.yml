@@ -1,0 +1,30 @@
+name: g2-sat
+
+channels:
+  - defaults
+  - pytorch
+  - conda-forge
+  
+dependencies:
+  - python=3.9
+  - pytorch::pytorch>=2.0.0
+  - pytorch-lightning>=2.0
+  - torch_geometric>=2.0
+  - numpy
+  - pandas
+  - scikit-learn>=1.2.0
+  - matplotlib
+  - pip>=21.0.1
+  - tqdm
+  - tensorboard>=2.11.0
+  - wandb>=0.14.0
+  - networkx
+  - gensim
+  - plotly
+  - einops
+  - optuna
+  - pip:
+    - torch_scatter
+    - torch_sparse
+    - torch_cluster
+    - torch_spline_conv -f https://data.pyg.org/whl/torch-${TORCH}+${CUDA}.html

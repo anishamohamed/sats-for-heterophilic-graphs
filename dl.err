@@ -1,0 +1,241 @@
+
+The following have been reloaded with a version change:
+  1) gcc/4.8.5 => gcc/8.2.0
+
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/optuna/samplers/_tpe/sampler.py:314: ExperimentalWarning: ``constant_liar`` option is an experimental feature. The interface can change in the future.
+  warnings.warn(
+[I 2023-11-23 10:10:37,677] A new study created in memory with name: no-name-8c473745-68dc-4049-8568-fb8ce1ffd6dc
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/torch_geometric/deprecation.py:22: UserWarning: 'data.DataLoader' is deprecated, use 'loader.DataLoader' instead
+  warnings.warn(out)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+wandb: Currently logged in as: anishamohamed00. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.16.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.14.0
+wandb: Run data is saved locally in ./wandb/run-20231123_101135-f1zchfmp
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run lively-sea-7
+wandb: ⭐️ View project at https://wandb.ai/anishamohamed00/g2_sat_ZINC
+wandb: 🚀 View run at https://wandb.ai/anishamohamed00/g2_sat_ZINC/runs/f1zchfmp
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+
+  | Name      | Type             | Params
+-----------------------------------------------
+0 | model     | GraphTransformer | 481 K 
+1 | criterion | L1Loss           | 0     
+-----------------------------------------------
+481 K     Trainable params
+0         Non-trainable params
+481 K     Total params
+1.927     Total estimated model params size (MB)
+SLURM auto-requeueing enabled. Setting signal handlers.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=1` in the `DataLoader` to improve performance.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=1` in the `DataLoader` to improve performance.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+SLURM auto-requeueing enabled. Setting signal handlers.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'test_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=1` in the `DataLoader` to improve performance.
+wandb: Waiting for W&B process to finish... (success).
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:           test/loss ▁
+wandb:          train/loss █▆▃▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▂▂▂▂▃▄▇▇▇▇▇▆▆▆▆▅▅▆▅▅
+wandb: trainer/global_step ▁▁▁▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇████
+wandb:            val/loss ▂▁▃█▅
+wandb: 
+wandb: Run summary:
+wandb:               epoch 100
+wandb:           test/loss 0.96044
+wandb:          train/loss 1.0797
+wandb: trainer/global_step 7900
+wandb:            val/loss 0.86985
+wandb: 
+wandb: 🚀 View run lively-sea-7 at: https://wandb.ai/anishamohamed00/g2_sat_ZINC/runs/f1zchfmp
+wandb: Synced 6 W&B file(s), 0 media file(s), 2 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20231123_101135-f1zchfmp/logs
+[I 2023-11-23 10:26:15,902] Trial 0 finished with value: 0.960440456867218 and parameters: {'num_layers': 2, 'gnn_type': 'graphsage', 'k_hop': 16, 'gradient_gating_p': 2.0}. Best is trial 0 with value: 0.960440456867218.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/torch_geometric/deprecation.py:22: UserWarning: 'data.DataLoader' is deprecated, use 'loader.DataLoader' instead
+  warnings.warn(out)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+wandb: wandb version 0.16.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.14.0
+wandb: Run data is saved locally in ./wandb/run-20231123_102646-9xhvbf7t
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run breezy-mountain-8
+wandb: ⭐️ View project at https://wandb.ai/anishamohamed00/g2_sat_ZINC
+wandb: 🚀 View run at https://wandb.ai/anishamohamed00/g2_sat_ZINC/runs/9xhvbf7t
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+
+  | Name      | Type             | Params
+-----------------------------------------------
+0 | model     | GraphTransformer | 1.2 M 
+1 | criterion | L1Loss           | 0     
+-----------------------------------------------
+1.2 M     Trainable params
+0         Non-trainable params
+1.2 M     Total params
+4.986     Total estimated model params size (MB)
+SLURM auto-requeueing enabled. Setting signal handlers.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=1` in the `DataLoader` to improve performance.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=1` in the `DataLoader` to improve performance.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+SLURM auto-requeueing enabled. Setting signal handlers.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'test_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=1` in the `DataLoader` to improve performance.
+wandb: Waiting for W&B process to finish... (success).
+wandb: - 0.009 MB of 0.009 MB uploaded (0.000 MB deduped)wandb: \ 0.009 MB of 0.023 MB uploaded (0.000 MB deduped)wandb: | 0.009 MB of 0.023 MB uploaded (0.000 MB deduped)wandb: / 0.009 MB of 0.023 MB uploaded (0.000 MB deduped)wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:           test/loss ▁
+wandb:          train/loss █▄▃▂▂▂▁▁▁▁▁▁▁▁▁▂▃▅▆▆▆▅▆▅▅▅▅▅▅▅▆▆▆▆▆▆▆▆▆▆
+wandb: trainer/global_step ▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇████
+wandb:            val/loss ▁▅█▅
+wandb: 
+wandb: Run summary:
+wandb:               epoch 80
+wandb:           test/loss 1.69909
+wandb:          train/loss 1.16679
+wandb: trainer/global_step 6320
+wandb:            val/loss 1.5876
+wandb: 
+wandb: 🚀 View run breezy-mountain-8 at: https://wandb.ai/anishamohamed00/g2_sat_ZINC/runs/9xhvbf7t
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20231123_102646-9xhvbf7t/logs
+[I 2023-11-23 10:59:45,890] Trial 1 finished with value: 1.6990883350372314 and parameters: {'num_layers': 6, 'gnn_type': 'gcn', 'k_hop': 16, 'gradient_gating_p': 2.0}. Best is trial 0 with value: 0.960440456867218.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/torch_geometric/deprecation.py:22: UserWarning: 'data.DataLoader' is deprecated, use 'loader.DataLoader' instead
+  warnings.warn(out)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+wandb: wandb version 0.16.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.14.0
+wandb: Run data is saved locally in ./wandb/run-20231123_110016-rp6nvnsn
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run fresh-grass-9
+wandb: ⭐️ View project at https://wandb.ai/anishamohamed00/g2_sat_ZINC
+wandb: 🚀 View run at https://wandb.ai/anishamohamed00/g2_sat_ZINC/runs/rp6nvnsn
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+
+  | Name      | Type             | Params
+-----------------------------------------------
+0 | model     | GraphTransformer | 758 K 
+1 | criterion | L1Loss           | 0     
+-----------------------------------------------
+758 K     Trainable params
+0         Non-trainable params
+758 K     Total params
+3.033     Total estimated model params size (MB)
+SLURM auto-requeueing enabled. Setting signal handlers.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=1` in the `DataLoader` to improve performance.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=1` in the `DataLoader` to improve performance.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+SLURM auto-requeueing enabled. Setting signal handlers.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'test_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=1` in the `DataLoader` to improve performance.
+wandb: Waiting for W&B process to finish... (success).
+wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:           test/loss ▁
+wandb:          train/loss █▅▃▂▂▂▁▁▁▁▁▁▁▁▁▁▂▂▂▂▂▂▂▃▃▄▄▃▃▃▄▇▆▆▆█▇▆▆▆
+wandb: trainer/global_step ▁▁▁▂▂▂▂▂▃▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇████
+wandb:            val/loss ▁▁▂█
+wandb: 
+wandb: Run summary:
+wandb:               epoch 80
+wandb:           test/loss 3.59503
+wandb:          train/loss 1.19147
+wandb: trainer/global_step 6320
+wandb:            val/loss 3.5741
+wandb: 
+wandb: 🚀 View run fresh-grass-9 at: https://wandb.ai/anishamohamed00/g2_sat_ZINC/runs/rp6nvnsn
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20231123_110016-rp6nvnsn/logs
+[I 2023-11-23 11:22:06,640] Trial 2 finished with value: 3.59503173828125 and parameters: {'num_layers': 2, 'gnn_type': 'gcn', 'k_hop': 32, 'gradient_gating_p': 2.0}. Best is trial 0 with value: 0.960440456867218.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/torch_geometric/deprecation.py:22: UserWarning: 'data.DataLoader' is deprecated, use 'loader.DataLoader' instead
+  warnings.warn(out)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+wandb: wandb version 0.16.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.14.0
+wandb: Run data is saved locally in ./wandb/run-20231123_112238-ejjpf7xd
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run kind-water-10
+wandb: ⭐️ View project at https://wandb.ai/anishamohamed00/g2_sat_ZINC
+wandb: 🚀 View run at https://wandb.ai/anishamohamed00/g2_sat_ZINC/runs/ejjpf7xd
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+
+  | Name      | Type             | Params
+-----------------------------------------------
+0 | model     | GraphTransformer | 739 K 
+1 | criterion | L1Loss           | 0     
+-----------------------------------------------
+739 K     Trainable params
+0         Non-trainable params
+739 K     Total params
+2.958     Total estimated model params size (MB)
+SLURM auto-requeueing enabled. Setting signal handlers.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=1` in the `DataLoader` to improve performance.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=1` in the `DataLoader` to improve performance.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+SLURM auto-requeueing enabled. Setting signal handlers.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'test_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=1` in the `DataLoader` to improve performance.
+wandb: Waiting for W&B process to finish... (success).
+wandb: - 0.009 MB of 0.009 MB uploaded (0.000 MB deduped)wandb: \ 0.009 MB of 0.009 MB uploaded (0.000 MB deduped)wandb: | 0.009 MB of 0.009 MB uploaded (0.000 MB deduped)wandb: / 0.009 MB of 0.009 MB uploaded (0.000 MB deduped)wandb: 
+wandb: Run history:
+wandb:               epoch ▁▁▁▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▇▇▇▇▇▇███
+wandb:           test/loss ▁
+wandb:          train/loss █▅▃▂▂▂▂▂▁▁▁▁▁▁▁▁▁▂▃▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆▆
+wandb: trainer/global_step ▁▁▁▂▂▂▂▂▂▃▃▃▃▃▄▄▄▄▄▄▅▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇████
+wandb:            val/loss ▁▁▅█▄
+wandb: 
+wandb: Run summary:
+wandb:               epoch 100
+wandb:           test/loss 1.69665
+wandb:          train/loss 1.09983
+wandb: trainer/global_step 7900
+wandb:            val/loss 1.61235
+wandb: 
+wandb: 🚀 View run kind-water-10 at: https://wandb.ai/anishamohamed00/g2_sat_ZINC/runs/ejjpf7xd
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20231123_112238-ejjpf7xd/logs
+[I 2023-11-23 11:47:44,418] Trial 3 finished with value: 1.6966466903686523 and parameters: {'num_layers': 6, 'gnn_type': 'gcn', 'k_hop': 8, 'gradient_gating_p': 1.0}. Best is trial 0 with value: 0.960440456867218.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/torch_geometric/deprecation.py:22: UserWarning: 'data.DataLoader' is deprecated, use 'loader.DataLoader' instead
+  warnings.warn(out)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+wandb: wandb version 0.16.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.14.0
+wandb: Run data is saved locally in ./wandb/run-20231123_114814-dnvyw6au
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run proud-jazz-11
+wandb: ⭐️ View project at https://wandb.ai/anishamohamed00/g2_sat_ZINC
+wandb: 🚀 View run at https://wandb.ai/anishamohamed00/g2_sat_ZINC/runs/dnvyw6au
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+
+  | Name      | Type             | Params
+-----------------------------------------------
+0 | model     | GraphTransformer | 881 K 
+1 | criterion | L1Loss           | 0     
+-----------------------------------------------
+881 K     Trainable params
+0         Non-trainable params
+881 K     Total params
+3.524     Total estimated model params size (MB)
+SLURM auto-requeueing enabled. Setting signal handlers.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=1` in the `DataLoader` to improve performance.
+/cluster/home/amohame/miniconda/envs/g2-sat/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=1` in the `DataLoader` to improve performance.
+slurmstepd: error: *** JOB 36820183 ON eu-lo-s4-083 CANCELLED AT 2023-11-23T12:08:16 DUE TO TIME LIMIT ***
