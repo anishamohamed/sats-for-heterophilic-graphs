@@ -1,11 +1,8 @@
-import os
-import pickle
 import torch
-from torch_scatter import scatter_add
 import torch_geometric.utils as utils
-import numpy as np
+from torch_scatter import scatter_add
 
-
+# parent class for positional encodings
 class PositionEncoding(object):
     def apply_to(self, dataset):
         dataset.abs_pe_list = []
@@ -15,28 +12,7 @@ class PositionEncoding(object):
 
         return dataset
 
-
-class LapEncoding(PositionEncoding):
-    def __init__(self, dim, use_edge_attr=False, normalization=None):
-        """
-        normalization: for Laplacian None. sym or rw
-        """
-        self.pos_enc_dim = dim
-        self.normalization = normalization
-        self.use_edge_attr = use_edge_attr
-
-    def compute_pe(self, graph):
-        edge_attr = graph.edge_attr if self.use_edge_attr else None
-        edge_index, edge_attr = utils.get_laplacian(
-            graph.edge_index, edge_attr, normalization=self.normalization,
-            num_nodes=graph.num_nodes)
-        L = utils.to_scipy_sparse_matrix(edge_index, edge_attr).tocsc()
-        EigVal, EigVec = np.linalg.eig(L.toarray())
-        idx = EigVal.argsort() # increasing order
-        EigVal, EigVec = np.real(EigVal[idx]), np.real(EigVec[:,idx])
-        return torch.from_numpy(EigVec[:, 1:self.pos_enc_dim+1]).float()
-
-
+# random walk positional encoding
 class RWEncoding(PositionEncoding):
     def __init__(self, dim, use_edge_attr=False, normalization=None):
         """
@@ -55,7 +31,7 @@ class RWEncoding(PositionEncoding):
             vector[:, i + 1] = torch.from_numpy(W.diagonal())
         return vector.float()
 
-
+# used by the random walk positional encoding
 def normalize_adj(edge_index, edge_weight=None, num_nodes=None):
     edge_index, edge_weight = utils.remove_self_loops(edge_index, edge_weight)
     if edge_weight is None:
@@ -69,8 +45,6 @@ def normalize_adj(edge_index, edge_weight=None, num_nodes=None):
     edge_weight = deg_inv[row] * edge_weight
     return utils.to_scipy_sparse_matrix(edge_index, edge_weight, num_nodes=num_nodes)
 
-
 POSENCODINGS = {
-    'lap': LapEncoding,
     'rw': RWEncoding,
 }
