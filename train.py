@@ -24,7 +24,7 @@ import wandb
 import optuna
 from optuna.samplers import TPESampler
 
-os.environ["WANDB_API_KEY"] = "8f17d7bd011da005a1f4e9a75469497e3236f0b8" # anisha
+os.environ["WANDB_API_KEY"] = "" # insert personal/group wandb key
 
 def load_args():
     parser = argparse.ArgumentParser(
