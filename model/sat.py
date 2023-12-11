@@ -169,11 +169,11 @@ class GraphTransformer(nn.Module):
                     -1,
                 ),
             )
-        )
+        ) # output: (batch_size, d_model)
 
         if self.abs_pe and abs_pe is not None:
             abs_pe = self.embedding_abs_pe(abs_pe)
-            output = output + abs_pe
+            output = output + abs_pe # absolute embeddings are summed
         if self.use_edge_attr and edge_attr is not None:
             edge_attr = self.embedding_edge(edge_attr)
             if subgraph_edge_attr is not None:
@@ -182,8 +182,9 @@ class GraphTransformer(nn.Module):
             edge_attr = None
             subgraph_edge_attr = None
 
+        # if graph classification: collapse node embeddings into single graph embedding
         if self.global_pool == "cls" and self.use_global_pool:
-            bsz = len(data.ptr) - 1
+            bsz = len(data.ptr) - 1 # batchsize
             if complete_edge_index is not None:
                 new_index = torch.vstack(
                     (
@@ -208,8 +209,8 @@ class GraphTransformer(nn.Module):
                     (subgraph_indicator_index, idx_tmp)
                 )
             degree = None
-            cls_tokens = repeat(self.cls_token, "() d -> b d", b=bsz)
-            output = torch.cat((output, cls_tokens))
+            cls_tokens = repeat(self.cls_token, "() d -> b d", b=bsz) # cls_tokens: (batch_size, d_model)
+            output = torch.cat((output, cls_tokens)) # output: (2*batch_size, d_model)
 
         output = self.encoder(
             output,
@@ -229,7 +230,7 @@ class GraphTransformer(nn.Module):
             if self.global_pool == "cls":
                 output = output[-bsz:]
             else:
-                output = self.pooling(output, data.batch)
+                output = self.pooling(output, data.batch) # output: (# graphs in batch, h)
         if self.max_seq_len is not None:
             pred_list = []
             for i in range(self.max_seq_len):

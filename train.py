@@ -5,7 +5,8 @@ from functools import partial
 import torch
 from torch import nn, optim
 import torch.nn.functional as F
-from torch_geometric.data import DataLoader
+
+from torch_geometric.loader import DataLoader # torch_geometric.data
 from torch_geometric import datasets
 from torch_geometric.utils import degree
 from torch_geometric.seed import seed_everything 
@@ -18,13 +19,12 @@ from data import GraphDataset
 from net import GraphTransformerWrapper
 from model.position_encoding import POSENCODINGS
 from model.gnn_layers import GNN_TYPES
-from timeit import default_timer as timer
 import wandb
 
 import optuna
 from optuna.samplers import TPESampler
 
-os.environ["WANDB_API_KEY"] = ""
+os.environ["WANDB_API_KEY"] = "8f17d7bd011da005a1f4e9a75469497e3236f0b8" # anisha
 
 def load_args():
     parser = argparse.ArgumentParser(
@@ -98,7 +98,8 @@ def load_args():
     return args
 
 def tune():
-    
+    print("Start tuning...")
+
     def objective(trial: optuna.trial.Trial):
         seed = 42
         dataset = "ZINC"
@@ -163,8 +164,8 @@ def tune():
     print(best_params)
 
 def run(args):
-    seed_everything(args["seed"])
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    seed_everything(args["seed"])
 
     # ZINC Experiment
     if args["dataset"] == "ZINC":
@@ -290,10 +291,12 @@ def run(args):
             project="g2_sat_" + args["dataset"],
             config=args,
         ),
-        callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=3),
-        check_val_every_n_epoch=20,
+        # callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=3),
+        check_val_every_n_epoch=1,
     )
 
+    if device == 'cuda':
+        torch.use_deterministic_algorithms(False)
     trainer.fit(wrapper, train_loader, val_loader)
     trainer.test(wrapper, test_loader)
     wandb.finish()
@@ -301,5 +304,5 @@ def run(args):
     return trainer.callback_metrics["test/loss"].item()
 
 if __name__ == "__main__":
-    # run(load_args())
-    tune()
+    run(load_args())
+    # tune()

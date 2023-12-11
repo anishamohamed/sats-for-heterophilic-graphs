@@ -267,7 +267,7 @@ class StructureExtractor(nn.Module):
     ):
         x_cat = [x]
         for gcn_layer in self.gcn:
-            if self.gnn_type in EDGE_GNN_TYPES and edge_attr:
+            if self.gnn_type in EDGE_GNN_TYPES and edge_attr is not None:
                 x_ = self.relu(gcn_layer(x, edge_index, edge_attr=edge_attr))
             else:
                 x_ = self.relu(gcn_layer(x, edge_index))

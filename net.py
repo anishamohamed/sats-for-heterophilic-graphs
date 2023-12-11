@@ -15,26 +15,29 @@ class GraphTransformerWrapper(pl.LightningModule):
         criterion: nn.Module,
         learning_rate: float,
         weight_decay: float,
-        lr_scheduler: nn.Module,    
+        lr_scheduler: nn.Module, 
+        transductive: bool = False,   
     ):
         super().__init__()
         self.model = model
         self.abs_pe = abs_pe
         self.criterion = criterion
-        # self.val_metric = val_metric
-        # self.collect_val_metric = collect_val_metric
         self.learning_rate = learning_rate
         self.weight_decay = weight_decay
         self.lr_scheduler = lr_scheduler
+        self.transductive = transductive
 
-        self.train_loss = []
-        self.val_loss = []
-        self.test_loss = []
-        # self.val_metric = []
-        # self.test_metric = []
+        self.train_loss = 0.0
+        self.val_loss = 0.0
+        self.test_loss = 0.0
+        self.train_samples = 0
+        self.val_samples = 0
+        self.test_samples = 0
 
-    def forward(self, x):
-        return self.model(x)
+        self.save_hyperparameters(ignore=['model', 'criterion'])
+
+    def forward(self, batch):
+        return self.model(batch)
 
     def training_step(self, batch, batch_idx):
         if self.abs_pe == "lap":
@@ -44,52 +47,78 @@ class GraphTransformerWrapper(pl.LightningModule):
             sign_flip[sign_flip < 0.5] = -1.0
             batch.abs_pe = batch.abs_pe * sign_flip.unsqueeze(0)
         output = self(batch)
-        loss = self.criterion(output, batch.y)
-        self.train_loss.append(loss.detach().cpu().numpy())
+
+        if self.transductive:
+            output = output[batch.train_mask]
+            y = batch.y[batch.train_mask]
+        else:
+            y = batch.y
+
+        loss = self.criterion(output, y)
+        size = len(y)
+
+        self.train_loss += loss.item() * size
+        self.train_samples += size
 
         return loss
     
     def on_train_epoch_end(self):
-        train_loss = np.mean(self.train_loss)
+        train_loss = self.train_loss / self.train_samples
         self.log("train/loss", train_loss, prog_bar=True)
 
-        self.train_loss.clear()
+        self.train_loss = 0.0
+        self.train_samples = 0
 
     def validation_step(self, batch, batch_idx):
         output = self(batch)
-        loss = self.criterion(output, batch.y)
-        # metric = self.val_metric(output, batch.y)
-        self.val_loss.append(loss.detach().cpu().numpy())
-        # self.val_metric.append(metric.detach().cpu().numpy())
+
+        if self.transductive:
+            output = output[batch.val_mask]
+            y = batch.y[batch.val_mask]
+        else:
+            y = batch.y
+            
+        loss = self.criterion(output, y)
+        size = len(y)
+        
+        self.val_loss += loss.item() * size
+        self.val_samples += size
 
     def on_validation_epoch_end(self):
-        val_loss = np.mean(self.val_loss)
-        # val_metric = np.mean(self.val_metric)
+        val_loss = self.val_loss / self.val_samples
         self.log("val/loss", val_loss, prog_bar=True)
-        # self.log("val/metric", val_metric, prog_bar=True)
 
-        self.val_loss.clear()
-        # self.val_metric.clear()
+        self.val_loss = 0.0
+        self.val_samples = 0
 
     def test_step(self, batch, batch_idx):
         output = self(batch)
-        loss = self.criterion(output, batch.y)
-        # metric = self.val_metric(output, batch.y)
-        self.test_loss.append(loss.detach().cpu().numpy())
-        # self.test_metric.append(metric.detach().cpu().numpy())
+
+        if self.transductive:
+            output = output[batch.test_mask]
+            y = batch.y[batch.test_mask]
+        else:
+            y = batch.y
+            
+        loss = self.criterion(output, y)
+        size = len(y)
+
+        self.test_loss += loss.item() * size
+        self.test_samples += size
 
     def on_test_epoch_end(self):
-        test_loss = np.mean(self.test_loss)
-        # test_metric = self.collect_val_metric(self.test_metric)
+        test_loss = self.test_loss / self.test_samples
         self.log("test/loss", test_loss, prog_bar=True)
-        # self.log("test/metric", test_metric, prog_bar=True)
 
-        self.test_loss.clear()
-        # self.test_metric.clear()
+        self.test_loss = 0.0
+        self.test_samples = 0
     
     def configure_optimizers(self):
         optimizer = optim.AdamW(
             self.parameters(), lr=self.learning_rate, weight_decay=self.weight_decay
         )
         scheduler = {'scheduler': self.lr_scheduler(optimizer), 'interval': 'step'} if self.lr_scheduler else None
-        return [optimizer], [scheduler]
+        if scheduler:
+            return [optimizer], [scheduler]
+        else:
+            return optimizer
