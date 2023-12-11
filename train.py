@@ -6,10 +6,11 @@ import torch
 from torch import nn, optim
 import torch.nn.functional as F
 
-from torch_geometric.loader import DataLoader # torch_geometric.data
 from torch_geometric import datasets
 from torch_geometric.utils import degree
+from torch_geometric.loader import DataLoader # torch_geometric.data
 from torch_geometric.seed import seed_everything 
+import torch_geometric.transforms as T
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.callbacks import EarlyStopping
@@ -32,14 +33,14 @@ def load_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("--seed", type=int, default=42, help="random seed")
-    parser.add_argument("--dataset", type=str, default="ZINC", help="name of dataset")
-    parser.add_argument("--data-path", type=str, default="datasets/ZINC", help="path to dataset folder")
+    parser.add_argument("--dataset", type=str, default="roman-empire", help="name of dataset")
+    parser.add_argument("--data-path", type=str, default="datasets", help="path to dataset folder")
     parser.add_argument("--num-heads", type=int, default=8, help="number of heads")
     parser.add_argument("--num-layers", type=int, default=6, help="number of layers")
     parser.add_argument(
         "--dim-hidden", type=int, default=64, help="hidden dimension of Transformer"
     )
-    parser.add_argument("--dropout", type=float, default=0.2, help="dropout")
+    parser.add_argument("--dropout", type=float, default=0.3, help="dropout")
     parser.add_argument("--epochs", type=int, default=2000, help="number of epochs")
     parser.add_argument("--lr", type=float, default=0.001, help="initial learning rate")
     parser.add_argument("--weight-decay", type=float, default=1e-5, help="weight decay")
@@ -47,7 +48,7 @@ def load_args():
     parser.add_argument(
         "--abs-pe",
         type=str,
-        default=None,
+        default="rw",
         choices=POSENCODINGS.keys(),
         help="which absolute PE to use?",
     )
@@ -69,14 +70,14 @@ def load_args():
     parser.add_argument(
         "--gnn-type",
         type=str,
-        default="graphsage",
+        default="pna2",
         choices=GNN_TYPES,
         help="GNN structure extractor type",
     )
     parser.add_argument(
         "--k-hop",
         type=int,
-        default=2,
+        default=3,
         help="Number of hops to use when extracting subgraphs around each node",
     )
     parser.add_argument(
@@ -167,7 +168,6 @@ def run(args):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     seed_everything(args["seed"])
 
-    # ZINC Experiment
     if args["dataset"] == "ZINC":
         input_size = 28 # n_tags
         num_edge_features = 4
@@ -206,44 +206,86 @@ def run(args):
         
         lr_scheduler = partial(ZincLRScheduler, lr=args["lr"], warmup=args["warmup"])
 
-    train_dataset = GraphDataset(
-        train_data,
-        degree=True,
-        k_hop=args["k_hop"],
-        se=args["se"],
-        use_subgraph_edge_attr=args["use_edge_attr"],
-    )
+    elif args["dataset"] == "roman-empire":
+        input_size = 300
+        num_classes = 18
+        num_edge_features = 0
+        data = datasets.HeterophilousGraphDataset(args["data_path"], name="Roman-empire", transform=T.NormalizeFeatures())
+        # data[0]: Data(x=[22662, 300], edge_index=[2, 32927], y=[22662], train_mask=[22662, 10], val_mask=[22662, 10], test_mask=[22662, 10])
+        
+        criterion = nn.L1Loss()
+        lr_scheduler = None
 
-    val_dataset = GraphDataset(
-        val_data,
-        degree=True,
-        k_hop=args["k_hop"],
-        se=args["se"],
-        use_subgraph_edge_attr=args["use_edge_attr"],
-    )
+    else:
+        print(f"Training on {args['dataset']} is not supported!")
+        quit()
 
-    test_dataset = GraphDataset(
-        test_data,
-        degree=True,
-        k_hop=args["k_hop"],
-        se=args["se"],
-        use_subgraph_edge_attr=args["use_edge_attr"],
-    )
+    # Inductive setting:
+    if args["dataset"] in ("ZINC"):
+        train_dataset = GraphDataset(
+            train_data,
+            degree=True,
+            k_hop=args["k_hop"],
+            se=args["se"],
+            use_subgraph_edge_attr=args["use_edge_attr"],
+        )
 
-    train_loader = DataLoader(train_dataset, batch_size=args["batch_size"], shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=args["batch_size"], shuffle=False)
-    test_loader = DataLoader(test_dataset, batch_size=args["batch_size"], shuffle=False)
+        val_dataset = GraphDataset(
+            val_data,
+            degree=True,
+            k_hop=args["k_hop"],
+            se=args["se"],
+            use_subgraph_edge_attr=args["use_edge_attr"],
+        )
 
-    abs_pe_encoder = None
-    if args["abs_pe"] and args["abs_pe_dim"] > 0:
-        abs_pe_method = POSENCODINGS[args["abs_pe"]]
-        abs_pe_encoder = abs_pe_method(args["abs_pe_dim"], normalization="sym")
-        if abs_pe_encoder is not None:
-            abs_pe_encoder.apply_to(train_dataset)
-            abs_pe_encoder.apply_to(val_dataset)
-            abs_pe_encoder.apply_to(test_dataset)
-    else: 
-        abs_pe_method = None
+        test_dataset = GraphDataset(
+            test_data,
+            degree=True,
+            k_hop=args["k_hop"],
+            se=args["se"],
+            use_subgraph_edge_attr=args["use_edge_attr"],
+        )
+
+        train_loader = DataLoader(train_dataset, batch_size=args["batch_size"], shuffle=True)
+        val_loader = DataLoader(val_dataset, batch_size=args["batch_size"], shuffle=False)
+        test_loader = DataLoader(test_dataset, batch_size=args["batch_size"], shuffle=False)
+
+        abs_pe_encoder = None
+        if args["abs_pe"] and args["abs_pe_dim"] > 0:
+            abs_pe_method = POSENCODINGS[args["abs_pe"]]
+            abs_pe_encoder = abs_pe_method(args["abs_pe_dim"], normalization="sym")
+            if abs_pe_encoder is not None:
+                abs_pe_encoder.apply_to(train_dataset)
+                abs_pe_encoder.apply_to(val_dataset)
+                abs_pe_encoder.apply_to(test_dataset)
+        else: 
+            abs_pe_method = None
+
+        transductive = False
+
+    # Transductive setting:
+    else:
+        train_dataset = GraphDataset(
+            data,
+            degree=True,
+            k_hop=args["k_hop"],
+            se=args["se"],
+            use_subgraph_edge_attr=args["use_edge_attr"],
+        )
+        train_loader = DataLoader(train_dataset, batch_size=1, shuffle=False)
+        val_loader = DataLoader(train_dataset, batch_size=1, shuffle=False)
+        test_loader = DataLoader(train_dataset, batch_size=1, shuffle=False)
+
+        abs_pe_encoder = None
+        if args["abs_pe"] and args["abs_pe_dim"] > 0:
+            abs_pe_method = POSENCODINGS[args["abs_pe"]]
+            abs_pe_encoder = abs_pe_method(args["abs_pe_dim"], normalization="sym")
+            if abs_pe_encoder is not None:
+                abs_pe_encoder.apply_to(train_dataset)
+        else: 
+            abs_pe_method = None
+
+        transductive = True
 
     deg = torch.cat(
         [
@@ -281,6 +323,7 @@ def run(args):
         args["lr"],
         args["weight_decay"],
         lr_scheduler,
+        transductive
     )
 
     trainer = pl.Trainer(
@@ -291,7 +334,7 @@ def run(args):
             project="g2_sat_" + args["dataset"],
             config=args,
         ),
-        callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=10),
+        # callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=10),
         check_val_every_n_epoch=1,
     )
 
@@ -304,5 +347,5 @@ def run(args):
     return trainer.callback_metrics["test/loss"].item()
 
 if __name__ == "__main__":
-    # run(load_args())
-    tune()
+    run(load_args())
+    # tune()

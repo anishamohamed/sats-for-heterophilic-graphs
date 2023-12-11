@@ -2,6 +2,6 @@
 __pycache__/
 datasets/
 wandb/
-.err
-.out
+dl.err
+dl.out
 checkpoints
