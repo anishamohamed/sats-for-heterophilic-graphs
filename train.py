@@ -6,7 +6,7 @@ import torch
 from torch import nn, optim
 import torch.nn.functional as F
 
-from torch_geometric.data import DataLoader
+from torch_geometric.loader import DataLoader # torch_geometric.data
 from torch_geometric import datasets
 from torch_geometric.utils import degree
 from torch_geometric.seed import seed_everything 
@@ -177,7 +177,7 @@ def run(args):
         test_data = datasets.ZINC(args["data_path"], subset=True, split="test")
 
         # MAE loss
-        criterion = lambda y_hat, y: F.nll_loss(F.log_softmax(y_hat, dim=-1), y)
+        criterion = nn.L1Loss()
 
         class ZincLRScheduler(optim.lr_scheduler._LRScheduler):
             def __init__(self, optimizer, lr, warmup):
@@ -292,7 +292,7 @@ def run(args):
             config=args,
         ),
         callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=3),
-        check_val_every_n_epoch=20,
+        check_val_every_n_epoch=1,
     )
 
     if device == 'cuda':

@@ -33,6 +33,8 @@ class GraphTransformerWrapper(pl.LightningModule):
         # self.val_metric = []
         # self.test_metric = []
 
+        self.save_hyperparameters()
+
     def forward(self, x):
         return self.model(x)
 

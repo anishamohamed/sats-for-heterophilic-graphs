@@ -1,6 +1,6 @@
 #!/bin/bash
   
-#SBATCH --time=2:00:00
+#SBATCH --time=20:00:00
 #SBATCH --gpus=rtx_2080_ti:1
 #SBATCH --mem-per-cpu=10G
 #SBATCH --job-name=sa
