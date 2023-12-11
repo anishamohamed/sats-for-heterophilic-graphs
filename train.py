@@ -291,8 +291,8 @@ def run(args):
             project="g2_sat_" + args["dataset"],
             config=args,
         ),
-        callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=3),
-        check_val_every_n_epoch=20,
+        # callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=3),
+        check_val_every_n_epoch=1,
     )
 
     if device == 'cuda':
@@ -304,5 +304,5 @@ def run(args):
     return trainer.callback_metrics["test/loss"].item()
 
 if __name__ == "__main__":
-    # run(load_args())
-    tune()
+    run(load_args())
+    # tune()
