@@ -108,7 +108,7 @@ def tune():
         num_layers = trial.suggest_categorical("num_layers", [2, 4, 6])
         dim_hidden = 64
         dropout = 0.2
-        epochs = 2000
+        epochs = 300
         lr = 1e-3
         weight_decay = 1e-5
         batch_size = 128
@@ -118,7 +118,7 @@ def tune():
         layer_norm = True
         use_edge_attr = True
         edge_dim = 32
-        gnn_type = trial.suggest_categorical("gnn_type", ["graphsage", "gcn"])
+        gnn_type = "gcn" # trial.suggest_categorical("gnn_type", ["graphsage", "gcn"])
         k_hop = trial.suggest_categorical("k_hop", [2, 8, 16, 32])
         global_pool = "mean"
         se = "gnn"
@@ -291,7 +291,7 @@ def run(args):
             project="g2_sat_" + args["dataset"],
             config=args,
         ),
-        callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=3),
+        callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=10),
         check_val_every_n_epoch=1,
     )
 
