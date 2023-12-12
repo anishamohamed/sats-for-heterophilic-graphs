@@ -26,5 +26,5 @@ module load gcc/8.2.0 python_gpu/3.10.4 hdf5/1.10.1 eth_proxy cuda/11.8.0 cudnn/
 
 # conda env create --file env.yml
 source  $HOME/miniconda/bin/activate g2-sat
-python train.py --dataset ZINC --data-path datasets/ZINC --se gnn --gnn-type pna2 --k-hop 3 --abs-pe rw --dropout 0.3 --use-edge-attr
+python train.py --dataset ZINC --data-path datasets/ZINC --se gnn --gnn-type gcn --k-hop 3 --abs-pe rw --dropout 0.3
 conda deactivate
