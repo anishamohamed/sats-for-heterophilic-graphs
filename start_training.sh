@@ -3,6 +3,7 @@
 #SBATCH --time=20:00:00
 #SBATCH --gpus=rtx_2080_ti:1
 #SBATCH --mem-per-cpu=10G
+#SBATCH --mem-per-cpu=10G
 #SBATCH --job-name=sa
 #SBATCH --output=dl.out
 #SBATCH --error=dl.err
