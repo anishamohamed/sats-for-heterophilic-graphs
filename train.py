@@ -25,6 +25,8 @@ import optuna
 from optuna.samplers import TPESampler
 
 os.environ["WANDB_API_KEY"] = ""
+#wandb_track = True
+
 
 def load_args():
     parser = argparse.ArgumentParser(
@@ -40,7 +42,7 @@ def load_args():
         "--dim-hidden", type=int, default=64, help="hidden dimension of Transformer"
     )
     parser.add_argument("--dropout", type=float, default=0.2, help="dropout")
-    parser.add_argument("--epochs", type=int, default=2000, help="number of epochs")
+    parser.add_argument("--epochs", type=int, default=1000, help="number of epochs")
     parser.add_argument("--lr", type=float, default=0.001, help="initial learning rate")
     parser.add_argument("--weight-decay", type=float, default=1e-5, help="weight decay")
     parser.add_argument("--batch-size", type=int, default=128, help="batch size")
@@ -282,17 +284,19 @@ def run(args):
         lr_scheduler,
     )
 
+
+    wandb_logger = WandbLogger(project="g2_sat_" + args["dataset"], log_model="all")
+    wandb_logger.watch(model, log="all")
     trainer = pl.Trainer(
         accelerator=device,
         max_epochs=args["epochs"],
         deterministic=True,
-        logger=WandbLogger(
-            project="g2_sat_" + args["dataset"],
-            config=args,
-        ),
-        callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=3),
+        logger=wandb_logger,
+        #callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=3),
         check_val_every_n_epoch=20,
-    )
+        )
+    
+    
 
     trainer.fit(wrapper, train_loader, val_loader)
     trainer.test(wrapper, test_loader)
@@ -301,5 +305,5 @@ def run(args):
     return trainer.callback_metrics["test/loss"].item()
 
 if __name__ == "__main__":
-    # run(load_args())
-    tune()
+    run(load_args())
+    # tune()
