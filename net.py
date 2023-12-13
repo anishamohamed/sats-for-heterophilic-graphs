@@ -1,11 +1,13 @@
 import torch
+from torch import nn, optim 
 import pytorch_lightning as pl
-from torch import nn, optim
 import numpy as np
 
 from typing import Optional
 
 from model.sat import GraphTransformer
+
+MASK = 0
 
 class GraphTransformerWrapper(pl.LightningModule):
     def __init__(
@@ -49,8 +51,8 @@ class GraphTransformerWrapper(pl.LightningModule):
         output = self(batch)
 
         if self.transductive:
-            output = output[batch.train_mask]
-            y = batch.y[batch.train_mask]
+            output = output[batch.train_mask[:, MASK]]
+            y = batch.y[batch.train_mask[:, MASK]].squeeze()
         else:
             y = batch.y
 
@@ -73,8 +75,8 @@ class GraphTransformerWrapper(pl.LightningModule):
         output = self(batch)
 
         if self.transductive:
-            output = output[batch.val_mask]
-            y = batch.y[batch.val_mask]
+            output = output[batch.val_mask[:, MASK]]
+            y = batch.y[batch.val_mask[:, MASK]].squeeze()
         else:
             y = batch.y
             
@@ -95,8 +97,8 @@ class GraphTransformerWrapper(pl.LightningModule):
         output = self(batch)
 
         if self.transductive:
-            output = output[batch.test_mask]
-            y = batch.y[batch.test_mask]
+            output = output[batch.test_mask[:, MASK]]
+            y = batch.y[batch.test_mask[:, MASK]].squeeze()
         else:
             y = batch.y
             

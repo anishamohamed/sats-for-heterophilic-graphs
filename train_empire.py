@@ -17,7 +17,7 @@ from pytorch_lightning.callbacks import EarlyStopping
 
 from model.sat import GraphTransformer
 from data import GraphDataset
-from net import GraphTransformerWrapper
+from empire_wrapper import RomanEmpireWrapper
 from model.position_encoding import POSENCODINGS
 from model.gnn_layers import GNN_TYPES
 import wandb
@@ -168,8 +168,6 @@ def run(args):
         data = datasets.HeterophilousGraphDataset(args["data_path"], name="Roman-empire", transform=T.NormalizeFeatures())
         # data[0]: Data(x=[22662, 300], edge_index=[2, 32927], y=[22662], train_mask=[22662, 10], val_mask=[22662, 10], test_mask=[22662, 10])
 
-        # MAE loss
-        criterion = nn.L1Loss()
         lr_scheduler = None # partial(optim.lr_scheduler.StepLR, step_size=100, gamma=0.8)
         dataset = GraphDataset(
             data,
@@ -197,57 +195,59 @@ def run(args):
             ]
         )
 
-    model = GraphTransformer(
-        in_size=nn.Linear(input_size, args["dim_hidden"]), # in_size=input_size,
-        num_class=num_classes,
-        d_model=args["dim_hidden"],
-        dim_feedforward=2*args["dim_hidden"],
-        dropout=args["dropout"],
-        num_heads=args["num_heads"],
-        num_layers=args["num_layers"],
-        batch_norm=args["batch_norm"],
-        abs_pe=args["abs_pe"],
-        abs_pe_dim=args["abs_pe_dim"],
-        gnn_type=args["gnn_type"],
-        use_edge_attr=False,
-        num_edge_features=num_edge_features,
-        edge_dim=args["edge_dim"],
-        k_hop=args["k_hop"],
-        se=args["se"],
-        deg=deg,
-        use_global_pool=False,
-        gradient_gating_p=args["gradient_gating_p"],
-    )
+    for i in range(10):
+        model = GraphTransformer(
+            in_size=nn.Linear(input_size, args["dim_hidden"]), # in_size=input_size,
+            num_class=num_classes,
+            d_model=args["dim_hidden"],
+            dim_feedforward=2*args["dim_hidden"],
+            dropout=args["dropout"],
+            num_heads=args["num_heads"],
+            num_layers=args["num_layers"],
+            batch_norm=args["batch_norm"],
+            abs_pe=args["abs_pe"],
+            abs_pe_dim=args["abs_pe_dim"],
+            gnn_type=args["gnn_type"],
+            use_edge_attr=False,
+            num_edge_features=num_edge_features,
+            edge_dim=args["edge_dim"],
+            k_hop=args["k_hop"],
+            se=args["se"],
+            deg=deg,
+            use_global_pool=False, # node classification task
+            gradient_gating_p=args["gradient_gating_p"],
+        )
 
-    wrapper = GraphTransformerWrapper(
-        model,
-        abs_pe_method,
-        criterion,
-        args["lr"],
-        args["weight_decay"],
-        lr_scheduler,
-    )
+        wrapper = RomanEmpireWrapper(
+            model,
+            abs_pe_method,
+            args["lr"],
+            args["weight_decay"],
+            lr_scheduler,
+            mask=i,
+        )
 
-    trainer = pl.Trainer(
-        accelerator=device,
-        max_epochs=args["epochs"],
-        deterministic=True,
-        logger=WandbLogger(
-            project="g2_sat_" + args["dataset"],
-            config=args,
-        ),
-        # callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=3),
-        check_val_every_n_epoch=1,
-        log_every_n_steps=1,
-    )
+        trainer = pl.Trainer(
+            accelerator=device,
+            max_epochs=args["epochs"],
+            deterministic=True,
+            logger=WandbLogger(
+                project="g2_sat_romanempire_" + str(i),
+                config=args,
+            ),
+            # callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=3),
+            check_val_every_n_epoch=1,
+            log_every_n_steps=1,
+        )
 
-    if device == 'cuda':
-        torch.use_deterministic_algorithms(False)
-    trainer.fit(wrapper, loader, loader)
-    trainer.test(wrapper, loader)
-    wandb.finish()
+        if device == 'cuda':
+            torch.use_deterministic_algorithms(False)
 
-    return trainer.callback_metrics["test/loss"].item()
+        trainer.fit(wrapper, loader, loader)
+        trainer.test(wrapper, loader)
+        wandb.finish()
+
+        return trainer.callback_metrics["test/loss"].item()
 
 if __name__ == "__main__":
     run(load_args())
