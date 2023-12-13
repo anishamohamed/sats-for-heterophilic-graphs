@@ -8,6 +8,8 @@ import torch_geometric.utils as utils
 from einops import rearrange
 from .utils import pad_batch, unpad_batch
 from .gnn_layers import get_simple_gnn_layer, EDGE_GNN_TYPES
+from .gnn_layers import DeeperGCN
+
 import torch.nn.functional as F
 
 
@@ -248,7 +250,9 @@ class StructureExtractor(nn.Module):
         self.gnn_type = gnn_type
         layers = []
         for _ in range(num_layers):
-            layers.append(get_simple_gnn_layer(gnn_type, embed_dim, **kwargs))
+            layer = get_simple_gnn_layer(gnn_type, embed_dim, **kwargs)
+            # automatically unpack output of GNN layer if it is a list
+            layers += layer if isinstance(layer, list) else [layer]
         self.gcn = nn.ModuleList(layers)
 
         self.relu = nn.ReLU()

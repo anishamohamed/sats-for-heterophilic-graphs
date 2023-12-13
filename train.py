@@ -24,7 +24,9 @@ import wandb
 import optuna
 from optuna.samplers import TPESampler
 
-os.environ["WANDB_API_KEY"] = "" # insert personal/group wandb key
+os.environ["WANDB_API_KEY"] = "89dd0dde666ab90e0366c4fec54fe1a4f785f3ef" # insert personal/group wandb key
+CLIPPING_THRESHOLD = 1.0
+
 
 def load_args():
     parser = argparse.ArgumentParser(
@@ -40,7 +42,7 @@ def load_args():
         "--dim-hidden", type=int, default=64, help="hidden dimension of Transformer"
     )
     parser.add_argument("--dropout", type=float, default=0.2, help="dropout")
-    parser.add_argument("--epochs", type=int, default=2000, help="number of epochs")
+    parser.add_argument("--epochs", type=int, default=100, help="number of epochs")
     parser.add_argument("--lr", type=float, default=0.001, help="initial learning rate")
     parser.add_argument("--weight-decay", type=float, default=1e-5, help="weight decay")
     parser.add_argument("--batch-size", type=int, default=128, help="batch size")
@@ -91,6 +93,10 @@ def load_args():
     )
     parser.add_argument(
         "--gradient-gating-p", type=float, default=.0, help="gradient gating parameter"
+    )
+
+    parser.add_argument(
+        "--track-GT", action='store_true', help="Log Graph Transformer parameters/gradients with WandB"
     )
 
     args = vars(parser.parse_args())
@@ -148,7 +154,7 @@ def tune():
             "global_pool": global_pool,
             "se": se,
             "batch_norm": batch_norm,
-            "gradient_gating_p": gradient_gating_p
+            "gradient_gating_p": gradient_gating_p,
         }
          
         print(args)
@@ -273,6 +279,8 @@ def run(args):
         global_pool=args["global_pool"],
         gradient_gating_p=args["gradient_gating_p"],
     )
+    wandb_logger = WandbLogger(project="Gradient_Debugging" + args["dataset"], log_model="all")
+    wandb_logger.watch(model, log="all")
 
     wrapper = GraphTransformerWrapper(
         model,
@@ -283,16 +291,19 @@ def run(args):
         lr_scheduler,
     )
 
+    
     trainer = pl.Trainer(
         accelerator=device,
         max_epochs=args["epochs"],
         deterministic=True,
         logger=WandbLogger(
-            project="g2_sat_" + args["dataset"],
+            project=wandb_logger,
             config=args,
         ),
         # callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=3),
         check_val_every_n_epoch=1,
+        gradient_clip_val=CLIPPING_THRESHOLD,
+        gradient_clip_algorithm="value"
     )
 
     if device == 'cuda':
