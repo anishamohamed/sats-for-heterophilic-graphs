@@ -8,6 +8,7 @@ import torch.nn.functional as F
 
 from torch_geometric.loader import DataLoader # torch_geometric.data
 from torch_geometric import datasets
+import torch_geometric.transforms as T
 from torch_geometric.utils import degree
 from torch_geometric.seed import seed_everything 
 import pytorch_lightning as pl
@@ -32,10 +33,10 @@ def load_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("--seed", type=int, default=42, help="random seed")
-    parser.add_argument("--dataset", type=str, default="ZINC", help="name of dataset")
-    parser.add_argument("--data-path", type=str, default="datasets/ZINC", help="path to dataset folder")
+    parser.add_argument("--dataset", type=str, default="roman-empire", help="name of dataset")
+    parser.add_argument("--data-path", type=str, default="datasets", help="path to dataset folder")
     parser.add_argument("--num-heads", type=int, default=8, help="number of heads")
-    parser.add_argument("--num-layers", type=int, default=6, help="number of layers")
+    parser.add_argument("--num-layers", type=int, default=1, help="number of layers")
     parser.add_argument(
         "--dim-hidden", type=int, default=64, help="hidden dimension of Transformer"
     )
@@ -69,7 +70,7 @@ def load_args():
     parser.add_argument(
         "--gnn-type",
         type=str,
-        default="graphsage",
+        default="gcn",
         choices=GNN_TYPES,
         help="GNN structure extractor type",
     )
@@ -78,13 +79,6 @@ def load_args():
         type=int,
         default=2,
         help="Number of hops to use when extracting subgraphs around each node",
-    )
-    parser.add_argument(
-        "--global-pool",
-        type=str,
-        default="mean",
-        choices=["mean", "cls", "add"],
-        help="global pooling method",
     )
     parser.add_argument(
         "--se", type=str, default="gnn", help="Extractor type: khopgnn, or gnn"
@@ -120,7 +114,6 @@ def tune():
         edge_dim = 32
         gnn_type = trial.suggest_categorical("gnn_type", ["graphsage", "gcn"])
         k_hop = trial.suggest_categorical("k_hop", [2, 8, 16, 32])
-        global_pool = "mean"
         se = "gnn"
         batch_norm = False
         gradient_gating_p = trial.suggest_categorical("gradient_gating_p", [0., 1., 2.])
@@ -167,93 +160,45 @@ def run(args):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     seed_everything(args["seed"])
 
-    # ZINC Experiment
-    if args["dataset"] == "ZINC":
-        input_size = 28 # n_tags
-        num_edge_features = 4
-        num_classes = 1
-        train_data = datasets.ZINC(args["data_path"], subset=True, split="train")
-        val_data =  datasets.ZINC(args["data_path"], subset=True, split="val")
-        test_data = datasets.ZINC(args["data_path"], subset=True, split="test")
+    # Roman-Empire Experiment
+    if args["dataset"] == "roman-empire":
+        input_size = 300 # n_tags
+        num_classes = 18
+        num_edge_features = 0
+        data = datasets.HeterophilousGraphDataset(args["data_path"], name="Roman-empire", transform=T.NormalizeFeatures())
+        # data[0]: Data(x=[22662, 300], edge_index=[2, 32927], y=[22662], train_mask=[22662, 10], val_mask=[22662, 10], test_mask=[22662, 10])
 
         # MAE loss
         criterion = nn.L1Loss()
+        lr_scheduler = None # partial(optim.lr_scheduler.StepLR, step_size=100, gamma=0.8)
+        dataset = GraphDataset(
+            data,
+            degree=False,
+            k_hop=args["k_hop"],
+            se=args["se"],
+            use_subgraph_edge_attr=False,
+            return_complete_index=False # large dataset, recommended to set as False as in original SAT code
+        )
+        loader = DataLoader(dataset, batch_size=1, collate_fn=lambda batch: batch[0])
 
-        class ZincLRScheduler(optim.lr_scheduler._LRScheduler):
-            def __init__(self, optimizer, lr, warmup):
-                self.warmup = warmup
-                if warmup is None:
-                    self.lr_scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-                        optimizer, mode="min", factor=0.5, patience=15, min_lr=1e-05, verbose=False
-                    )
-                else:
-                    self.lr_steps = (lr - 1e-6) / warmup
-                    self.decay_factor = lr * warmup**0.5
-                    super().__init__(optimizer)
+        abs_pe_encoder = None
+        if args["abs_pe"] and args["abs_pe_dim"] > 0:
+            abs_pe_method = POSENCODINGS[args["abs_pe"]]
+            abs_pe_encoder = abs_pe_method(args["abs_pe_dim"], normalization="sym")
+            if abs_pe_encoder is not None:
+                abs_pe_encoder.apply_to(dataset)
+        else: 
+            abs_pe_method = None
 
-            def get_lr(self):
-                if self.warmup is None:
-                    return [group['lr'] for group in self.optimizer.param_groups]
-                else:
-                    return [self._get_lr(group['initial_lr'], self.last_epoch) for group in self.optimizer.param_groups]
-
-            def _get_lr(self, initial_lr, s):
-                if s < self.warmup:
-                    lr = 1e-6 + s * self.lr_steps
-                else:
-                    lr = self.decay_factor * s**-0.5
-                return lr
-        
-        lr_scheduler = partial(ZincLRScheduler, lr=args["lr"], warmup=args["warmup"])
-
-    train_dataset = GraphDataset(
-        train_data,
-        degree=True,
-        k_hop=args["k_hop"],
-        se=args["se"],
-        use_subgraph_edge_attr=args["use_edge_attr"],
-    )
-
-    val_dataset = GraphDataset(
-        val_data,
-        degree=True,
-        k_hop=args["k_hop"],
-        se=args["se"],
-        use_subgraph_edge_attr=args["use_edge_attr"],
-    )
-
-    test_dataset = GraphDataset(
-        test_data,
-        degree=True,
-        k_hop=args["k_hop"],
-        se=args["se"],
-        use_subgraph_edge_attr=args["use_edge_attr"],
-    )
-
-    train_loader = DataLoader(train_dataset, batch_size=args["batch_size"], shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=args["batch_size"], shuffle=False)
-    test_loader = DataLoader(test_dataset, batch_size=args["batch_size"], shuffle=False)
-
-    abs_pe_encoder = None
-    if args["abs_pe"] and args["abs_pe_dim"] > 0:
-        abs_pe_method = POSENCODINGS[args["abs_pe"]]
-        abs_pe_encoder = abs_pe_method(args["abs_pe_dim"], normalization="sym")
-        if abs_pe_encoder is not None:
-            abs_pe_encoder.apply_to(train_dataset)
-            abs_pe_encoder.apply_to(val_dataset)
-            abs_pe_encoder.apply_to(test_dataset)
-    else: 
-        abs_pe_method = None
-
-    deg = torch.cat(
-        [
-            degree(data.edge_index[1], num_nodes=data.num_nodes)
-            for data in train_dataset
-        ]
-    )
+        deg = torch.cat(
+            [
+                degree(data.edge_index[1], num_nodes=data.num_nodes)
+                for data in dataset
+            ]
+        )
 
     model = GraphTransformer(
-        in_size=input_size,
+        in_size=nn.Linear(input_size, args["dim_hidden"]), # in_size=input_size,
         num_class=num_classes,
         d_model=args["dim_hidden"],
         dim_feedforward=2*args["dim_hidden"],
@@ -264,13 +209,13 @@ def run(args):
         abs_pe=args["abs_pe"],
         abs_pe_dim=args["abs_pe_dim"],
         gnn_type=args["gnn_type"],
-        use_edge_attr=args["use_edge_attr"],
+        use_edge_attr=False,
         num_edge_features=num_edge_features,
         edge_dim=args["edge_dim"],
         k_hop=args["k_hop"],
         se=args["se"],
         deg=deg,
-        global_pool=args["global_pool"],
+        use_global_pool=False,
         gradient_gating_p=args["gradient_gating_p"],
     )
 
@@ -293,16 +238,17 @@ def run(args):
         ),
         # callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=3),
         check_val_every_n_epoch=1,
+        log_every_n_steps=1,
     )
 
     if device == 'cuda':
         torch.use_deterministic_algorithms(False)
-    trainer.fit(wrapper, train_loader, val_loader)
-    trainer.test(wrapper, test_loader)
+    trainer.fit(wrapper, loader, loader)
+    trainer.test(wrapper, loader)
     wandb.finish()
 
     return trainer.callback_metrics["test/loss"].item()
 
 if __name__ == "__main__":
-    # run(load_args())
-    tune()
+    run(load_args())
+    # tune()

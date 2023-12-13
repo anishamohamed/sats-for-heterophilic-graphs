@@ -77,7 +77,7 @@ class GraphTransformer(nn.Module):
         if in_embed:
             if isinstance(in_size, int):
                 self.embedding = nn.Embedding(in_size, d_model)
-            elif isinstance(in_size, Callable):
+            elif isinstance(in_size, nn.Module):
                 self.embedding = in_size
             else:
                 raise ValueError("Not implemented!")
@@ -225,6 +225,7 @@ class GraphTransformer(nn.Module):
             ptr=data.ptr,
             return_attn=return_attn,
         )
+        print(f"output shape: {output.shape}")
         # readout step
         if self.use_global_pool:
             if self.global_pool == "cls":
