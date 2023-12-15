@@ -225,7 +225,7 @@ class GraphTransformer(nn.Module):
             ptr=data.ptr,
             return_attn=return_attn,
         )
-        print(f"output shape: {output.shape}")
+
         # readout step
         if self.use_global_pool:
             if self.global_pool == "cls":

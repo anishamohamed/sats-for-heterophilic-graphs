@@ -36,12 +36,12 @@ def load_args():
     parser.add_argument("--dataset", type=str, default="roman-empire", help="name of dataset")
     parser.add_argument("--data-path", type=str, default="datasets", help="path to dataset folder")
     parser.add_argument("--num-heads", type=int, default=8, help="number of heads")
-    parser.add_argument("--num-layers", type=int, default=1, help="number of layers")
+    parser.add_argument("--num-layers", type=int, default=4, help="number of layers")
     parser.add_argument(
         "--dim-hidden", type=int, default=64, help="hidden dimension of Transformer"
     )
     parser.add_argument("--dropout", type=float, default=0.2, help="dropout")
-    parser.add_argument("--epochs", type=int, default=2000, help="number of epochs")
+    parser.add_argument("--epochs", type=int, default=10000, help="number of epochs")
     parser.add_argument("--lr", type=float, default=0.001, help="initial learning rate")
     parser.add_argument("--weight-decay", type=float, default=1e-5, help="weight decay")
     parser.add_argument("--batch-size", type=int, default=128, help="batch size")
@@ -195,9 +195,12 @@ def run(args):
             ]
         )
 
-    for i in range(10):
+    num_runs = data[0].train_mask.size(-1)
+
+    for i in range(num_runs):
+        node_projection = nn.Sequential(nn.Linear(input_size, args["dim_hidden"]), nn.Mish(), nn.Linear(args["dim_hidden"], args["dim_hidden"]))
         model = GraphTransformer(
-            in_size=nn.Linear(input_size, args["dim_hidden"]), # in_size=input_size,
+            in_size=node_projection, # in_size=input_size,
             num_class=num_classes,
             d_model=args["dim_hidden"],
             dim_feedforward=2*args["dim_hidden"],
@@ -232,10 +235,10 @@ def run(args):
             max_epochs=args["epochs"],
             deterministic=True,
             logger=WandbLogger(
-                project="g2_sat_romanempire_" + str(i),
+                project="g2_sat_roman-empire",
                 config=args,
             ),
-            # callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=3),
+            # callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=200),
             check_val_every_n_epoch=1,
             log_every_n_steps=1,
         )
@@ -247,7 +250,7 @@ def run(args):
         trainer.test(wrapper, loader)
         wandb.finish()
 
-        return trainer.callback_metrics["test/loss"].item()
+    return trainer.callback_metrics["test/loss"].item()
 
 if __name__ == "__main__":
     run(load_args())
