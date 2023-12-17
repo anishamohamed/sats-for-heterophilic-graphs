@@ -1,5 +1,3 @@
-# config.yaml
-
 model:
   name: "my_model"
   architecture: "convolutional"
