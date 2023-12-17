@@ -7,7 +7,7 @@ from typing import Optional
 
 from model.sat import GraphTransformer
 
-class RomanEmpireWrapper(pl.LightningModule):
+class HeterophilousGraphWrapper(pl.LightningModule):
     def __init__(
         self,
         model: GraphTransformer,
