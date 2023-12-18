@@ -1,11 +1,9 @@
 import torch
-from torch import nn, optim 
+from torch import nn, optim
 import pytorch_lightning as pl
-import numpy as np
-
 from typing import Optional
+from src.model.sat import GraphTransformer
 
-from model.sat import GraphTransformer
 
 class HeterophilousGraphWrapper(pl.LightningModule):
     def __init__(
@@ -15,7 +13,7 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         learning_rate: float,
         weight_decay: float,
         lr_scheduler: nn.Module,
-        mask: int,   
+        mask: int,
     ):
         super().__init__()
         self.model = model
@@ -25,10 +23,10 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         self.weight_decay = weight_decay
         self.lr_scheduler = lr_scheduler
         self.mask = mask
-        
+
         self.criterion = nn.CrossEntropyLoss()
 
-        self.save_hyperparameters(ignore=['model', 'criterion'])
+        self.save_hyperparameters(ignore=["model", "criterion"])
 
     def forward(self, data):
         return self.model(data)
@@ -46,33 +44,37 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         loss = self.criterion(output, y)
         self.log("train/loss", loss.item(), prog_bar=True)
         correct = torch.sum(torch.argmax(output, dim=-1) == y)
-        self.log("train/acc", correct/torch.sum(data.train_mask[:, self.mask]))
-        
+        self.log("train/acc", correct / torch.sum(data.train_mask[:, self.mask]))
+
         return loss
 
     def validation_step(self, data, data_idx):
         output = self(data)[data.val_mask[:, self.mask]]
         y = data.y[data.val_mask[:, self.mask]].squeeze()
-            
+
         loss = self.criterion(output, y)
         self.log("val/loss", loss.item(), prog_bar=True)
         correct = torch.sum(torch.argmax(output, dim=-1) == y)
-        self.log("val/acc", correct/torch.sum(data.val_mask[:, self.mask]))
+        self.log("val/acc", correct / torch.sum(data.val_mask[:, self.mask]))
 
     def test_step(self, data, data_idx):
         output = self(data)[data.test_mask[:, self.mask]]
         y = data.y[data.test_mask[:, self.mask]].squeeze()
-            
+
         loss = self.criterion(output, y)
         self.log("test/loss", loss.item(), prog_bar=True)
         correct = torch.sum(torch.argmax(output, dim=-1) == y)
-        self.log("val/acc", correct/torch.sum(data.test_mask[:, self.mask]))
+        self.log("test/acc", correct / torch.sum(data.test_mask[:, self.mask]))
 
     def configure_optimizers(self):
         optimizer = optim.AdamW(
             self.parameters(), lr=self.learning_rate, weight_decay=self.weight_decay
         )
-        scheduler = {'scheduler': self.lr_scheduler(optimizer), 'interval': 'step'} if self.lr_scheduler else None
+        scheduler = (
+            {"scheduler": self.lr_scheduler(optimizer), "interval": "step"}
+            if self.lr_scheduler
+            else None
+        )
         if scheduler:
             return [optimizer], [scheduler]
         else:

@@ -6,8 +6,8 @@ from torch_scatter import scatter_add, scatter_mean, scatter_max
 import torch_geometric.nn as gnn
 import torch_geometric.utils as utils
 from einops import rearrange
-from .utils import pad_batch, unpad_batch
-from .gnn_layers import get_simple_gnn_layer, EDGE_GNN_TYPES
+from src.model.utils import pad_batch, unpad_batch
+from src.model.gnn_layers import get_simple_gnn_layer, EDGE_GNN_TYPES
 import torch.nn.functional as F
 
 
@@ -38,7 +38,7 @@ class Attention(gnn.MessagePassing):
         gnn_type="gcn",
         se="gnn",
         k_hop=2,
-        gradient_gating_p=.0,
+        gradient_gating_p=0.0,
         **kwargs
     ):
         super().__init__(node_dim=0, aggr="add")
@@ -57,11 +57,19 @@ class Attention(gnn.MessagePassing):
         self.gnn_type = gnn_type
         if self.se == "khopgnn":
             self.khop_structure_extractor = KHopStructureExtractor(
-                embed_dim, gnn_type=gnn_type, num_layers=k_hop, gradient_gating_p=gradient_gating_p, **kwargs
+                embed_dim,
+                gnn_type=gnn_type,
+                num_layers=k_hop,
+                gradient_gating_p=gradient_gating_p,
+                **kwargs
             )
         else:
             self.structure_extractor = StructureExtractor(
-                embed_dim, gnn_type=gnn_type, num_layers=k_hop, gradient_gating_p=gradient_gating_p, **kwargs
+                embed_dim,
+                gnn_type=gnn_type,
+                num_layers=k_hop,
+                gradient_gating_p=gradient_gating_p,
+                **kwargs
             )
         self.attend = nn.Softmax(dim=-1)
 
@@ -80,7 +88,7 @@ class Attention(gnn.MessagePassing):
 
         self.attn_sum = None
 
-        # anisha: 
+        # anisha:
         self.batch_first = False
 
     def _reset_parameters(self):
@@ -238,7 +246,7 @@ class StructureExtractor(nn.Module):
         batch_norm=True,
         concat=True,
         khopgnn=False,
-        gradient_gating_p=.0,
+        gradient_gating_p=0.0,
         **kwargs
     ):
         super().__init__()
@@ -271,19 +279,22 @@ class StructureExtractor(nn.Module):
                 x_ = self.relu(gcn_layer(x, edge_index, edge_attr=edge_attr))
             else:
                 x_ = self.relu(gcn_layer(x, edge_index))
-            
+
             # TODO: check gradient gating here
             tau = torch.tanh(
                 scatter_mean(
-                    (torch.abs(x[edge_index[0]] - x[edge_index[1]]) ** self.gradient_gating_p).squeeze(-1),
+                    (
+                        torch.abs(x[edge_index[0]] - x[edge_index[1]])
+                        ** self.gradient_gating_p
+                    ).squeeze(-1),
                     edge_index[0],
                     0,
-                    dim_size = x.size(0),
+                    dim_size=x.size(0),
                 )
             )
             x = (1 - tau) * x + tau * x_
 
-            if self.concat: # concatenate output of different conv layers
+            if self.concat:  # concatenate output of different conv layers
                 x_cat.append(x)
 
         if self.concat:
@@ -326,7 +337,7 @@ class KHopStructureExtractor(nn.Module):
         batch_norm=True,
         concat=True,
         khopgnn=True,
-        gradient_gating_p=.0,
+        gradient_gating_p=0.0,
         **kwargs
     ):
         super().__init__()
@@ -407,7 +418,7 @@ class TransformerEncoderLayer(nn.TransformerEncoderLayer):
         gnn_type="gcn",
         se="gnn",
         k_hop=2,
-        gradient_gating_p=.0,
+        gradient_gating_p=0.0,
         **kwargs
     ):
         super().__init__(d_model, nhead, dim_feedforward, dropout, activation)

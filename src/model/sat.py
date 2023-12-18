@@ -2,7 +2,7 @@
 import torch
 from torch import nn
 import torch_geometric.nn as gnn
-from model.sat_block import TransformerEncoderLayer
+from src.model.sat_block import TransformerEncoderLayer
 from einops import repeat
 from typing import Union, Callable
 
@@ -49,23 +49,23 @@ class GraphTransformer(nn.Module):
         in_size: Union[int, Callable],
         num_class: int,
         d_model: int,
-        num_heads: int=8,
-        dim_feedforward: int=512,
-        dropout: float=0.0,
-        num_layers: int=4,
-        batch_norm: bool=False,
-        abs_pe: bool=False,
-        abs_pe_dim: int=0,
-        gnn_type: str="graph",
-        se: str="gnn",
-        use_edge_attr: bool=False,
-        num_edge_features: int=4,
-        in_embed: bool=True,
-        edge_embed: bool=True,
-        use_global_pool: bool=True,
+        num_heads: int = 8,
+        dim_feedforward: int = 512,
+        dropout: float = 0.0,
+        num_layers: int = 4,
+        batch_norm: bool = False,
+        abs_pe: bool = False,
+        abs_pe_dim: int = 0,
+        gnn_type: str = "graph",
+        se: str = "gnn",
+        use_edge_attr: bool = False,
+        num_edge_features: int = 4,
+        in_embed: bool = True,
+        edge_embed: bool = True,
+        use_global_pool: bool = True,
         max_seq_len=None,
         global_pool="mean",
-        gradient_gating_p: float=.0,
+        gradient_gating_p: float = 0.0,
         **kwargs
     ):
         super().__init__()
@@ -169,11 +169,11 @@ class GraphTransformer(nn.Module):
                     -1,
                 ),
             )
-        ) # output: (batch_size, d_model)
+        )  # output: (batch_size, d_model)
 
         if self.abs_pe and abs_pe is not None:
             abs_pe = self.embedding_abs_pe(abs_pe)
-            output = output + abs_pe # absolute embeddings are summed
+            output = output + abs_pe  # absolute embeddings are summed
         if self.use_edge_attr and edge_attr is not None:
             edge_attr = self.embedding_edge(edge_attr)
             if subgraph_edge_attr is not None:
@@ -184,7 +184,7 @@ class GraphTransformer(nn.Module):
 
         # if graph classification: collapse node embeddings into single graph embedding
         if self.global_pool == "cls" and self.use_global_pool:
-            bsz = len(data.ptr) - 1 # batchsize
+            bsz = len(data.ptr) - 1  # batchsize
             if complete_edge_index is not None:
                 new_index = torch.vstack(
                     (
@@ -209,8 +209,10 @@ class GraphTransformer(nn.Module):
                     (subgraph_indicator_index, idx_tmp)
                 )
             degree = None
-            cls_tokens = repeat(self.cls_token, "() d -> b d", b=bsz) # cls_tokens: (batch_size, d_model)
-            output = torch.cat((output, cls_tokens)) # output: (2*batch_size, d_model)
+            cls_tokens = repeat(
+                self.cls_token, "() d -> b d", b=bsz
+            )  # cls_tokens: (batch_size, d_model)
+            output = torch.cat((output, cls_tokens))  # output: (2*batch_size, d_model)
 
         output = self.encoder(
             output,
@@ -231,7 +233,9 @@ class GraphTransformer(nn.Module):
             if self.global_pool == "cls":
                 output = output[-bsz:]
             else:
-                output = self.pooling(output, data.batch) # output: (# graphs in batch, h)
+                output = self.pooling(
+                    output, data.batch
+                )  # output: (# graphs in batch, h)
         if self.max_seq_len is not None:
             pred_list = []
             for i in range(self.max_seq_len):

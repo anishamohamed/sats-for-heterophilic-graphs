@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import torch
 from torch import nn
 import torch.nn.functional as F
 import torch_geometric.nn as gnn

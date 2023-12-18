@@ -1,33 +1,27 @@
 import torch
-from torch import nn, optim 
+from torch import nn, optim
 import pytorch_lightning as pl
-import numpy as np
-
 from typing import Optional
+from src.model.sat import GraphTransformer
 
-from model.sat import GraphTransformer
 
-MASK = 0
-
-class GraphTransformerWrapper(pl.LightningModule):
+class ZINCWrapper(pl.LightningModule):
     def __init__(
         self,
         model: GraphTransformer,
         abs_pe: Optional[str],
-        criterion: nn.Module,
         learning_rate: float,
         weight_decay: float,
-        lr_scheduler: nn.Module, 
-        transductive: bool = False,   
+        lr_scheduler: nn.Module,
     ):
         super().__init__()
         self.model = model
         self.abs_pe = abs_pe
-        self.criterion = criterion
         self.learning_rate = learning_rate
         self.weight_decay = weight_decay
         self.lr_scheduler = lr_scheduler
-        self.transductive = transductive
+
+        self.criterion = nn.L1Loss()
 
         self.train_loss = 0.0
         self.val_loss = 0.0
@@ -36,7 +30,7 @@ class GraphTransformerWrapper(pl.LightningModule):
         self.val_samples = 0
         self.test_samples = 0
 
-        self.save_hyperparameters(ignore=['model', 'criterion'])
+        self.save_hyperparameters(ignore=["model", "criterion"])
 
     def forward(self, batch):
         return self.model(batch)
@@ -48,22 +42,16 @@ class GraphTransformerWrapper(pl.LightningModule):
             sign_flip[sign_flip >= 0.5] = 1.0
             sign_flip[sign_flip < 0.5] = -1.0
             batch.abs_pe = batch.abs_pe * sign_flip.unsqueeze(0)
+
         output = self(batch)
-
-        if self.transductive:
-            output = output[batch.train_mask[:, MASK]]
-            y = batch.y[batch.train_mask[:, MASK]].squeeze()
-        else:
-            y = batch.y
-
-        loss = self.criterion(output, y)
-        size = len(y)
+        loss = self.criterion(output, batch.y)
+        size = len(batch.y)
 
         self.train_loss += loss.item() * size
         self.train_samples += size
 
         return loss
-    
+
     def on_train_epoch_end(self):
         train_loss = self.train_loss / self.train_samples
         self.log("train/loss", train_loss, prog_bar=True)
@@ -73,16 +61,9 @@ class GraphTransformerWrapper(pl.LightningModule):
 
     def validation_step(self, batch, batch_idx):
         output = self(batch)
+        loss = self.criterion(output, batch.y)
+        size = len(batch.y)
 
-        if self.transductive:
-            output = output[batch.val_mask[:, MASK]]
-            y = batch.y[batch.val_mask[:, MASK]].squeeze()
-        else:
-            y = batch.y
-            
-        loss = self.criterion(output, y)
-        size = len(y)
-        
         self.val_loss += loss.item() * size
         self.val_samples += size
 
@@ -95,15 +76,8 @@ class GraphTransformerWrapper(pl.LightningModule):
 
     def test_step(self, batch, batch_idx):
         output = self(batch)
-
-        if self.transductive:
-            output = output[batch.test_mask[:, MASK]]
-            y = batch.y[batch.test_mask[:, MASK]].squeeze()
-        else:
-            y = batch.y
-            
-        loss = self.criterion(output, y)
-        size = len(y)
+        loss = self.criterion(output, batch.y)
+        size = len(batch.y)
 
         self.test_loss += loss.item() * size
         self.test_samples += size
@@ -114,12 +88,16 @@ class GraphTransformerWrapper(pl.LightningModule):
 
         self.test_loss = 0.0
         self.test_samples = 0
-    
+
     def configure_optimizers(self):
         optimizer = optim.AdamW(
             self.parameters(), lr=self.learning_rate, weight_decay=self.weight_decay
         )
-        scheduler = {'scheduler': self.lr_scheduler(optimizer), 'interval': 'step'} if self.lr_scheduler else None
+        scheduler = (
+            {"scheduler": self.lr_scheduler(optimizer), "interval": "step"}
+            if self.lr_scheduler
+            else None
+        )
         if scheduler:
             return [optimizer], [scheduler]
         else:
