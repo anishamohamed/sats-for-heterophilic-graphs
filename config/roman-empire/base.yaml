@@ -1,0 +1,15 @@
+model:
+  name: "my_model"
+  architecture: "convolutional"
+  hidden_layers: 3
+  learning_rate: 0.001
+
+dataset:
+  name: "my_dataset"
+  path: "/path/to/dataset"
+  batch_size: 64
+  num_classes: 10
+
+training:
+  epochs: 10
+  save_path: "/path/to/save/model"
