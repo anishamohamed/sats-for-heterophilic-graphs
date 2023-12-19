@@ -20,10 +20,10 @@ model:
   abs_pe_dim: 32
   se: "gnn"
   gnn_type: "pna2"
-  k_hop: [3, 6, 10]
+  k_hop: [3, 8, 16]
   in_embed: True
   use_global_pool: False
-  gradient_gating_p: [0.0, 1.0, 2.0]
+  gradient_gating_p: [0.0, 1.0, 1.5]
 
 epochs: 2000
 lr: 0.001

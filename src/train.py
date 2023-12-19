@@ -26,6 +26,8 @@ from net.heterophilous import HeterophilousGraphWrapper
 import yaml
 import wandb
 
+NUM_SPLITS_HETERORPHILOUS = 10
+
 
 def load_config(path):
     with open(path, "r") as config_file:
@@ -164,6 +166,7 @@ def run_heterophilous_single_split(dataloader, config):
     logger = (
         WandbLogger(
             project="g2_sat_" + config.get("dataset"),
+            entity="math_dl",
             config=config,
         )
         if config.get("wandb_key") is not None
@@ -192,6 +195,18 @@ def run_heterophilous_single_split(dataloader, config):
 
 
 def run_heterophilous(config):
+    loader, config = prepare_heterophilous_data(config)
+
+    accuracy_list = list()
+    for mask in range(NUM_SPLITS_HETERORPHILOUS):
+        config.update({"mask": mask})
+        accuracy_list.append(run_heterophilous_single_split(loader, config))
+
+    accuracy_list = np.array(accuracy_list)
+    print(f"Accuracy: {np.mean(accuracy_list)} +- {np.std(accuracy_list)}")
+
+
+def prepare_heterophilous_data(config):
     data, input_size, num_class = get_heterophilous_graph_data(config.get("dataset"), config.get("root_dir"))
     dataset = GraphDataset(
         data,
@@ -212,7 +227,6 @@ def run_heterophilous(config):
     config.update({"abs_pe_method": abs_pe_method})
 
     deg = degree(data[0].edge_index[1], num_nodes=data[0].num_nodes)
-
     config.update({"input_size": input_size})
     config.get("model").update(
         {
@@ -222,18 +236,8 @@ def run_heterophilous(config):
             "deg": deg,
         }
     )
-
     loader = DataLoader(dataset, batch_size=1, collate_fn=lambda batch: batch[0])
-
-    num_splits = data[0].train_mask.size(-1)
-    accuracy_list = list()
-
-    for mask in range(num_splits):
-        config.update({"mask": mask})
-        accuracy_list.append(run_heterophilous_single_split(loader, config))
-
-    accuracy_list = np.array(accuracy_list)
-    print(f"Accuracy: {np.mean(accuracy_list)} +- {np.std(accuracy_list)}")
+    return loader, config
 
 
 def run(config_path):

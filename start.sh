@@ -1,7 +1,7 @@
 #!/bin/bash
   
 #SBATCH --time=20:00:00
-#SBATCH --gpus=rtx_2080_ti:1
+#SBATCH --gpus=a100_80gb:1
 #SBATCH --mem-per-cpu=36G
 #SBATCH --job-name=sa
 #SBATCH --output=dl.out
