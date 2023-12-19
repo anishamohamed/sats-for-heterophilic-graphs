@@ -26,4 +26,6 @@ model:
 epochs: 10000
 lr: 0.001
 weight_decay: 0.00001
-wandb_key: "8f17d7bd011da005a1f4e9a75469497e3236f0b8" 
+
+logger:
+  wandb_key: "8f17d7bd011da005a1f4e9a75469497e3236f0b8" 

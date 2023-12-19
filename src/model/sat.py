@@ -165,9 +165,7 @@ class GraphTransformer(nn.Module):
             if node_depth is None
             else self.embedding(
                 x,
-                node_depth.view(
-                    -1,
-                ),
+                node_depth.view(-1,),
             )
         )  # output: (batch_size, d_model)
 

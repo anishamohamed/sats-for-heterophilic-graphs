@@ -18,13 +18,11 @@ def convert_to_trial(trial: optuna.trial.Trial, config: dict):
     trial_config = config.copy()
     for key, value in config.items():
         if isinstance(value, list):
-            print(f"{key}: {value}")
             trial_config.update({key: trial.suggest_categorical(key, value)})
         if isinstance(value, dict): # config[model], config[node_projection]
             trial_config[key] = trial_config[key].copy()
             for k, v in value.items():
                 if isinstance(v, list):
-                    print(f"{k}: {v},")
                     trial_config[key].update({k: trial.suggest_categorical(k, v)})
     return trial_config
 
@@ -40,9 +38,10 @@ def objective_zinc(trial: optuna.trial.Trial, config):
 def tune(config_path):
     config = load_config(config_path)
     config.update({"device": "cuda" if torch.cuda.is_available() else "cpu"})
-    os.environ["WANDB_API_KEY"] = config.get("wandb_key")
+    if config.get("logger") is not None:
+        os.environ["WANDB_API_KEY"] = config["logger"].get("wandb_key")
 
-    seed_everything(config.get("seed"))
+    seed_everything(config.get("seed"), 42)
     config["dataset"] = config["dataset"].lower().replace("-", "_")
 
     if config["dataset"] == "zinc":

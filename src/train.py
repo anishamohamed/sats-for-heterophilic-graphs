@@ -115,10 +115,11 @@ def run_zinc(config):
 
     logger = (
         WandbLogger(
-            project="g2_sat_" + config.get("dataset"),
+            project=config["logger"].get("project") or "g2_sat_" + config.get("dataset"),
+            entity=config["logger"].get("entity"),
             config=config,
         )
-        if config.get("wandb_key") is not None
+        if config.get("logger") is not None
         else False
     )
     trainer = pl.Trainer(
@@ -142,7 +143,7 @@ def run_zinc(config):
     return trainer.callback_metrics["test/loss"].item()
 
 
-def run_heterophilous_single_split(dataloader, config):
+def run_heterophilous_single_split(dataset, config):
     node_projection = MLP(
         in_channels=config.get("input_size"),
         hidden_channels=config.get("node_projection").get("hidden_channels"),
@@ -155,6 +156,7 @@ def run_heterophilous_single_split(dataloader, config):
     model = GraphTransformer(in_size=node_projection, **model_config)
 
     wrapper = HeterophilousGraphWrapper(
+        dataset,
         model,
         config.get("abs_pe_method"),
         config.get("lr"),
@@ -165,11 +167,11 @@ def run_heterophilous_single_split(dataloader, config):
 
     logger = (
         WandbLogger(
-            project="g2_sat_" + config.get("dataset"),
-            entity="math_dl",
+            project=config["logger"].get("project") or "g2_sat_" + config.get("dataset"),
+            entity=config["logger"].get("entity"),
             config=config,
         )
-        if config.get("wandb_key") is not None
+        if config.get("logger") is not None
         else False
     )
     trainer = pl.Trainer(
@@ -185,8 +187,8 @@ def run_heterophilous_single_split(dataloader, config):
     if config.get("device") == "cuda":
         torch.use_deterministic_algorithms(False)
 
-    trainer.fit(wrapper, dataloader, dataloader)  # same dataloader for train,val, test
-    trainer.test(wrapper, dataloader)
+    trainer.fit(wrapper) 
+    trainer.test(wrapper)
 
     if logger:
         wandb.finish()
@@ -195,12 +197,12 @@ def run_heterophilous_single_split(dataloader, config):
 
 
 def run_heterophilous(config):
-    loader, config = prepare_heterophilous_data(config)
+    dataset, config = prepare_heterophilous_data(config)
 
     accuracy_list = list()
     for mask in range(NUM_SPLITS_HETERORPHILOUS):
         config.update({"mask": mask})
-        accuracy_list.append(run_heterophilous_single_split(loader, config))
+        accuracy_list.append(run_heterophilous_single_split(dataset, config))
 
     accuracy_list = np.array(accuracy_list)
     print(f"Accuracy: {np.mean(accuracy_list)} +- {np.std(accuracy_list)}")
@@ -236,17 +238,19 @@ def prepare_heterophilous_data(config):
             "deg": deg,
         }
     )
-    loader = DataLoader(dataset, batch_size=1, collate_fn=lambda batch: batch[0])
-    return loader, config
+
+    return dataset, config
 
 
 def run(config_path):
     config = load_config(config_path)
     config.update({"device": "cuda" if torch.cuda.is_available() else "cpu"})
-    os.environ["WANDB_API_KEY"] = config.get("wandb_key")
+
+    if config.get("logger") is not None:
+        os.environ["WANDB_API_KEY"] = config["logger"].get("wandb_key")
 
     seed_everything(config.get("seed", 42))
-    config["dataset"] = config["dataset"].lower().replace("-", "_")
+    config["dataset"] = config.get("dataset").lower().replace("-", "_")
 
     if config["dataset"] == "zinc":
         run_zinc(config)
