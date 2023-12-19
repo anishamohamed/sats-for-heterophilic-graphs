@@ -6,8 +6,8 @@ from torch_scatter import scatter_add, scatter_mean, scatter_max
 import torch_geometric.nn as gnn
 import torch_geometric.utils as utils
 from einops import rearrange
-from src.model.utils import pad_batch, unpad_batch
-from src.model.gnn_layers import get_simple_gnn_layer, EDGE_GNN_TYPES
+from model.utils import pad_batch, unpad_batch
+from model.gnn_layers import get_simple_gnn_layer, EDGE_GNN_TYPES
 import torch.nn.functional as F
 
 

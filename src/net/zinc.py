@@ -2,7 +2,7 @@ import torch
 from torch import nn, optim
 import pytorch_lightning as pl
 from typing import Optional
-from src.model.sat import GraphTransformer
+from model.sat import GraphTransformer
 
 
 class ZINCWrapper(pl.LightningModule):

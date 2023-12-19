@@ -2,7 +2,7 @@
 import torch
 from torch import nn
 import torch_geometric.nn as gnn
-from src.model.sat_block import TransformerEncoderLayer
+from model.sat_block import TransformerEncoderLayer
 from einops import repeat
 from typing import Union, Callable
 

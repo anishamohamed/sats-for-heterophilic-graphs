@@ -15,13 +15,13 @@ import pytorch_lightning as pl
 from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.callbacks import EarlyStopping
 
-from src.data.dataset import GraphDataset
-from src.data.utils import get_heterophilous_graph_data
-from src.model.sat import GraphTransformer
-from src.model.abs_pe import POSENCODINGS
-from src.net.zinc import ZINCWrapper
-from src.net.utils import ZincLRScheduler
-from src.net.heterophilous import HeterophilousGraphWrapper
+from data.dataset import GraphDataset
+from data.utils import get_heterophilous_graph_data
+from model.sat import GraphTransformer
+from model.abs_pe import POSENCODINGS
+from net.zinc import ZINCWrapper
+from net.utils import ZincLRScheduler
+from net.heterophilous import HeterophilousGraphWrapper
 
 import yaml
 import wandb
@@ -37,7 +37,7 @@ def run_zinc(config):
     # dataset specific parameters
     input_size = 28  # n_tags
     num_edge_features = 4
-    num_classes = 1
+    num_class = 1
     train_data = datasets.ZINC(config.get("root_dir"), subset=True, split="train")
     val_data = datasets.ZINC(config.get("root_dir"), subset=True, split="val")
     test_data = datasets.ZINC(config.get("root_dir"), subset=True, split="test")
@@ -65,9 +65,9 @@ def run_zinc(config):
     )
 
     abs_pe_encoder = None
-    if config.get("abs_pe") and config.get("abs_pe_dim") > 0:
-        abs_pe_method = POSENCODINGS[config.get("abs_pe")]
-        abs_pe_encoder = abs_pe_method(config.get("abs_pe_dim"), normalization="sym")
+    if config.get("model").get("abs_pe") and config.get("model").get("abs_pe_dim") > 0:
+        abs_pe_method = POSENCODINGS[config.get("model").get("abs_pe")]
+        abs_pe_encoder = abs_pe_method(config.get("model").get("abs_pe_dim"), normalization="sym")
         if abs_pe_encoder is not None:
             abs_pe_encoder.apply_to(train_dataset)
             abs_pe_encoder.apply_to(val_dataset)
@@ -93,7 +93,7 @@ def run_zinc(config):
     model_config.update(
         {
             "in_size": input_size,
-            "num_class": num_classes,
+            "num_class": num_class,
             "num_edge_features": num_edge_features,
             "deg": deg,  # to be propagated to gnn layers...
         }
@@ -141,15 +141,15 @@ def run_zinc(config):
 
 
 def run_heterophilous_single_split(dataloader, config):
-    model_config = config.get("model")
     node_projection = MLP(
         in_channels=config.get("input_size"),
-        hidden_size=config.get("node_projection").get("hidden_size"),
+        hidden_channels=config.get("node_projection").get("hidden_channels"),
         out_channels=config.get("node_projection").get("out_channels"),
         num_layers=config.get("node_projection").get("num_layers"),
         act=nn.Mish(),
         norm="batch_norm",
     )
+    model_config = config.get("model")
     model = GraphTransformer(in_size=node_projection, **model_config)
 
     wrapper = HeterophilousGraphWrapper(
@@ -192,19 +192,19 @@ def run_heterophilous_single_split(dataloader, config):
 
 
 def run_heterophilous(config):
-    data, input_size, num_classes = get_heterophilous_graph_data(config.get("dataset"), config.get("root_dir"))
+    data, input_size, num_class = get_heterophilous_graph_data(config.get("dataset"), config.get("root_dir"))
     dataset = GraphDataset(
         data,
         degree=config.get("degree"),
-        k_hop=config.get("k_hop"),
-        se=config.get("se"),
+        k_hop=config.get("model").get("k_hop"),
+        se=config.get("model").get("se"),
         return_complete_index=False,  # large dataset, recommended to set as False as in original SAT code
     )
 
     abs_pe_encoder = None
-    if config.get("abs_pe") and config.get("abs_pe_dim") > 0:
-        abs_pe_method = POSENCODINGS[config.get("abs_pe")]
-        abs_pe_encoder = abs_pe_method(config.get("abs_pe_dim"), normalization="sym")
+    if config.get("model").get("abs_pe") and config.get("model").get("abs_pe_dim") > 0:
+        abs_pe_method = POSENCODINGS[config.get("model").get("abs_pe")]
+        abs_pe_encoder = abs_pe_method(config.get("model").get("abs_pe_dim"), normalization="sym")
         if abs_pe_encoder is not None:
             abs_pe_encoder.apply_to(dataset)
     else:
@@ -216,7 +216,7 @@ def run_heterophilous(config):
     config.update({"input_size": input_size})
     config.get("model").update(
         {
-            "num_classes": num_classes,
+            "num_class": num_class,
             "use_edge_attr": False,
             "use_global_pool": False,  # node classification tasks
             "deg": deg,
@@ -241,7 +241,7 @@ def run(config_path):
     config.update({"device": "cuda" if torch.cuda.is_available() else "cpu"})
     os.environ["WANDB_API_KEY"] = config.get("wandb_key")
 
-    seed_everything(config.get("seed"))
+    seed_everything(config.get("seed", 42))
     config["dataset"] = config["dataset"].lower().replace("-", "_")
 
     if config["dataset"] == "zinc":

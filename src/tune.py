@@ -7,10 +7,10 @@ from torch_geometric.loader import DataLoader
 from torch_geometric.utils import degree
 from torch_geometric.seed import seed_everything
 
-from src.data.dataset import GraphDataset
-from src.data.utils import get_heterophilous_graph_data
-from src.model.abs_pe import POSENCODINGS
-from src.train import load_config, run_zinc, run_heterophilous_single_split
+from data.dataset import GraphDataset
+from data.utils import get_heterophilous_graph_data
+from model.abs_pe import POSENCODINGS
+from train import load_config, run_zinc, run_heterophilous_single_split
 import optuna
 from optuna.samplers import TPESampler
 
@@ -18,22 +18,32 @@ def convert_to_trial(trial: optuna.trial.Trial, config: dict):
     for key, value in config.items():
         if isinstance(value, list):
             config.update({key: trial.suggest_categorical(str(key), value)})
-        if isinstance(value, dict):
+            print(f"{value} --> {config[key]}")
+        if isinstance(value, dict): # config[model], config[node_projection]
             for k, v in value.items():
                 if isinstance(v, list):
-                    value.update({k: trial.suggest_categorical(str(k), v)})
+                    config[key].update({k: trial.suggest_categorical(str(k), v)})
+                    print(f"{v} --> {config[key][k]}")
     return config
 
 def objective_zinc(trial: optuna.trial.Trial, config):
     config = convert_to_trial(trial, config)
     print(config)
-    return run_zinc(config)
+    return 0.0 # run_zinc(config)
 
-def objective_heterophilous(trial: optuna.trial.Trial, dataloader, config):
-    config = convert_to_trial(trial, config)
+def objective_heterophilous(trial: optuna.trial.Trial):
+    for key, value in config.items():
+        if isinstance(value, list):
+            config.update({key: trial.suggest_categorical(str(key), value)})
+            print(f"{value} --> {config[key]}")
+        if isinstance(value, dict): # config[model], config[node_projection]
+            for k, v in value.items():
+                if isinstance(v, list):
+                    config[key].update({k: trial.suggest_categorical(str(k), v)})
+                    print(f"{v} --> {config[key][k]}")
     config.update({"mask": 0}) # train on first mask id
     print(config)
-    return run_heterophilous_single_split(dataloader, config)
+    return 0.0 # run_heterophilous_single_split(dataloader, config)
 
 def tune(config_path):
     config = load_config(config_path)
@@ -54,30 +64,31 @@ def tune(config_path):
         "tolokers",
         "questions",
     ]:
-        data, input_size, num_classes = get_heterophilous_graph_data(config.get("dataset"), config.get("root_dir"))
+        data, input_size, num_class = get_heterophilous_graph_data(config.get("dataset"), config.get("root_dir"))
         dataset = GraphDataset(
             data,
             degree=config.get("degree"),
-            k_hop=config.get("k_hop"),
-            se=config.get("se"),
+            k_hop=config.get("model").get("k_hop"),
+            se=config.get("model").get("se"),
             return_complete_index=False,  # large dataset, recommended to set as False as in original SAT code
         )
 
         abs_pe_encoder = None
-        if config.get("abs_pe") and config.get("abs_pe_dim") > 0:
-            abs_pe_method = POSENCODINGS[config.get("abs_pe")]
-            abs_pe_encoder = abs_pe_method(config.get("abs_pe_dim"), normalization="sym")
+        if config.get("model").get("abs_pe") and config.get("model").get("abs_pe_dim") > 0:
+            abs_pe_method = POSENCODINGS[config.get("model").get("abs_pe")]
+            abs_pe_encoder = abs_pe_method(config.get("model").get("abs_pe_dim"), normalization="sym")
             if abs_pe_encoder is not None:
                 abs_pe_encoder.apply_to(dataset)
         else:
             abs_pe_method = None
         config.update({"abs_pe_method": abs_pe_method})
 
-        config.update({"input_size": input_size})
         deg = degree(data[0].edge_index[1], num_nodes=data[0].num_nodes)
+
+        config.update({"input_size": input_size})
         config.get("model").update(
             {
-                "num_classes": num_classes,
+                "num_class": num_class,
                 "use_edge_attr": False,
                 "use_global_pool": False,  # node classification tasks
                 "deg": deg,
@@ -86,7 +97,20 @@ def tune(config_path):
 
         loader = DataLoader(dataset, batch_size=1, collate_fn=lambda batch: batch[0])
 
-        objective = partial(objective_heterophilous, dataloader=loader, config=config)
+        def objective_heterophilous(trial: optuna.trial.Trial):
+            for key, value in config.items():
+                if isinstance(value, list):
+                    config.update({key: trial.suggest_categorical(key, value)})
+                    print(f"{value} --> {config[key]}")
+                if isinstance(value, dict): # config[model], config[node_projection]
+                    for k, v in value.items():
+                        if isinstance(v, list):
+                            config[key].update({k: trial.suggest_categorical(key, v)})
+                            print(f"{v} --> {config[key][k]}")
+            config.update({"mask": 0}) # train on first mask id
+            var = trial.suggest_categorical("var", [1, 2, 3, 4, 5])
+            return 0.0 # run_heterophilous_single_split(dataloader, config)
+
         direction = "maximize"
 
     else:
@@ -95,7 +119,7 @@ def tune(config_path):
     study = optuna.create_study(
         direction=direction, sampler=TPESampler(constant_liar=True)
     )
-    study.optimize(objective, n_trials=200)
+    study.optimize(objective_heterophilous, n_trials=200)
 
     best_params = study.best_params
     print(f"Best: {study.best_value}")
@@ -107,4 +131,4 @@ if __name__ == "__main__":
         print("Usage: python tune.py <config_file_path>")
         sys.exit(1)
 
-    tune(load_config(sys.argv[1]))
+    tune(sys.argv[1])

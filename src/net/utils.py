@@ -1,6 +1,5 @@
 from torch import optim
 
-
 class ZincLRScheduler(optim.lr_scheduler._LRScheduler):
     def __init__(self, optimizer, lr, warmup):
         self.warmup = warmup
