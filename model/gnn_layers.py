@@ -37,7 +37,7 @@ def get_simple_gnn_layer(gnn_type, embed_dim, **kwargs):
         return gnn.SAGEConv(embed_dim, embed_dim)
     elif gnn_type == "gcn":
         if edge_dim is None:
-            return gnn.GCNConv(embed_dim)
+            return gnn.GCNConv(embed_dim, embed_dim)
         else:
             return GCNConv(embed_dim, edge_dim)
     elif gnn_type == "gcn_bn":

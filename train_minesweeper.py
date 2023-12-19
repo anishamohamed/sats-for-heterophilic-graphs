@@ -17,7 +17,7 @@ from pytorch_lightning.callbacks import EarlyStopping
 
 from model.sat import GraphTransformer
 from data import GraphDataset
-from empire_wrapper import RomanEmpireWrapper
+from hetero_net import HeterophilousGraphWrapper
 from model.position_encoding import POSENCODINGS
 from model.gnn_layers import GNN_TYPES
 import wandb
@@ -33,7 +33,7 @@ def load_args():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument("--seed", type=int, default=42, help="random seed")
-    parser.add_argument("--dataset", type=str, default="roman-empire", help="name of dataset")
+    parser.add_argument("--dataset", type=str, default="Minesweeper", help="name of dataset")
     parser.add_argument("--data-path", type=str, default="datasets", help="path to dataset folder")
     parser.add_argument("--num-heads", type=int, default=8, help="number of heads")
     parser.add_argument("--num-layers", type=int, default=4, help="number of layers")
@@ -91,82 +91,17 @@ def load_args():
     args["batch_norm"] = not args["layer_norm"]
     return args
 
-def tune():
-    print("Start tuning...")
-
-    def objective(trial: optuna.trial.Trial):
-        seed = 42
-        dataset = "ZINC"
-        data_path = "datasets/ZINC"
-        num_heads = 8
-        num_layers = trial.suggest_categorical("num_layers", [2, 4, 6])
-        dim_hidden = 64
-        dropout = 0.2
-        epochs = 2000
-        lr = 1e-3
-        weight_decay = 1e-5
-        batch_size = 128
-        abs_pe = "rw"
-        abs_pe_dim = 16
-        warmup = 5000
-        layer_norm = True
-        use_edge_attr = True
-        edge_dim = 32
-        gnn_type = trial.suggest_categorical("gnn_type", ["graphsage", "gcn"])
-        k_hop = trial.suggest_categorical("k_hop", [2, 8, 16, 32])
-        se = "gnn"
-        batch_norm = False
-        gradient_gating_p = trial.suggest_categorical("gradient_gating_p", [0., 1., 2.])
-
-        args = {
-            "seed": seed,
-            "dataset": dataset,
-            "data_path": data_path,
-            "num_heads": num_heads,
-            "num_layers": num_layers,
-            "dim_hidden": dim_hidden,
-            "dropout": dropout,
-            "epochs": epochs,
-            "lr": lr,
-            "weight_decay": weight_decay,
-            "batch_size": batch_size,
-            "abs_pe": abs_pe,
-            "abs_pe_dim": abs_pe_dim,
-            "warmup": warmup,
-            "layer_norm": layer_norm,
-            "use_edge_attr": use_edge_attr,
-            "edge_dim": edge_dim,
-            "gnn_type": gnn_type,
-            "k_hop": k_hop,
-            "global_pool": global_pool,
-            "se": se,
-            "batch_norm": batch_norm,
-            "gradient_gating_p": gradient_gating_p
-        }
-         
-        print(args)
-        return run(args)
-
-    study = optuna.create_study(
-        direction="minimize", sampler=TPESampler(constant_liar=True)
-    )
-    study.optimize(objective, n_trials=40)
-
-    best_params = study.best_params
-    print(f"Best accuracy: {study.best_value}")
-    print(best_params)
-
 def run(args):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     seed_everything(args["seed"])
 
     # Roman-Empire Experiment
-    if args["dataset"] == "roman-empire":
-        input_size = 300 # n_tags
-        num_classes = 18
+    if args["dataset"] == "Minesweeper":
+        input_size = 7 # n_tags
+        num_classes = 2
         num_edge_features = 0
-        data = datasets.HeterophilousGraphDataset(args["data_path"], name="Roman-empire", transform=T.NormalizeFeatures())
-        # data[0]: Data(x=[22662, 300], edge_index=[2, 32927], y=[22662], train_mask=[22662, 10], val_mask=[22662, 10], test_mask=[22662, 10])
+        data = datasets.HeterophilousGraphDataset(args["data_path"], name="Minesweeper", transform=T.NormalizeFeatures())
+        
 
         lr_scheduler = None # partial(optim.lr_scheduler.StepLR, step_size=100, gamma=0.8)
         dataset = GraphDataset(
@@ -195,63 +130,67 @@ def run(args):
             ]
         )
 
-    num_runs = data[0].train_mask.size(-1)
+        num_runs = data[0].train_mask.size(-1)
 
-    for i in range(num_runs):
-        node_projection = nn.Sequential(nn.Linear(input_size, args["dim_hidden"]), nn.Mish(), nn.Linear(args["dim_hidden"], args["dim_hidden"]))
-        model = GraphTransformer(
-            in_size=node_projection, # in_size=input_size,
-            num_class=num_classes,
-            d_model=args["dim_hidden"],
-            dim_feedforward=2*args["dim_hidden"],
-            dropout=args["dropout"],
-            num_heads=args["num_heads"],
-            num_layers=args["num_layers"],
-            batch_norm=args["batch_norm"],
-            abs_pe=args["abs_pe"],
-            abs_pe_dim=args["abs_pe_dim"],
-            gnn_type=args["gnn_type"],
-            use_edge_attr=False,
-            num_edge_features=num_edge_features,
-            edge_dim=args["edge_dim"],
-            k_hop=args["k_hop"],
-            se=args["se"],
-            deg=deg,
-            use_global_pool=False, # node classification task
-            gradient_gating_p=args["gradient_gating_p"],
-        )
+        for i in range(num_runs):
+            node_projection = nn.Sequential(nn.Linear(input_size, args["dim_hidden"]), nn.Mish(), nn.Linear(args["dim_hidden"], args["dim_hidden"]))
+            model = GraphTransformer(
+                in_size=node_projection, # in_size=input_size,
+                num_class=num_classes,
+                d_model=args["dim_hidden"],
+                dim_feedforward=2*args["dim_hidden"],
+                dropout=args["dropout"],
+                num_heads=args["num_heads"],
+                num_layers=args["num_layers"],
+                batch_norm=args["batch_norm"],
+                abs_pe=args["abs_pe"],
+                abs_pe_dim=args["abs_pe_dim"],
+                gnn_type=args["gnn_type"],
+                use_edge_attr=False,
+                num_edge_features=num_edge_features,
+                edge_dim=args["edge_dim"],
+                k_hop=args["k_hop"],
+                se=args["se"],
+                deg=deg,
+                use_global_pool=False, # node classification task
+                gradient_gating_p=args["gradient_gating_p"],
+            ).to(device)
 
-        wrapper = RomanEmpireWrapper(
-            model,
-            abs_pe_method,
-            args["lr"],
-            args["weight_decay"],
-            lr_scheduler,
-            mask=i,
-        )
+            wrapper = HeterophilousGraphWrapper(
+                model,
+                abs_pe=args["abs_pe"],
+                learning_rate=args["lr"],
+                weight_decay=args["weight_decay"],
+                lr_scheduler=lr_scheduler,
+                mask=i,
+            )
 
-        trainer = pl.Trainer(
-            accelerator=device,
-            max_epochs=args["epochs"],
-            deterministic=True,
-            logger=WandbLogger(
-                project="g2_sat_roman-empire",
-                config=args,
-            ),
-            # callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=200),
-            check_val_every_n_epoch=1,
-            log_every_n_steps=1,
-        )
+            wandb_logger = WandbLogger(project="Gradient_Debugging_" + args["dataset"], log_model="all")
+            wandb_logger.watch(model, log="all")
 
-        if device == 'cuda':
-            torch.use_deterministic_algorithms(False)
+            trainer = pl.Trainer(
+                accelerator=device,
+                max_epochs=args["epochs"],
+                deterministic=True,
+                logger=wandb_logger,
+                # callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=200),cc
+                check_val_every_n_epoch=1,
+                log_every_n_steps=1,
+            )
 
-        trainer.fit(wrapper, loader, loader)
-        trainer.test(wrapper, loader)
-        wandb.finish()
+            if device == 'cuda':
+                torch.use_deterministic_algorithms(False)
 
-    return trainer.callback_metrics["test/loss"].item()
+            trainer.fit(wrapper, loader, loader)
+            trainer.test(wrapper, loader)
+            wandb.finish()
+
+        return trainer.callback_metrics["test/loss"].item()
+
 
 if __name__ == "__main__":
     run(load_args())
-    # tune()
+
+
+
+
