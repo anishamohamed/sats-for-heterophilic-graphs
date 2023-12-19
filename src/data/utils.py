@@ -18,11 +18,11 @@ def get_heterophilous_graph_data(name: str, root_dir: str):
             transform=T.NormalizeFeatures(),
         )
         # data[0]: Data(x=[24492, 300], edge_index=[2, 186100], y=[24492], train_mask=[24492, 10], val_mask=[24492, 10], test_mask=[24492, 10])
-    elif name == "minesweepers":
+    elif name == "minesweeper":
         input_size = 7
         num_classes = 2
         data = datasets.HeterophilousGraphDataset(
-            root_dir, name="Minesweepers", transform=T.NormalizeFeatures()
+            root_dir, name="Minesweeper", transform=T.NormalizeFeatures()
         )
         # data[0]: Data(x=[10000, 7], edge_index=[2, 78804], y=[10000], train_mask=[10000, 10], val_mask=[10000, 10], test_mask=[10000, 10]
     elif name == "tolokers":
