@@ -5,6 +5,7 @@ import numpy as np
 
 import torch
 from torch import nn
+from torch.utils.data import TensorDataset
 
 from torch_geometric.loader import DataLoader
 from torch_geometric import datasets
@@ -143,20 +144,22 @@ def run_zinc(config):
     return trainer.callback_metrics["test/loss"].item()
 
 
-def run_heterophilous_single_split(dataset, config):
-    node_projection = MLP(
-        in_channels=config.get("input_size"),
-        hidden_channels=config.get("node_projection").get("hidden_channels"),
-        out_channels=config.get("node_projection").get("out_channels"),
-        num_layers=config.get("node_projection").get("num_layers"),
-        act=nn.Mish(),
-        norm="batch_norm",
-    )
+def run_heterophilous_single_split(dataloaders, config):
+    if config.get("node_projection") is not None:
+        in_size = MLP(
+            in_channels=config.get("input_size"),
+            hidden_channels=config.get("node_projection").get("hidden_channels"),
+            out_channels=config.get("node_projection").get("out_channels"),
+            num_layers=config.get("node_projection").get("num_layers"),
+            act=nn.Mish(),
+            norm="batch_norm",
+        )
+    else:
+        in_size = config.get("input_size")
     model_config = config.get("model")
-    model = GraphTransformer(in_size=node_projection, **model_config)
+    model = GraphTransformer(in_size=in_size, **model_config)
 
     wrapper = HeterophilousGraphWrapper(
-        dataset,
         model,
         config.get("abs_pe_method"),
         config.get("lr"),
@@ -186,9 +189,10 @@ def run_heterophilous_single_split(dataset, config):
 
     if config.get("device") == "cuda":
         torch.use_deterministic_algorithms(False)
-
-    trainer.fit(wrapper) 
-    trainer.test(wrapper)
+    
+    train_loader, val_loader, test_loader = dataloaders
+    trainer.fit(wrapper, train_loader, val_loader) 
+    trainer.test(wrapper, test_loader)
 
     if logger:
         wandb.finish()
@@ -197,18 +201,19 @@ def run_heterophilous_single_split(dataset, config):
 
 
 def run_heterophilous(config):
-    dataset, config = prepare_heterophilous_data(config)
+    dataloaders, config = prepare_heterophilous_dataloaders(config)
 
     accuracy_list = list()
     for mask in range(NUM_SPLITS_HETERORPHILOUS):
         config.update({"mask": mask})
-        accuracy_list.append(run_heterophilous_single_split(dataset, config))
+        acc = run_heterophilous_single_split(dataloaders, config)
+        accuracy_list.append(acc)
 
     accuracy_list = np.array(accuracy_list)
     print(f"Accuracy: {np.mean(accuracy_list)} +- {np.std(accuracy_list)}")
 
 
-def prepare_heterophilous_data(config):
+def prepare_heterophilous_dataloaders(config):
     data, input_size, num_class = get_heterophilous_graph_data(config.get("dataset"), config.get("root_dir"))
     dataset = GraphDataset(
         data,
@@ -239,7 +244,9 @@ def prepare_heterophilous_data(config):
         }
     )
 
-    return dataset, config
+    loader = DataLoader(dataset, batch_size=1, collate_fn=lambda batch: batch[0])
+
+    return (loader, loader, loader), config
 
 
 def run(config_path):
