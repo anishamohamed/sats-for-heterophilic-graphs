@@ -1,0 +1,805 @@
+Package protobuf conflicts for:
+grpcio -> protobuf[version='>=3.5.0']
+tensorboard[version='>=2.11.0'] -> protobuf[version='>=3.19.6,<4.24|>=3.19.6|>=3.6.0|>=3.9.2']
+wandb[version='>=0.14.0'] -> protobuf[version='>=3.19.0,!=4.21.0,<5']
+smart_open -> google-cloud-storage -> protobuf[version='<5.0.0dev']
+
+Package mpc conflicts for:
+giflib -> libgcc -> mpc[version='>=0.8.0']
+pyqt -> libgcc -> mpc[version='>=0.8.0']
+gmpy2 -> mpc[version='>=1.1.0,<2.0a0|>=1.2.1,<2.0a0']
+sympy -> gmpy2[version='>=2.0.8'] -> mpc[version='>=1.1.0,<2.0a0|>=1.2.1,<2.0a0']
+scipy -> libgcc -> mpc[version='>=0.8.0']
+mpmath -> gmpy2 -> mpc[version='>=1.1.0,<2.0a0|>=1.2.1,<2.0a0']
+
+Package cudatoolkit conflicts for:
+pytorch[version='>=2.0.0'] -> cudnn[version='>=8.9,<9.0a0'] -> cudatoolkit[version='10.0.*|11.*|>=11.8.0|>=11.3,<11.4|>=10.1,<10.2|9.2.*|9.0.*|8.*|>=11.3.1,<11.4.0a0|>=10.2.89,<10.3.0a0|>=10.1.243,<10.2.0a0|>=10.0.130,<10.1.0a0|>=9.0,<9.1.0a0|>=9.2,<9.3.0a0|>=8.0,<8.1.0a0|11.1|11.1.*|11.0|11.0.*|10.2|10.2.*|>=11.2,<12.0a0|10.1|10.1.*|10.0|10.0.*|9.2|9.2.*']
+pytorch-lightning[version='>=2.0'] -> pytorch[version='>=1.11.0'] -> cudatoolkit[version='10.2|10.2.*|>=11.2,<12|>=11.3.1,<11.4.0a0|>=11.8.0,<11.9.0a0|>=11.8,<12|11.0|11.0.*|11.1|11.1.*']
+pyg -> cudatoolkit[version='10.1.*|10.2.*|11.3.*|11.6.*|11.5.*|11.1.*']
+torchmetrics -> pytorch[version='>=1.8.1'] -> cudatoolkit[version='10.0|10.0.*|10.1|10.1.*|10.2|10.2.*|>=11.2,<12|>=11.3.1,<11.4.0a0|>=11.8.0,<11.9.0a0|>=11.8,<12|11.0|11.0.*|11.1|11.1.*|>=11.2,<12.0a0|>=10.1.243,<10.2.0a0|>=9.2,<9.3.0a0|>=10.0.130,<10.1.0a0|9.2|9.2.*']
+pyg -> pytorch=1.13 -> cudatoolkit[version='10.2|10.2.*|>=11.2,<12|>=11.3.1,<11.4.0a0|>=11.8,<12|11.0|11.0.*|11.1|11.1.*|>=11.8.0,<11.9.0a0|>=11.2,<12.0a0']
+pytorch[version='>=2.0.0'] -> cudatoolkit[version='>=11.2,<12|>=11.8.0,<11.9.0a0|>=11.8,<12']
+tbb -> libhwloc[version='>=2.9.3,<2.9.4.0a0'] -> cudatoolkit[version='10.2|10.2.*|11.0|11.0.*|11.1|11.1.*|>=11.2,<12|>=11.8,<12']
+
+Package bottleneck conflicts for:
+networkx -> pandas[version='>=1.1'] -> bottleneck[version='>=1.2.1|>=1.3.1|>=1.3.2|>=1.3.4']
+pandas -> bottleneck[version='>=1.2.1|>=1.3.1|>=1.3.2|>=1.3.4']
+pyg -> pandas -> bottleneck[version='>=1.2.1|>=1.3.1|>=1.3.2|>=1.3.4']
+
+Package c-ares conflicts for:
+grpc-cpp -> c-ares[version='>=1.16.1,<2.0a0|>=1.18.1,<2.0a0|>=1.19.0,<2.0a0|>=1.19.1,<2.0a0|>=1.17.2,<2.0a0|>=1.17.1,<2.0a0']
+tensorboard[version='>=2.11.0'] -> grpcio[version='>=1.48.2'] -> c-ares[version='>=1.15.0,<2.0a0|>=1.17.1,<2.0a0|>=1.18.1,<2.0a0|>=1.19.1,<2.0a0|>=1.17.2,<2.0a0|>=1.16.1,<2.0a0']
+grpcio -> grpc-cpp==1.48.2=he1ff14a_1 -> c-ares[version='>=1.19.0,<2.0a0|>=1.22.1,<2.0a0|>=1.21.0,<2.0a0|>=1.20.1,<2.0a0']
+grpcio -> c-ares[version='>=1.14.0,<2.0a0|>=1.15.0,<2.0a0|>=1.17.1,<2.0a0|>=1.18.1,<2.0a0|>=1.19.1,<2.0a0|>=1.17.2,<2.0a0|>=1.16.1,<2.0a0']
+
+Package gmpy2 conflicts for:
+mpmath -> gmpy2
+sympy -> gmpy2[version='>=2.0.8']
+sympy -> mpmath[version='>=0.19'] -> gmpy2
+pytorch[version='>=2.0.0'] -> sympy -> gmpy2[version='>=2.0.8']
+
+Package pooch conflicts for:
+networkx -> scipy[version='>=1.5,!=1.6.1'] -> pooch
+optuna -> scipy!=1.4.0 -> pooch
+gensim -> scipy[version='>=1.7.0'] -> pooch
+pyg -> scipy -> pooch
+scikit-learn[version='>=1.2.0'] -> scipy[version='>=1.5.0'] -> pooch
+scipy -> pooch
+
+Package pyqt5-sip conflicts for:
+pyqt -> pyqt5-sip[version='12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.13.0|12.12.2|12.12.2|12.12.2|12.12.2|12.12.2|12.12.2|12.12.2|12.12.2|12.12.2|12.9.0|12.9.0|12.9.0|12.9.0|12.9.0|12.9.0|12.9.0|12.9.0|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18',build='py37hcd2ae1e_5|py37hcd2ae1e_6|py36hc4f0c31_6|py38h709712a_6|py38h709712a_7|py39he80948d_7|py310h122e73d_8|py37hcd2ae1e_8|py38hfa26641_0|py39h5a03fae_0|py310hd8f1fbe_0|py37hd23a5d3_1|py39h5a03fae_1|py38hfa26641_0|py39h5a03fae_0|py39h5a03fae_1|py310hd8f1fbe_2|py38hfa26641_2|py311ha362b79_2|py39h227be39_3|py311hcafe171_3|py311hb755f60_4|py39h3d6467e_4|py310hc6cd4ac_5|py312h30efb56_5|py38h6a678d5_0|py310h6a678d5_0|py39h6a678d5_0|py37h6a678d5_0|py310h6a678d5_1|py310h5eee18b_0|py39h5eee18b_0|py38h5eee18b_0|py312h5eee18b_0|py311h5eee18b_0|py39h6a678d5_1|py37h6a678d5_1|py38h6a678d5_1|py311h6a678d5_0|py38h17151c0_5|py39h3d6467e_5|py311hb755f60_5|py310hc6cd4ac_4|py38h17151c0_4|py310heca2aa9_3|py38h8dc9893_3|py39h5a03fae_2|py37hd23a5d3_1|py310hd8f1fbe_1|py38hfa26641_1|py37hd23a5d3_0|py310hd8f1fbe_0|py310hd8f1fbe_1|py38hfa26641_1|py37hd23a5d3_0|py39he80948d_8|py38h709712a_8|py37hcd2ae1e_7|py36hc4f0c31_7|py39he80948d_6']
+matplotlib -> pyqt[version='>=5'] -> pyqt5-sip[version='12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.11.0|12.13.0|12.12.2|12.12.2|12.12.2|12.12.2|12.12.2|12.12.2|12.12.2|12.12.2|12.12.2|12.9.0|12.9.0|12.9.0|12.9.0|12.9.0|12.9.0|12.9.0|12.9.0|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18|4.19.18',build='py37hcd2ae1e_5|py37hcd2ae1e_6|py36hc4f0c31_6|py38h709712a_6|py38h709712a_7|py39he80948d_7|py310h122e73d_8|py37hcd2ae1e_8|py38hfa26641_0|py39h5a03fae_0|py310hd8f1fbe_0|py37hd23a5d3_1|py39h5a03fae_1|py38hfa26641_0|py39h5a03fae_0|py39h5a03fae_1|py310hd8f1fbe_2|py38hfa26641_2|py311ha362b79_2|py39h227be39_3|py311hcafe171_3|py311hb755f60_4|py39h3d6467e_4|py310hc6cd4ac_5|py312h30efb56_5|py38h6a678d5_0|py310h6a678d5_0|py39h6a678d5_0|py37h6a678d5_0|py310h6a678d5_1|py310h5eee18b_0|py39h5eee18b_0|py38h5eee18b_0|py312h5eee18b_0|py311h5eee18b_0|py39h6a678d5_1|py37h6a678d5_1|py38h6a678d5_1|py311h6a678d5_0|py38h17151c0_5|py39h3d6467e_5|py311hb755f60_5|py310hc6cd4ac_4|py38h17151c0_4|py310heca2aa9_3|py38h8dc9893_3|py39h5a03fae_2|py37hd23a5d3_1|py310hd8f1fbe_1|py38hfa26641_1|py37hd23a5d3_0|py310hd8f1fbe_0|py310hd8f1fbe_1|py38hfa26641_1|py37hd23a5d3_0|py39he80948d_8|py38h709712a_8|py37hcd2ae1e_7|py36hc4f0c31_7|py39he80948d_6']
+
+Package appdirs conflicts for:
+wandb[version='>=0.14.0'] -> appdirs[version='>=1.4.3']
+scipy -> pooch -> appdirs[version='>=1.3.0']
+
+Package nomkl conflicts for:
+pytorch[version='>=2.0.0'] -> nomkl
+pandas -> numexpr[version='>=2.8.0'] -> nomkl
+torchmetrics -> pytorch[version='>=1.8.1'] -> nomkl
+numpy -> openblas[version='>=0.3.3,<0.3.4.0a0'] -> nomkl==3.0=0
+numexpr -> nomkl
+pyg -> pytorch=2.1 -> nomkl
+pytorch-lightning[version='>=2.0'] -> pytorch[version='>=1.11.0'] -> nomkl
+blas -> openblas -> nomkl==3.0=0
+scipy -> openblas[version='>=0.3.3,<0.3.4.0a0'] -> nomkl==3.0=0
+
+Package blis conflicts for:
+scipy -> libblas[version='>=3.9.0,<4.0a0'] -> blis[version='0.5.1.*|>=0.5.2,<0.5.3.0a0|>=0.6.0,<0.6.1.0a0|>=0.6.1,<0.6.2.0a0|>=0.7.0,<0.7.1.0a0|>=0.8.0,<0.8.1.0a0|>=0.8.1,<0.8.2.0a0|>=0.9.0,<0.9.1.0a0']
+numpy -> libblas[version='>=3.9.0,<4.0a0'] -> blis[version='0.5.1.*|>=0.5.2,<0.5.3.0a0|>=0.6.0,<0.6.1.0a0|>=0.6.1,<0.6.2.0a0|>=0.7.0,<0.7.1.0a0|>=0.8.0,<0.8.1.0a0|>=0.8.1,<0.8.2.0a0|>=0.9.0,<0.9.1.0a0']
+blas -> libblas==3.9.0=20_linux64_blis -> blis[version='0.5.1.*|>=0.5.2,<0.5.3.0a0|>=0.6.0,<0.6.1.0a0|>=0.6.1,<0.6.2.0a0|>=0.7.0,<0.7.1.0a0|>=0.8.0,<0.8.1.0a0|>=0.8.1,<0.8.2.0a0|>=0.9.0,<0.9.1.0a0']
+
+Package requests conflicts for:
+google-auth-oauthlib -> google-auth[version='>=1.0.0'] -> requests[version='>=2.0.0|>=2.20.0,<3.0.0|>=2.20.0,<3.0.0dev']
+pytorch-lightning[version='>=2.0'] -> requests
+smart_open -> requests
+wandb[version='>=0.14.0'] -> requests[version='>=2.0.0,<3']
+tensorboard[version='>=2.11.0'] -> requests[version='>=2.21.0,<3']
+requests-oauthlib -> requests[version='>=2.0.0']
+pyg -> requests
+plotly -> requests
+scipy -> pooch -> requests[version='>=2.19.0']
+google-auth -> requests[version='>=2.20.0,<3.0.0|>=2.20.0,<3.0.0dev']
+smart_open -> google-cloud-storage -> requests[version='>=2.0.0|>=2.18.0|>=2.18.0,<3.0.0dev|>=2.18.4']
+tensorboard[version='>=2.11.0'] -> google-auth[version='>=1.6.3,<3'] -> requests[version='>=2.20.0,<3.0.0|>=2.20.0,<3.0.0dev']
+gensim -> smart_open[version='>=1.8.1'] -> requests
+
+Package psutil conflicts for:
+pyg -> psutil
+wandb[version='>=0.14.0'] -> psutil[version='>=5.0.0']
+
+Package tqdm conflicts for:
+optuna -> tqdm
+pytorch-lightning[version='>=2.0'] -> torchmetrics[version='>=0.7.0'] -> tqdm[version='>=4.41.0']
+torchmetrics -> tqdm[version='>=4.41.0']
+pytorch-lightning[version='>=2.0'] -> tqdm[version='>=4.57.0']
+
+Package google-auth conflicts for:
+tensorboard[version='>=2.11.0'] -> google-auth[version='>=1.6.3,<3']
+google-auth-oauthlib -> google-auth[version='>=1.0.0|>=2.15.0']
+smart_open -> google-cloud-storage -> google-auth[version='>=1.0.0|>=1.11.0,<2.0dev|>=1.24.0,<2.0dev|>=1.25.0,<3.0dev|>=2.23.3,<3.0dev|>=1.24.0,<3.0dev|>=1.9.0,<2.0dev|>=1.2.0,<2.0dev|>=1.2.0']
+tensorboard[version='>=2.11.0'] -> google-auth-oauthlib[version='>=0.4.1,<1.1'] -> google-auth[version='>=1.0.0|>=2.15.0']
+
+Package ipaddress conflicts for:
+google-auth -> urllib3[version='<2.0'] -> ipaddress
+pyjwt -> cryptography[version='>=2.6,<3.0.0'] -> ipaddress
+requests -> urllib3[version='>=1.21.1,<2'] -> ipaddress
+cryptography -> ipaddress
+sentry-sdk -> urllib3[version='>=1.10'] -> ipaddress
+pyopenssl -> cryptography[version='>=2.8'] -> ipaddress
+oauthlib -> cryptography -> ipaddress
+urllib3 -> ipaddress
+
+Package python-dateutil conflicts for:
+pandas -> python-dateutil[version='>=2.5.*|>=2.6.1|>=2.7.3|>=2.8.1|>=2.8.2']
+matplotlib -> python-dateutil
+pyg -> pandas -> python-dateutil[version='>=2.5.*|>=2.6.1|>=2.7.3|>=2.8.1|>=2.8.2']
+matplotlib-base -> python-dateutil[version='>=2.1|>=2.7']
+matplotlib -> matplotlib-base[version='>=3.8.0,<3.8.1.0a0'] -> python-dateutil[version='>=2.1|>=2.7']
+networkx -> pandas[version='>=1.1'] -> python-dateutil[version='>=2.1|>=2.7|>=2.7.3|>=2.8.1|>=2.8.2']
+optuna -> alembic[version='>=1.5.0'] -> python-dateutil
+alembic -> python-dateutil
+
+Package rsa conflicts for:
+google-auth-oauthlib -> google-auth[version='>=1.0.0'] -> rsa[version='>=3.1.4,<4.1|>=3.1.4,<5|>=3.1.4,<4dev']
+tensorboard[version='>=2.11.0'] -> google-auth[version='>=1.6.3,<3'] -> rsa[version='>=3.1.4,<4.1|>=3.1.4,<5|>=3.1.4,<4dev']
+google-auth -> rsa[version='>=3.1.4,<4.1|>=3.1.4,<5|>=3.1.4,<4dev']
+
+Package jpeg conflicts for:
+libwebp -> libtiff -> jpeg=9
+matplotlib-base -> pillow[version='>=6.2.0'] -> jpeg[version='>=9b,<10a|>=9e,<10a|>=9d,<10a|>=9c,<10a']
+libtiff -> jpeg[version='9.*|>=9b,<10a|>=9e,<10a|>=9d,<10a|>=9c,<10a']
+openjpeg -> libtiff[version='>=4.1.0,<5.0a0'] -> jpeg[version='9.*|>=9b,<10a|>=9e,<10a|>=9d,<10a|>=9c,<10a']
+pyqt -> qt-main=5.15 -> jpeg[version='9.*|>=9b,<10a|>=9d,<10a|>=9e,<10a|>=9c,<10a']
+libwebp -> jpeg[version='>=9b,<10a|>=9d,<10a|>=9e,<10a|>=9c,<10a']
+libtiff -> libwebp -> jpeg
+pillow -> jpeg[version='8.*|9.*|>=9b,<10a|>=9e,<10a|>=9d,<10a|>=9c,<10a']
+qt-main -> jpeg[version='>=9d,<10a|>=9e,<10a']
+lcms2 -> jpeg[version='>=9b,<10a|>=9e,<10a|>=9d,<10a|>=9c,<10a']
+
+Package gitdb conflicts for:
+gitpython -> gitdb[version='>=0.6.2|>=0.6.4|>=4.0.1,<5']
+gitpython -> gitdb2 -> gitdb[version='>=4']
+wandb[version='>=0.14.0'] -> gitpython[version='>=1.0.0,!=3.1.29'] -> gitdb[version='>=0.6.2|>=0.6.4|>=4.0.1,<5']
+
+Package yaml conflicts for:
+optuna -> pyyaml -> yaml[version='>=0.1.7,<0.2.0a0|>=0.2.5,<0.3.0a0|>=0.2.2,<0.3.0a0']
+pyyaml -> yaml[version='>=0.1.7,<0.2.0a0|>=0.2.5,<0.3.0a0|>=0.2.2,<0.3.0a0']
+pytorch[version='>=2.0.0'] -> pyyaml -> yaml[version='>=0.1.7,<0.2.0a0|>=0.2.5,<0.3.0a0|>=0.2.2,<0.3.0a0']
+pytorch-lightning[version='>=2.0'] -> pyyaml[version='>=5.4'] -> yaml[version='>=0.2.5,<0.3.0a0']
+pyg -> pyyaml -> yaml[version='>=0.1.7,<0.2.0a0|>=0.2.5,<0.3.0a0|>=0.2.2,<0.3.0a0']
+wandb[version='>=0.14.0'] -> pyyaml -> yaml[version='>=0.1.7,<0.2.0a0|>=0.2.5,<0.3.0a0|>=0.2.2,<0.3.0a0']
+
+Package lerc conflicts for:
+pillow -> libtiff[version='>=4.2.0,<5.0a0'] -> lerc[version='>=2.2.1,<3.0a0|>=3.0,<4.0a0|>=4.0.0,<5.0a0']
+libwebp -> libtiff[version='>=4.1.0,<5.0a0'] -> lerc[version='>=2.2.1,<3.0a0|>=3.0,<4.0a0|>=4.0.0,<5.0a0']
+lcms2 -> libtiff[version='>=4.1.0,<5.0a0'] -> lerc[version='>=2.2.1,<3.0a0|>=3.0,<4.0a0|>=4.0.0,<5.0a0']
+libtiff -> lerc[version='>=2.2.1,<3.0a0|>=3.0,<4.0a0|>=4.0.0,<5.0a0']
+openjpeg -> libtiff[version='>=4.1.0,<5.0a0'] -> lerc[version='>=2.2.1,<3.0a0|>=3.0,<4.0a0|>=4.0.0,<5.0a0']
+
+Package charset-normalizer conflicts for:
+google-auth -> aiohttp[version='>=3.6.2,<4.0.0dev'] -> charset-normalizer[version='>=2,<3|>=2,<4|>=2.0,<3.0|>=2.0,<4.0|>=2.0.0,<3|>=2.0.0,<2.1.0|>=2.0.0,<2.1|>=2.0.0,<2.0.1']
+requests -> charset-normalizer[version='>=2,<3|>=2,<4|>=2.0.0,<3|>=2.0.0,<2.1.0|>=2.0.0,<2.1|>=2.0.0,<2.0.1']
+pyg -> requests -> charset-normalizer[version='>=2,<3|>=2,<4|>=2.0.0,<3|>=2.0.0,<2.1.0|>=2.0.0,<2.1|>=2.0.0,<2.0.1']
+wandb[version='>=0.14.0'] -> requests[version='>=2.0.0,<3'] -> charset-normalizer[version='>=2,<3|>=2,<4|>=2.0.0,<3|>=2.0.0,<2.1.0|>=2.0.0,<2.1|>=2.0.0,<2.0.1']
+aiohttp -> charset-normalizer[version='>=2.0,<3.0|>=2.0,<4.0']
+smart_open -> requests -> charset-normalizer[version='>=2,<3|>=2,<4|>=2.0.0,<3|>=2.0.0,<2.1.0|>=2.0.0,<2.1|>=2.0.0,<2.0.1']
+tensorboard[version='>=2.11.0'] -> requests[version='>=2.21.0,<3'] -> charset-normalizer[version='>=2,<3|>=2,<4|>=2.0.0,<3|>=2.0.0,<2.1.0|>=2.0.0,<2.1|>=2.0.0,<2.0.1']
+pytorch-lightning[version='>=2.0'] -> requests -> charset-normalizer[version='>=2,<3|>=2,<4|>=2.0.0,<3|>=2.0.0,<2.1.0|>=2.0.0,<2.1|>=2.0.0,<2.0.1']
+requests-oauthlib -> requests[version='>=2.0.0'] -> charset-normalizer[version='>=2,<3|>=2,<4|>=2.0.0,<3|>=2.0.0,<2.1.0|>=2.0.0,<2.1|>=2.0.0,<2.0.1']
+plotly -> requests -> charset-normalizer[version='>=2,<3|>=2,<4|>=2.0.0,<3|>=2.0.0,<2.1.0|>=2.0.0,<2.1|>=2.0.0,<2.0.1']
+
+Package lz4-c conflicts for:
+libtiff -> zstd[version='>=1.5.2,<1.6.0a0'] -> lz4-c[version='>=1.8.3,<1.8.4.0a0|>=1.9.2,<1.10.0a0|>=1.9.3,<1.10.0a0|>=1.9.4,<1.10.0a0|>=1.9.3,<1.9.4.0a0|>=1.9.2,<1.9.3.0a0']
+mysql -> mysql-client==8.0.33=h545f5f4_6 -> lz4-c[version='>=1.9.2,<1.9.3.0a0|>=1.9.3,<1.10.0a0|>=1.9.3,<1.9.4.0a0']
+zstd -> lz4 -> lz4-c[version='1.8.1.*|>=1.8.1.2,<1.9.0a0']
+llvm-openmp -> zstd[version='>=1.5.5,<1.6.0a0'] -> lz4-c[version='>=1.9.3,<1.10.0a0|>=1.9.4,<1.10.0a0|>=1.9.3,<1.9.4.0a0']
+zstd -> lz4-c[version='>=1.8.1.2,<1.8.2.0a0|>=1.8.3,<1.8.4.0a0|>=1.9.2,<1.10.0a0|>=1.9.3,<1.10.0a0|>=1.9.4,<1.10.0a0|>=1.9.3,<1.9.4.0a0|>=1.9.2,<1.9.3.0a0']
+qt-main -> zstd[version='>=1.5.2,<1.6.0a0'] -> lz4-c[version='>=1.9.3,<1.10.0a0|>=1.9.4,<1.10.0a0|>=1.9.3,<1.9.4.0a0']
+
+Package click conflicts for:
+tensorboard[version='>=2.11.0'] -> google-auth-oauthlib[version='>=0.4.1,<1.1'] -> click[version='>=6.0.0']
+wandb[version='>=0.14.0'] -> click[version='>=7.0,!=8.0.0|>=7.1,!=8.0.0']
+attrs -> hypothesis -> click[version='>=7.0']
+google-auth-oauthlib -> click[version='>=6.0.0']
+
+Package cloog conflicts for:
+scipy -> libgcc -> cloog==0.18.0
+giflib -> libgcc -> cloog==0.18.0
+pyqt -> libgcc -> cloog==0.18.0
+
+Package cryptography-vectors conflicts for:
+pyopenssl -> cryptography[version='>=2.2.1'] -> cryptography-vectors[version='2.3.*|2.3.1.*']
+oauthlib -> cryptography -> cryptography-vectors[version='2.3.*|2.3.1.*']
+pyjwt -> cryptography[version='>=1.4'] -> cryptography-vectors[version='2.3.*|2.3.1.*']
+cryptography -> cryptography-vectors[version='2.3.*|2.3.1.*']
+urllib3 -> cryptography[version='>=1.3.4'] -> cryptography-vectors[version='2.3.*|2.3.1.*']
+
+Package pyopenssl conflicts for:
+requests -> urllib3[version='>=1.21.1,<2'] -> pyopenssl[version='>=0.14']
+google-auth -> pyopenssl[version='>=20.0.0']
+sentry-sdk -> urllib3[version='>=1.10'] -> pyopenssl[version='>=0.14']
+google-auth -> urllib3[version='<2.0'] -> pyopenssl[version='>=0.14']
+tensorboard[version='>=2.11.0'] -> google-auth[version='>=1.6.3,<3'] -> pyopenssl[version='>=20.0.0']
+urllib3 -> pyopenssl[version='>=0.14']
+google-auth-oauthlib -> google-auth[version='>=1.0.0'] -> pyopenssl[version='>=20.0.0']
+
+Package libbrotlidec conflicts for:
+urllib3 -> brotli[version='>=1.0.9'] -> libbrotlidec[version='1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.1.0|1.1.0',build='h7f98852_5|h7f98852_6|h166bdaf_9|h5eee18b_7|hd590300_1|hd590300_0|h166bdaf_8|h166bdaf_7']
+fonttools -> brotli[version='>=1.0.1'] -> libbrotlidec[version='1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.1.0|1.1.0',build='h7f98852_5|h7f98852_6|h166bdaf_9|h5eee18b_7|hd590300_1|hd590300_0|h166bdaf_8|h166bdaf_7']
+brotli-bin -> libbrotlidec[version='1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.1.0|1.1.0',build='h7f98852_5|h7f98852_6|h166bdaf_9|h5eee18b_7|hd590300_1|hd590300_0|h166bdaf_8|h166bdaf_7']
+brotli -> libbrotlidec[version='1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.1.0|1.1.0',build='h7f98852_5|h7f98852_6|h166bdaf_9|h5eee18b_7|hd590300_1|hd590300_0|h166bdaf_8|h166bdaf_7']
+
+Package pysocks conflicts for:
+urllib3 -> pysocks[version='>=1.5.6,<2.0,!=1.5.7']
+requests -> urllib3[version='>=1.21.1,<2'] -> pysocks[version='>=1.5.6,<2.0,!=1.5.7']
+sentry-sdk -> urllib3[version='>=1.10'] -> pysocks[version='>=1.5.6,<2.0,!=1.5.7']
+google-auth -> urllib3[version='<2.0'] -> pysocks[version='>=1.5.6,<2.0,!=1.5.7']
+
+Package kiwisolver conflicts for:
+matplotlib-base -> kiwisolver[version='>=1.0.1|>=1.3.1']
+matplotlib -> kiwisolver
+networkx -> matplotlib-base[version='>=3.4'] -> kiwisolver[version='>=1.0.1|>=1.3.1']
+matplotlib -> matplotlib-base[version='>=3.8.0,<3.8.1.0a0'] -> kiwisolver[version='>=1.0.1|>=1.3.1']
+
+Package async-timeout conflicts for:
+google-auth -> aiohttp[version='>=3.6.2,<4.0.0dev'] -> async-timeout[version='<4.0,>=3.0|>=3.0,<4.0|>=4.0,<5.0|>=4.0.0a3,<5.0|<5.0,>=4.0.0a3|>=1.2,<3.0|>=1.2.0']
+aiohttp -> async-timeout[version='<4.0,>=3.0|>=3.0,<4.0|>=4.0,<5.0|>=4.0.0a3,<5.0|>=1.2,<3.0|>=1.2.0|<5.0,>=4.0.0a3']
+
+Package wheel conflicts for:
+pip[version='>=21.0.1'] -> wheel
+tensorboard-plugin-wit -> wheel[version='>=0.26']
+python=3.9 -> pip -> wheel
+tensorboard[version='>=2.11.0'] -> wheel[version='>=0.26']
+
+Package cycler conflicts for:
+matplotlib -> cycler[version='>=0.10']
+networkx -> matplotlib-base[version='>=3.4'] -> cycler[version='>=0.10']
+matplotlib-base -> cycler[version='>=0.10']
+
+Package brotli-python conflicts for:
+google-auth -> urllib3[version='<2.0'] -> brotli-python[version='>=1.0.9']
+requests -> urllib3[version='>=1.21.1,<2'] -> brotli-python[version='>=1.0.9']
+sentry-sdk -> urllib3[version='>=1.10'] -> brotli-python[version='>=1.0.9']
+urllib3 -> brotli-python[version='>=1.0.9']
+
+Package cyrus-sasl conflicts for:
+mysql -> cyrus-sasl[version='>=2.1.26,<3.0a0|>=2.1.28,<3.0a0']
+mysql -> mysql-server==8.0.33=he45e2b4_6 -> cyrus-sasl[version='>=2.1.27,<3.0a0']
+qt-main -> mysql=5.7 -> cyrus-sasl[version='>=2.1.26,<3.0a0|>=2.1.28,<3.0a0']
+
+Package munkres conflicts for:
+matplotlib-base -> fonttools[version='>=4.22.0'] -> munkres
+fonttools -> munkres
+
+Package libjpeg-turbo conflicts for:
+openjpeg -> libtiff[version='>=4.1.0,<5.0a0'] -> libjpeg-turbo[version='>=2.1.4,<3.0a0|>=2.1.5.1,<3.0a0|>=3.0.0,<4.0a0']
+libtiff -> libjpeg-turbo[version='>=2.1.4,<3.0a0|>=2.1.5.1,<3.0a0|>=3.0.0,<4.0a0']
+lcms2 -> libjpeg-turbo[version='>=2.1.5.1,<3.0a0|>=3.0.0,<4.0a0']
+libwebp -> libjpeg-turbo[version='>=2.1.4,<3.0a0|>=2.1.5.1,<3.0a0|>=3.0.0,<4.0a0']
+pillow -> libjpeg-turbo[version='>=2.1.4,<3.0a0|>=2.1.5.1,<3.0a0|>=3.0.0,<4.0a0']
+lcms2 -> libtiff[version='>=4.1.0,<5.0a0'] -> libjpeg-turbo[version='>=2.1.4,<3.0a0']
+pyqt -> qt-main=5.15 -> libjpeg-turbo[version='>=2.1.5.1,<3.0a0|>=3.0.0,<4.0a0']
+qt-main -> libjpeg-turbo[version='>=2.1.5.1,<3.0a0|>=3.0.0,<4.0a0']
+matplotlib-base -> pillow[version='>=6.2.0'] -> libjpeg-turbo[version='>=2.1.4,<3.0a0|>=2.1.5.1,<3.0a0|>=3.0.0,<4.0a0']
+
+Package mpmath conflicts for:
+pytorch[version='>=2.0.0'] -> sympy -> mpmath[version='>=0.19']
+sympy -> mpmath[version='>=0.19']
+
+Package liblapacke conflicts for:
+numexpr -> blas=[build=openblas] -> liblapacke[version='3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0',build='6_mkl|7_mkl|8_mkl|11_mkl|14_mkl|15_mkl|16_mkl|18_mkl|7_mkl|8_mkl|9_mkl|11_linux64_mkl|14_linux64_mkl|0_openblas|3_openblas|6_openblas|8_openblas|10_openblas|11_openblas|14_openblas|15_openblas|17_openblas|6_openblas|8_openblas|9_openblas|10_openblas|12_linux64_openblas|13_linux64_openblas|14_linux64_openblas|15_linux64_openblas|18_linux64_openblas|19_linux64_openblas|20_linux64_openblas|17_linux64_openblas|16_linux64_openblas|11_linux64_openblas|7_openblas|5_openblas|16_openblas|13_openblas|12_openblas|9_openblas|7_openblas|5_openblas|4_openblas|2_openblas|20_linux64_mkl|19_linux64_mkl|16_linux64_mkl|15_linux64_mkl|13_linux64_mkl|12_linux64_mkl|10_mkl|6_mkl|5_mkl|21_mkl|20_mkl|19_mkl|13_mkl|12_mkl|10_mkl|9_mkl|5_mkl|4_mkl']
+numpy -> blas=[build=openblas] -> liblapacke[version='3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0',build='6_mkl|7_mkl|8_mkl|11_mkl|14_mkl|15_mkl|16_mkl|18_mkl|7_mkl|8_mkl|9_mkl|11_linux64_mkl|14_linux64_mkl|0_openblas|3_openblas|6_openblas|8_openblas|10_openblas|11_openblas|14_openblas|15_openblas|17_openblas|6_openblas|8_openblas|9_openblas|10_openblas|12_linux64_openblas|13_linux64_openblas|14_linux64_openblas|15_linux64_openblas|18_linux64_openblas|19_linux64_openblas|20_linux64_openblas|17_linux64_openblas|16_linux64_openblas|11_linux64_openblas|7_openblas|5_openblas|16_openblas|13_openblas|12_openblas|9_openblas|7_openblas|5_openblas|4_openblas|2_openblas|20_linux64_mkl|19_linux64_mkl|16_linux64_mkl|15_linux64_mkl|13_linux64_mkl|12_linux64_mkl|10_mkl|6_mkl|5_mkl|21_mkl|20_mkl|19_mkl|13_mkl|12_mkl|10_mkl|9_mkl|5_mkl|4_mkl']
+blas -> liblapacke[version='3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0',build='0_openblas|1_h6e990d7_netlib|2_openblas|4_h6e990d7_netlib|5_h6e990d7_netlib|5_mkl|6_openblas|7_mkl|8_openblas|8_mkl|8_h6e990d7_netlib|9_mkl|10_h86c2bf4_netlib|11_openblas|11_mkl|11_h86c2bf4_netlib|13_mkl|14_mkl|*netlib|16_mkl|17_openblas|18_mkl|19_mkl|5_mkl|6_openblas|8_openblas|8_mkl|9_openblas|9_mkl|10_openblas|11_linux64_mkl|12_linux64_openblas|12_linux64_mkl|13_linux64_openblas|13_linux64_mkl|15_linux64_openblas|16_linux64_openblas|16_linux64_mkl|*netlib|20_linux64_mkl|20_linux64_openblas|19_linux64_openblas|19_linux64_mkl|18_linux64_openblas|17_linux64_openblas|15_linux64_mkl|14_linux64_mkl|14_linux64_openblas|11_linux64_openblas|10_mkl|7_mkl|7_openblas|6_mkl|5_h92ddd45_netlib|5_openblas|4_h92ddd45_netlib|3_h92ddd45_netlib|21_mkl|20_mkl|16_openblas|15_openblas|15_mkl|14_openblas|13_openblas|12_mkl|12_openblas|10_mkl|10_openblas|9_openblas|7_h6e990d7_netlib|7_openblas|6_h6e990d7_netlib|6_mkl|5_openblas|4_mkl|4_openblas|3_openblas|0_h6e990d7_netlib']
+mkl_fft -> blas=[build=mkl] -> liblapacke[version='3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.9.0',build='5_mkl|7_mkl|8_mkl|9_mkl|11_mkl|13_mkl|14_mkl|15_mkl|16_mkl|18_mkl|6_mkl|9_mkl|11_linux64_mkl|12_linux64_mkl|20_linux64_mkl|19_linux64_mkl|16_linux64_mkl|15_linux64_mkl|14_linux64_mkl|13_linux64_mkl|10_mkl|8_mkl|7_mkl|5_mkl|21_mkl|20_mkl|19_mkl|12_mkl|10_mkl|6_mkl|4_mkl']
+pytorch[version='>=2.0.0'] -> blas=[build=mkl] -> liblapacke[version='3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0',build='2_openblas|3_openblas|6_openblas|10_openblas|15_openblas|17_openblas|6_openblas|10_openblas|12_linux64_openblas|13_linux64_openblas|15_linux64_openblas|16_linux64_openblas|18_linux64_openblas|5_mkl|7_mkl|8_mkl|9_mkl|11_mkl|13_mkl|14_mkl|15_mkl|16_mkl|18_mkl|6_mkl|9_mkl|11_linux64_mkl|12_linux64_mkl|20_linux64_mkl|19_linux64_mkl|16_linux64_mkl|15_linux64_mkl|14_linux64_mkl|13_linux64_mkl|10_mkl|8_mkl|7_mkl|5_mkl|21_mkl|20_mkl|19_mkl|12_mkl|10_mkl|6_mkl|4_mkl|20_linux64_openblas|19_linux64_openblas|17_linux64_openblas|14_linux64_openblas|11_linux64_openblas|9_openblas|8_openblas|7_openblas|5_openblas|16_openblas|14_openblas|13_openblas|12_openblas|11_openblas|9_openblas|8_openblas|7_openblas|5_openblas|4_openblas|0_openblas']
+numpy-base -> blas=[build=openblas] -> liblapacke[version='3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0',build='6_mkl|7_mkl|8_mkl|11_mkl|14_mkl|15_mkl|16_mkl|18_mkl|7_mkl|8_mkl|9_mkl|11_linux64_mkl|14_linux64_mkl|0_openblas|3_openblas|6_openblas|8_openblas|10_openblas|11_openblas|14_openblas|15_openblas|17_openblas|6_openblas|8_openblas|9_openblas|10_openblas|12_linux64_openblas|13_linux64_openblas|14_linux64_openblas|15_linux64_openblas|18_linux64_openblas|19_linux64_openblas|20_linux64_openblas|17_linux64_openblas|16_linux64_openblas|11_linux64_openblas|7_openblas|5_openblas|16_openblas|13_openblas|12_openblas|9_openblas|7_openblas|5_openblas|4_openblas|2_openblas|20_linux64_mkl|19_linux64_mkl|16_linux64_mkl|15_linux64_mkl|13_linux64_mkl|12_linux64_mkl|10_mkl|6_mkl|5_mkl|21_mkl|20_mkl|19_mkl|13_mkl|12_mkl|10_mkl|9_mkl|5_mkl|4_mkl']
+scipy -> blas=[build=openblas] -> liblapacke[version='3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0|3.9.0',build='6_mkl|7_mkl|8_mkl|11_mkl|14_mkl|15_mkl|16_mkl|18_mkl|7_mkl|8_mkl|9_mkl|11_linux64_mkl|14_linux64_mkl|0_openblas|3_openblas|6_openblas|8_openblas|10_openblas|11_openblas|14_openblas|15_openblas|17_openblas|6_openblas|8_openblas|9_openblas|10_openblas|12_linux64_openblas|13_linux64_openblas|14_linux64_openblas|15_linux64_openblas|18_linux64_openblas|19_linux64_openblas|20_linux64_openblas|17_linux64_openblas|16_linux64_openblas|11_linux64_openblas|7_openblas|5_openblas|16_openblas|13_openblas|12_openblas|9_openblas|7_openblas|5_openblas|4_openblas|2_openblas|20_linux64_mkl|19_linux64_mkl|16_linux64_mkl|15_linux64_mkl|13_linux64_mkl|12_linux64_mkl|10_mkl|6_mkl|5_mkl|21_mkl|20_mkl|19_mkl|13_mkl|12_mkl|10_mkl|9_mkl|5_mkl|4_mkl']
+mkl_random -> blas=[build=mkl] -> liblapacke[version='3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.8.0|3.9.0',build='5_mkl|7_mkl|8_mkl|9_mkl|11_mkl|13_mkl|14_mkl|15_mkl|16_mkl|18_mkl|6_mkl|9_mkl|11_linux64_mkl|12_linux64_mkl|20_linux64_mkl|19_linux64_mkl|16_linux64_mkl|15_linux64_mkl|14_linux64_mkl|13_linux64_mkl|10_mkl|8_mkl|7_mkl|5_mkl|21_mkl|20_mkl|19_mkl|12_mkl|10_mkl|6_mkl|4_mkl']
+
+Package libwebp conflicts for:
+pillow -> libwebp[version='>=0.3.0|>=1.2.0,<1.3.0a0|>=1.3.2,<2.0a0']
+openjpeg -> libtiff[version='>=4.1.0,<5.0a0'] -> libwebp
+matplotlib-base -> pillow[version='>=6.2.0'] -> libwebp[version='>=0.3.0|>=1.2.0,<1.3.0a0|>=1.3.2,<2.0a0']
+pyqt -> qt-webengine=5.15 -> libwebp[version='>=1.2.0,<1.3.0a0']
+lcms2 -> libtiff[version='>=4.1.0,<5.0a0'] -> libwebp
+libtiff -> libwebp
+
+Package libpq conflicts for:
+pyqt -> qt-main=5.15 -> libpq[version='>=12.15,<13.0a0|>=12.9,<13.0a0|>=16.1,<17.0a0|>=16.0,<17.0a0|>=15.4,<16.0a0|>=15.3,<16.0a0|>=15.2,<16.0a0|>=15.1,<16.0a0|>=14.5,<15.0a0|>=14.3,<15.0a0|>=14.2,<15.0a0|>=14.1,<15.0a0|>=13.1,<14.0a0|>=12.3,<13.0a0']
+qt-main -> libpq[version='>=12.15,<13.0a0|>=12.9,<13.0a0|>=16.1,<17.0a0|>=16.0,<17.0a0|>=15.4,<16.0a0|>=15.3,<16.0a0|>=15.2,<16.0a0|>=15.1,<16.0a0|>=14.5,<15.0a0|>=14.3,<15.0a0|>=14.2,<15.0a0|>=14.1,<15.0a0']
+
+Package libxcb conflicts for:
+qt-main -> libxcb[version='>=1.13,<1.14.0a0|>=1.15,<1.16.0a0|>=1.15,<2.0a0']
+matplotlib-base -> pillow[version='>=6.2.0'] -> libxcb[version='>=1.13,<1.14.0a0|>=1.15,<1.16.0a0']
+qt-main -> gst-plugins-base[version='>=1.14.1,<1.15.0a0'] -> libxcb[version='1.*|>=1.13|>=1.13,<2.0a0|>=1.14,<2.0a0']
+gst-plugins-base -> libxcb[version='>=1.12,<2.0a0|>=1.13,<2.0a0|>=1.14,<2.0a0|>=1.15,<1.16.0a0|>=1.13,<1.14.0a0']
+pillow -> libxcb[version='>=1.13,<1.14.0a0|>=1.15,<1.16.0a0']
+libxkbcommon -> libxcb[version='>=1.13,<1.14.0a0|>=1.14,<2.0a0|>=1.15,<2.0a0|>=1.15,<1.16.0a0']
+pyqt -> qt-main=5.15 -> libxcb[version='>=1.12,<2.0a0|>=1.13,<1.14.0a0|>=1.15,<1.16.0a0|>=1.15,<2.0a0|>=1.13,<2.0a0']
+
+Package pyu2f conflicts for:
+google-auth-oauthlib -> google-auth[version='>=1.0.0'] -> pyu2f[version='>=0.1.5']
+google-auth -> pyu2f[version='>=0.1.5']
+tensorboard[version='>=2.11.0'] -> google-auth[version='>=1.6.3,<3'] -> pyu2f[version='>=0.1.5']
+
+Package glib conflicts for:
+pyqt -> qt-main=5.15 -> glib[version='>=2.53.6,<3.0a0|>=2.56.1,<3.0a0|>=2.56.2,<3.0a0|>=2.69.1,<3.0a0|>=2.58.3,<3.0a0|>=2.63.1,<3.0a0']
+qt-main -> glib[version='>=2.69.1,<3.0a0']
+gst-plugins-base -> glib[version='>=2.53.6,<3.0a0|>=2.56.1,<3.0a0|>=2.66.1,<3.0a0|>=2.69.1,<3.0a0|>=2.58.3,<3.0a0|>=2.58.2,<2.59.0a0']
+qt-main -> dbus[version='>=1.13.18,<2.0a0'] -> glib[version='>=2.53.6,<3.0a0|>=2.56.1,<3.0a0|>=2.58.2,<2.59.0a0|>=2.58.3,<3.0a0|>=2.66.1,<3.0a0|>=2.63.1,<3.0a0|>=2.56.2,<3.0a0|>=2.78.3,<3.0a0|>=2.78.1,<3.0a0|>=2.78.0,<3.0a0|>=2.76.4,<3.0a0|>=2.76.3,<3.0a0|>=2.76.2,<3.0a0|>=2.74.1,<3.0a0|>=2.74.0,<3.0a0|>=2.72.1,<3.0a0|>=2.70.2,<3.0a0']
+dbus -> glib[version='>=2.53.6,<3.0a0|>=2.56.1,<3.0a0|>=2.56.2,<3.0a0|>=2.63.1,<3.0a0|>=2.58.3,<3.0a0']
+gst-plugins-base -> gstreamer[version='>=1.18.5,<2.0a0'] -> glib[version='2.51.*|>=2.55.0,<2.56.0a0|>=2.56.2,<2.57.0a0|>=2.70.2,<3.0a0|>=2.72.1,<3.0a0|>=2.74.0,<3.0a0|>=2.74.1,<3.0a0|>=2.76.2,<3.0a0|>=2.76.3,<3.0a0|>=2.76.4,<3.0a0|>=2.78.0,<3.0a0|>=2.78.1,<3.0a0|>=2.78.3,<3.0a0']
+gstreamer -> glib[version='2.51.*|>=2.53.6,<3.0a0|>=2.56.1,<3.0a0|>=2.66.1,<3.0a0|>=2.69.1,<3.0a0|>=2.78.3,<3.0a0|>=2.78.1,<3.0a0|>=2.78.0,<3.0a0|>=2.76.4,<3.0a0|>=2.76.3,<3.0a0|>=2.76.2,<3.0a0|>=2.74.1,<3.0a0|>=2.74.0,<3.0a0|>=2.72.1,<3.0a0|>=2.70.2,<3.0a0|>=2.58.3,<3.0a0|>=2.58.2,<2.59.0a0|>=2.56.2,<2.57.0a0|>=2.55.0,<2.56.0a0']
+
+Package pcre conflicts for:
+gstreamer -> glib[version='>=2.69.1,<3.0a0'] -> pcre[version='>=8.44,<9.0a0|>=8.45,<9.0a0']
+qt-main -> glib[version='>=2.69.1,<3.0a0'] -> pcre[version='>=8.41,<9.0a0|>=8.43,<9.0a0|>=8.45,<9.0a0|>=8.42,<9.0a0']
+gst-plugins-base -> glib[version='>=2.69.1,<3.0a0'] -> pcre[version='>=8.41,<9.0a0|>=8.43,<9.0a0|>=8.45,<9.0a0|>=8.44,<9.0a0|>=8.42,<9.0a0']
+glib -> pcre[version='>=8.41,<9.0a0|>=8.42,<9.0a0|>=8.43,<9.0a0|>=8.44,<9.0a0|>=8.45,<9.0a0']
+gstreamer -> pcre[version='>=8.41,<9.0a0|>=8.42,<9.0a0|>=8.43,<9.0a0']
+dbus -> glib -> pcre[version='>=8.41,<9.0a0|>=8.42,<9.0a0|>=8.43,<9.0a0|>=8.44,<9.0a0|>=8.45,<9.0a0']
+
+Package abseil-cpp conflicts for:
+tensorboard[version='>=2.11.0'] -> grpcio[version='>=1.48.2'] -> abseil-cpp[version='>=20211102.0,<20211102.1.0a0|>=20230802.0,<20230802.1.0a0']
+grpc-cpp -> abseil-cpp[version='20190808.*|>=20200225.1,<20200225.2.0a0|>=20200225.2,<20200225.3.0a0|>=20200923.2,<20200923.3.0a0|>=20200923.3,<20200923.4.0a0|>=20210324.0,<20210324.1.0a0|>=20210324.1,<20210324.2.0a0|>=20210324.2,<20210324.3.0a0|>=20211102.0,<20211102.1.0a0|>=20230802.0,<20230802.1.0a0']
+grpcio -> abseil-cpp[version='>=20211102.0,<20211102.1.0a0|>=20230802.0,<20230802.1.0a0']
+
+Package mysql-common conflicts for:
+qt-main -> mysql-libs[version='>=8.0.33,<8.1.0a0'] -> mysql-common[version='8.0.27|8.0.27|8.0.27|8.0.27|8.0.28|8.0.28|8.0.28|8.0.28|8.0.28|8.0.28|8.0.28|8.0.29|8.0.29|8.0.29|8.0.29|8.0.30|8.0.30|8.0.30|8.0.30|8.0.31|8.0.31|8.0.32|8.0.32|8.0.32|8.0.32|8.0.32|8.0.33',build='ha770c72_0|ha770c72_3|ha770c72_0|h26416b9_2|h26416b9_3|haf5c9bc_0|h26416b9_0|haf5c9bc_1|h26416b9_0|h14678bc_0|ha901b37_0|ha901b37_1|hf1915f5_1|hf1915f5_3|hf1915f5_4|hf1915f5_6|hf1915f5_5|hf1915f5_2|hf1915f5_0|hf1915f5_3|hf1915f5_2|haf5c9bc_0|haf5c9bc_1|h26416b9_1|h26416b9_0|haf5c9bc_0|h26416b9_1|h26416b9_4|haf5c9bc_4|haf5c9bc_3|haf5c9bc_2|ha770c72_2|ha770c72_1']
+mysql -> mysql-common[version='8.0.19|8.0.20|8.0.20|8.0.21|8.0.21|8.0.21|8.0.22|8.0.22|8.0.22|8.0.22|8.0.23|8.0.23|8.0.23|8.0.24|8.0.25|8.0.25|8.0.25|8.0.25|8.0.26|8.0.27|8.0.27|8.0.27|8.0.27|8.0.28|8.0.28|8.0.28|8.0.28|8.0.28|8.0.28|8.0.28|8.0.29|8.0.29|8.0.29|8.0.29|8.0.30|8.0.30|8.0.30|8.0.30|8.0.31|8.0.31|8.0.32|8.0.32|8.0.32|8.0.32|8.0.32|8.0.33',build='1|ha770c72_3|ha770c72_0|ha770c72_0|ha770c72_3|ha770c72_0|ha770c72_0|ha770c72_3|ha770c72_0|h26416b9_2|h26416b9_3|haf5c9bc_0|h26416b9_0|haf5c9bc_1|h26416b9_0|h14678bc_0|ha901b37_0|ha901b37_1|hf1915f5_1|hf1915f5_3|hf1915f5_4|hf1915f5_6|hf1915f5_5|hf1915f5_2|hf1915f5_0|hf1915f5_3|hf1915f5_2|haf5c9bc_0|haf5c9bc_1|h26416b9_1|h26416b9_0|haf5c9bc_0|h26416b9_1|h26416b9_4|haf5c9bc_4|haf5c9bc_3|haf5c9bc_2|ha770c72_2|ha770c72_1|ha770c72_2|ha770c72_1|ha770c72_2|ha770c72_1|ha770c72_0|ha770c72_2|ha770c72_1|0|2|1|0|0|0']
+
+Package krb5 conflicts for:
+libcups -> krb5[version='>=1.16.3,<1.17.0a0|>=1.17.1,<1.18.0a0|>=1.19.1,<1.20.0a0|>=1.19.2,<1.20.0a0|>=1.21.1,<1.22.0a0|>=1.20.1,<1.21.0a0|>=1.19.3,<1.20.0a0']
+libpq -> krb5[version='>=1.14.2,<1.15.0a0|>=1.16,<1.17.0a0|>=1.16.1,<1.17.0a0|>=1.17.1,<1.18.0a0|>=1.19.1,<1.20.0a0|>=1.19.2,<1.20.0a0|>=1.20.1,<1.21.0a0|>=1.21.2,<1.22.0a0|>=1.21.1,<1.22.0a0|>=1.19.3,<1.20.0a0|>=1.16.4,<1.17.0a0|>=1.16.3,<1.17.0a0|>=1.16.2,<1.17.0a0']
+pyqt -> qt-main=5.15 -> krb5[version='>=1.19.2,<1.20.0a0|>=1.19.3,<1.20.0a0|>=1.19.4,<1.20.0a0|>=1.20.1,<1.21.0a0|>=1.21.2,<1.22.0a0|>=1.21.1,<1.22.0a0']
+qt-main -> libcups=2 -> krb5[version='>=1.16.3,<1.17.0a0|>=1.17.1,<1.18.0a0|>=1.19.1,<1.20.0a0']
+qt-main -> krb5[version='>=1.19.2,<1.20.0a0|>=1.19.3,<1.20.0a0|>=1.19.4,<1.20.0a0|>=1.20.1,<1.21.0a0|>=1.21.2,<1.22.0a0|>=1.21.1,<1.22.0a0']
+cyrus-sasl -> krb5[version='1.14.*|>=1.16,<1.17.0a0|>=1.16.1,<1.17.0a0|>=1.18.2,<1.19.0a0|>=1.19.1,<1.20.0a0|>=1.19.2,<1.20.0a0|>=1.19.4,<1.20.0a0|>=1.20.1,<1.21.0a0|>=1.21.1,<1.22.0a0|>=1.17.1,<1.18.0a0|>=1.16.3,<1.17.0a0|>=1.16.2,<1.17.0a0|>=1.14.2,<1.15.0a0|>=1.14.6,<1.15.0a0']
+mysql -> cyrus-sasl[version='>=2.1.28,<3.0a0'] -> krb5[version='1.14.*|>=1.16,<1.17.0a0|>=1.16.1,<1.17.0a0|>=1.18.2,<1.19.0a0|>=1.19.1,<1.20.0a0|>=1.19.2,<1.20.0a0|>=1.19.4,<1.20.0a0|>=1.20.1,<1.21.0a0|>=1.21.1,<1.22.0a0|>=1.17.1,<1.18.0a0|>=1.16.3,<1.17.0a0|>=1.16.2,<1.17.0a0|>=1.14.2,<1.15.0a0|>=1.14.6,<1.15.0a0']
+
+Package gstreamer conflicts for:
+qt-main -> gst-plugins-base[version='>=1.14.1,<1.15.0a0'] -> gstreamer[version='1.20.3|1.20.3|1.21.1|1.21.1|1.21.2|1.21.3|1.21.3|1.22.0|1.22.0|1.22.0|1.22.3|1.22.3|1.22.3|1.22.4|1.22.4|1.22.5|1.22.5|1.22.6|1.22.6|1.22.6|1.22.7|1.22.7|>=1.14.0,<2.0a0|>=1.14.1,<2.0a0|>=1.14.5,<2.0a0|>=1.14.4,<2.0a0|>=1.20.3,<2.0a0|>=1.20.2,<2.0a0|>=1.20.1,<2.0a0|>=1.18.5,<2.0a0',build='hd4edc92_0|hd4edc92_1|hd4edc92_0|h25f0c4b_0|h25f0c4b_0|h977cf35_0|h5eee18b_0|h98fc4e7_1|h98fc4e7_1|h98fc4e7_1|h98fc4e7_2|h98fc4e7_1|h98fc4e7_0|h98fc4e7_0|h98fc4e7_0|h98fc4e7_0|h977cf35_1|h25f0c4b_2|h25f0c4b_1|h25f0c4b_1|hd4edc92_2|hd4edc92_1']
+qt-main -> gstreamer[version='>=1.14.0,<1.15.0a0|>=1.14.1,<1.15.0a0|>=1.22.7,<1.23.0a0|>=1.22.6,<1.23.0a0|>=1.22.5,<1.23.0a0|>=1.22.4,<1.23.0a0|>=1.22.3,<1.23.0a0|>=1.22.0,<1.23.0a0|>=1.21.3,<1.22.0a0|>=1.21.2,<1.22.0a0|>=1.21.1,<1.22.0a0|>=1.20.3,<1.21.0a0|>=1.20.2,<1.21.0a0|>=1.20.1,<1.21.0a0|>=1.20.0,<1.21.0a0|>=1.18.5,<1.19.0a0']
+pyqt -> qt-main=5.15 -> gstreamer[version='>=1.12.4,<1.13.0a0|>=1.14.0,<1.15.0a0|>=1.14.1,<1.15.0a0|>=1.22.7,<1.23.0a0|>=1.22.6,<1.23.0a0|>=1.22.5,<1.23.0a0|>=1.22.4,<1.23.0a0|>=1.22.3,<1.23.0a0|>=1.22.0,<1.23.0a0|>=1.21.3,<1.22.0a0|>=1.21.2,<1.22.0a0|>=1.21.1,<1.22.0a0|>=1.20.3,<1.21.0a0|>=1.20.2,<1.21.0a0|>=1.20.1,<1.21.0a0|>=1.20.0,<1.21.0a0|>=1.18.5,<1.19.0a0|>=1.14.4,<1.15.0a0|>=1.12.5,<1.13.0a0|>=1.18.3,<1.19.0a0|>=1.18.2,<1.19.0a0']
+gst-plugins-base -> gstreamer[version='1.20.3|1.20.3|1.21.1|1.21.1|1.21.2|1.21.3|1.21.3|1.22.0|1.22.0|1.22.0|1.22.3|1.22.3|1.22.3|>=1.18.5,<2.0a0|>=1.14.1,<2.0a0|>=1.14.0,<2.0a0|>=1.12.4,<1.13.0a0|>=1.12.2,<1.13.0a0|1.22.7|1.22.7|1.22.6|1.22.6|1.22.6|1.22.5|1.22.5|1.22.4|1.22.4|>=1.20.3,<2.0a0|>=1.20.2,<2.0a0|>=1.20.1,<2.0a0|>=1.20.0,<2.0a0|>=1.18.4,<2.0a0|>=1.18.3,<2.0a0|>=1.18.2,<2.0a0|>=1.18.1,<2.0a0|>=1.14.5,<2.0a0|>=1.14.4,<2.0a0|>=1.12.5,<1.13.0a0|1.8.*',build='hd4edc92_2|hd4edc92_0|hd4edc92_1|hd4edc92_0|h25f0c4b_0|h25f0c4b_1|h25f0c4b_1|h977cf35_0|h98fc4e7_0|h98fc4e7_1|h98fc4e7_0|h98fc4e7_1|h98fc4e7_0|h98fc4e7_1|h98fc4e7_2|h98fc4e7_0|h98fc4e7_1|h5eee18b_0|h977cf35_1|h25f0c4b_2|h25f0c4b_0|hd4edc92_1']
+
+Package libdeflate conflicts for:
+libwebp -> libtiff[version='>=4.1.0,<5.0a0'] -> libdeflate[version='>=1.10,<1.11.0a0|>=1.12,<1.13.0a0|>=1.13,<1.14.0a0|>=1.14,<1.15.0a0|>=1.16,<1.17.0a0|>=1.17,<1.18.0a0|>=1.8,<1.9.0a0|>=1.19,<1.20.0a0|>=1.18,<1.19.0a0|>=1.7,<1.8.0a0']
+pillow -> libtiff[version='>=4.2.0,<5.0a0'] -> libdeflate[version='>=1.10,<1.11.0a0|>=1.12,<1.13.0a0|>=1.13,<1.14.0a0|>=1.14,<1.15.0a0|>=1.16,<1.17.0a0|>=1.17,<1.18.0a0|>=1.8,<1.9.0a0|>=1.19,<1.20.0a0|>=1.18,<1.19.0a0|>=1.7,<1.8.0a0']
+lcms2 -> libtiff[version='>=4.1.0,<5.0a0'] -> libdeflate[version='>=1.10,<1.11.0a0|>=1.12,<1.13.0a0|>=1.13,<1.14.0a0|>=1.14,<1.15.0a0|>=1.16,<1.17.0a0|>=1.17,<1.18.0a0|>=1.8,<1.9.0a0|>=1.19,<1.20.0a0|>=1.18,<1.19.0a0|>=1.7,<1.8.0a0']
+libtiff -> libdeflate[version='>=1.10,<1.11.0a0|>=1.12,<1.13.0a0|>=1.13,<1.14.0a0|>=1.14,<1.15.0a0|>=1.16,<1.17.0a0|>=1.17,<1.18.0a0|>=1.8,<1.9.0a0|>=1.19,<1.20.0a0|>=1.18,<1.19.0a0|>=1.7,<1.8.0a0']
+openjpeg -> libtiff[version='>=4.1.0,<5.0a0'] -> libdeflate[version='>=1.10,<1.11.0a0|>=1.12,<1.13.0a0|>=1.13,<1.14.0a0|>=1.14,<1.15.0a0|>=1.16,<1.17.0a0|>=1.17,<1.18.0a0|>=1.8,<1.9.0a0|>=1.19,<1.20.0a0|>=1.18,<1.19.0a0|>=1.7,<1.8.0a0']
+
+Package networkx conflicts for:
+pytorch[version='>=2.0.0'] -> networkx
+pytorch-lightning[version='>=2.0'] -> pytorch[version='>=1.11.0'] -> networkx
+torchmetrics -> pytorch[version='>=1.8.1'] -> networkx
+
+Package importlib-resources conflicts for:
+networkx -> matplotlib-base[version='>=3.4'] -> importlib-resources[version='>=3.2.0']
+matplotlib-base -> importlib-resources[version='>=3.2.0']
+matplotlib -> matplotlib-base[version='>=3.8.0,<3.8.1.0a0'] -> importlib-resources[version='>=3.2.0']
+
+Package joblib conflicts for:
+scikit-learn[version='>=1.2.0'] -> joblib[version='>=1.1.1']
+optuna -> joblib
+pyg -> scikit-learn -> joblib[version='>=0.11|>=1.0.0|>=1.1.1']
+
+Package backports_abc conflicts for:
+tornado -> backports_abc[version='>=0.4']
+matplotlib-base -> tornado -> backports_abc[version='>=0.4']
+matplotlib -> tornado[version='>=5'] -> backports_abc[version='>=0.4']
+
+Package win_inet_pton conflicts for:
+pysocks -> win_inet_pton
+urllib3 -> pysocks[version='>=1.5.6,<2.0,!=1.5.7'] -> win_inet_pton
+
+Package scandir conflicts for:
+importlib-metadata -> pathlib2 -> scandir
+importlib_resources -> pathlib2 -> scandir
+
+Package libdb conflicts for:
+cyrus-sasl -> libdb[version='>=6.1.26,<6.2.0a0|>=6.2.32,<6.3.0a0']
+mysql -> cyrus-sasl[version='>=2.1.26,<3.0a0'] -> libdb[version='>=6.1.26,<6.2.0a0|>=6.2.32,<6.3.0a0']
+
+Package libbrotlicommon conflicts for:
+brotli-bin -> libbrotlidec==1.0.9=h5eee18b_7 -> libbrotlicommon[version='1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.1.0|1.1.0',build='h7f98852_5|h7f98852_6|h166bdaf_9|h5eee18b_7|hd590300_1|hd590300_0|h166bdaf_8|h166bdaf_7']
+brotli -> libbrotlidec==1.0.9=h5eee18b_7 -> libbrotlicommon[version='1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.1.0|1.1.0',build='h7f98852_5|h7f98852_6|h166bdaf_9|h5eee18b_7|hd590300_1|hd590300_0|h166bdaf_8|h166bdaf_7']
+libbrotlidec -> libbrotlicommon[version='1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.1.0|1.1.0',build='h7f98852_5|h7f98852_6|h166bdaf_9|h5eee18b_7|hd590300_1|hd590300_0|h166bdaf_8|h166bdaf_7']
+libbrotlienc -> libbrotlicommon[version='1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.1.0|1.1.0',build='h7f98852_5|h7f98852_6|h166bdaf_9|h5eee18b_7|hd590300_1|hd590300_0|h166bdaf_8|h166bdaf_7']
+
+Package aiosignal conflicts for:
+aiohttp -> aiosignal[version='>=1.1.2']
+google-auth -> aiohttp[version='>=3.6.2,<4.0.0dev'] -> aiosignal[version='>=1.1.2']
+
+Package filelock conflicts for:
+pyg -> pytorch=2.1 -> filelock
+pytorch[version='>=2.0.0'] -> filelock
+torchmetrics -> pytorch[version='>=1.8.1'] -> filelock
+pytorch-lightning[version='>=2.0'] -> pytorch[version='>=1.11.0'] -> filelock
+
+Package mpfr conflicts for:
+pyqt -> libgcc -> mpfr[version='>=2.4.0']
+sympy -> gmpy2[version='>=2.0.8'] -> mpfr[version='3.*|>=4.0.1,<5.0a0|>=4.0.2,<5.0a0|>=4.1.0,<5.0a0']
+gmpy2 -> mpc -> mpfr=4
+mpmath -> gmpy2 -> mpfr[version='3.*|>=4.0.1,<5.0a0|>=4.0.2,<5.0a0|>=4.1.0,<5.0a0']
+scipy -> libgcc -> mpfr[version='>=2.4.0']
+giflib -> libgcc -> mpfr[version='>=2.4.0']
+gmpy2 -> mpfr[version='3.*|>=4.0.1,<5.0a0|>=4.0.2,<5.0a0|>=4.1.0,<5.0a0']
+mpc -> mpfr[version='3.*|>=4.0.1,<5.0a0|>=4.1.0,<5.0a0|>=4.0.2,<5.0a0|4.*']
+
+Package lightning-utilities conflicts for:
+torchmetrics -> lightning-utilities[version='>=0.7.0|>=0.8.0']
+pytorch-lightning[version='>=2.0'] -> lightning-utilities[version='>=0.4.2|>=0.7.0|>=0.8.0']
+
+Package libllvm15 conflicts for:
+libclang13 -> libllvm15[version='>=15.0.0,<15.1.0a0|>=15.0.1,<15.1.0a0|>=15.0.2,<15.1.0a0|>=15.0.3,<15.1.0a0|>=15.0.4,<15.1.0a0|>=15.0.5,<15.1.0a0|>=15.0.6,<15.1.0a0|>=15.0.7,<15.1.0a0']
+libclang -> libllvm15[version='>=15.0.0,<15.1.0a0|>=15.0.1,<15.1.0a0|>=15.0.2,<15.1.0a0|>=15.0.3,<15.1.0a0|>=15.0.4,<15.1.0a0|>=15.0.5,<15.1.0a0|>=15.0.6,<15.1.0a0|>=15.0.7,<15.1.0a0']
+qt-main -> libclang13[version='>=14.0.6'] -> libllvm15[version='>=15.0.0,<15.1.0a0|>=15.0.1,<15.1.0a0|>=15.0.2,<15.1.0a0|>=15.0.3,<15.1.0a0|>=15.0.4,<15.1.0a0|>=15.0.5,<15.1.0a0|>=15.0.6,<15.1.0a0|>=15.0.7,<15.1.0a0']
+
+Package libbrotlienc conflicts for:
+urllib3 -> brotli[version='>=1.0.9'] -> libbrotlienc[version='1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.1.0|1.1.0',build='h7f98852_5|h7f98852_6|h166bdaf_9|h5eee18b_7|hd590300_1|hd590300_0|h166bdaf_8|h166bdaf_7']
+brotli -> libbrotlienc[version='1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.1.0|1.1.0',build='h7f98852_5|h7f98852_6|h166bdaf_9|h5eee18b_7|hd590300_1|hd590300_0|h166bdaf_8|h166bdaf_7']
+fonttools -> brotli[version='>=1.0.1'] -> libbrotlienc[version='1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.1.0|1.1.0',build='h7f98852_5|h7f98852_6|h166bdaf_9|h5eee18b_7|hd590300_1|hd590300_0|h166bdaf_8|h166bdaf_7']
+brotli-bin -> libbrotlienc[version='1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.0.9|1.1.0|1.1.0',build='h7f98852_5|h7f98852_6|h166bdaf_9|h5eee18b_7|hd590300_1|hd590300_0|h166bdaf_8|h166bdaf_7']
+
+Package importlib_metadata conflicts for:
+sqlalchemy -> importlib_metadata
+optuna -> sqlalchemy[version='>=1.3.0'] -> importlib_metadata[version='>=4.4']
+alembic -> sqlalchemy[version='>=1.3.0'] -> importlib_metadata
+matplotlib-base -> importlib_resources[version='>=3.2.0'] -> importlib_metadata
+plotly -> nbformat[version='>=4.2'] -> importlib_metadata[version='>=3.6']
+importlib_resources -> importlib_metadata
+
+Package giflib conflicts for:
+libtiff -> libwebp -> giflib[version='>=5.1.4,<5.2.0a0|>=5.2.1,<5.3.0a0|>=5.1.7,<5.1.8.0a0']
+libwebp -> giflib[version='>=5.1.4,<5.2.0a0|>=5.2.1,<5.3.0a0|>=5.1.7,<5.1.8.0a0']
+pillow -> libwebp[version='>=1.3.2,<2.0a0'] -> giflib[version='>=5.1.4,<5.2.0a0|>=5.2.1,<5.3.0a0|>=5.1.7,<5.1.8.0a0']
+
+Package libclang13 conflicts for:
+pyqt -> qt-main=5.15 -> libclang13[version='>=14.0.3|>=14.0.4|>=14.0.6|>=15.0.7|>=16.0.4|>=16.0.3|>=16.0.0|>=15.0.6|>=15.0.5|>=15.0.3']
+libclang -> libclang13[version='14.0.0|14.0.3|14.0.4|14.0.5|14.0.6|14.0.6|14.0.6|17.0.6|17.0.6|17.0.5|17.0.4|17.0.4|17.0.3|17.0.2|17.0.1|16.0.6|16.0.6|16.0.6|16.0.6|16.0.5|16.0.4|16.0.3|16.0.3|16.0.3|16.0.2|16.0.1|16.0.0|16.0.0|15.0.7|15.0.7|15.0.7|15.0.7|15.0.7|15.0.6|15.0.5|15.0.4|15.0.3|15.0.2|15.0.1|15.0.0',build='default_h3a83d3e_0|default_h3a83d3e_0|default_h9986a30_1|default_h3a83d3e_0|default_h3a83d3e_0|default_h3a83d3e_0|default_h3e3d535_1|default_h9986a30_2|default_ha2b6cf4_4|default_hd781213_0|default_hd781213_1|default_h4d60ac6_2|default_h4d60ac6_0|default_h4d60ac6_0|default_h4d60ac6_2|default_ha2b6cf4_3|default_h4d60ac6_0|default_h4d60ac6_1|default_h4d60ac6_0|default_h31cde19_0|default_he11475f_1|default_ha2b6cf4_1|default_h4d60ac6_0|default_h4d60ac6_0|default_h4d60ac6_0|default_h4d60ac6_0|default_h4d60ac6_1|default_h4d60ac6_0|default_hd781213_0|default_h9b593c0_0|default_h9b593c0_1|default_h9b593c0_0|default_h9986a30_3|default_h3e3d535_0|default_h3a83d3e_0|default_h3a83d3e_0|default_h3a83d3e_0|default_h3a83d3e_0|default_h3a83d3e_0|default_h3a83d3e_0|default_h3a83d3e_0']
+qt-main -> libclang13[version='>=14.0.3|>=14.0.4|>=14.0.6|>=15.0.7|>=16.0.4|>=16.0.3|>=16.0.0|>=15.0.6|>=15.0.5|>=15.0.3']
+qt-main -> libclang[version='>=14.0.6,<15.0a0'] -> libclang13[version='14.0.3|14.0.4|14.0.5|14.0.6|15.0.7|15.0.7|15.0.7|15.0.7|15.0.7|16.0.6|16.0.6|16.0.6|16.0.6|16.0.5|16.0.4|16.0.3|16.0.3|16.0.3|16.0.2|16.0.1|16.0.0|16.0.0|15.0.6|15.0.5|15.0.4|15.0.3',build='default_h3a83d3e_0|default_h3a83d3e_0|default_h9b593c0_1|default_hd781213_0|default_hd781213_1|default_h4d60ac6_2|default_h4d60ac6_2|default_ha2b6cf4_3|default_h3e3d535_0|default_h3e3d535_1|default_h9986a30_2|default_ha2b6cf4_4|default_h9986a30_1|default_h31cde19_0|default_he11475f_1|default_h3a83d3e_0|default_h9986a30_3|default_h4d60ac6_1|default_h4d60ac6_0|default_h4d60ac6_0|default_h4d60ac6_0|default_hd781213_0|default_h9b593c0_0|default_h9b593c0_0|default_h3a83d3e_0|default_h3a83d3e_0|default_h3a83d3e_0|default_h3a83d3e_0|default_h3a83d3e_0']
+
+Package decorator conflicts for:
+networkx -> decorator[version='>=3.4.0|>=4.1.0|>=4.3.0|>=4.3.0,<5']
+plotly -> decorator[version='>=4.0.6']
+pytorch[version='>=2.0.0'] -> networkx -> decorator[version='>=3.4.0|>=4.1.0|>=4.3.0|>=4.3.0,<5']
+pyg -> networkx[version='>=2.4'] -> decorator[version='>=4.3.0|>=4.3.0,<5']
+
+Package libhwloc conflicts for:
+tbb -> libhwloc[version='>=2.8.0,<2.8.1.0a0|>=2.9.0,<2.9.1.0a0|>=2.9.1,<2.9.2.0a0|>=2.9.2,<2.9.3.0a0|>=2.9.3,<2.9.4.0a0']
+mkl -> tbb=2021 -> libhwloc[version='>=2.8.0,<2.8.1.0a0|>=2.9.0,<2.9.1.0a0|>=2.9.1,<2.9.2.0a0|>=2.9.2,<2.9.3.0a0|>=2.9.3,<2.9.4.0a0']
+
+Package matplotlib-base conflicts for:
+pyg -> networkx[version='>=2.4'] -> matplotlib-base[version='>=3.3|>=3.4']
+networkx -> matplotlib-base[version='>=3.3|>=3.4']
+pytorch[version='>=2.0.0'] -> networkx -> matplotlib-base[version='>=3.3|>=3.4']
+networkx -> matplotlib[version='>=3.3'] -> matplotlib-base[version='>=3.3.0,<3.3.1.0a0|>=3.3.1,<3.3.2.0a0|>=3.3.2,<3.3.3.0a0|>=3.3.4,<3.3.5.0a0|>=3.4.2,<3.4.3.0a0|>=3.4.3,<3.4.4.0a0|>=3.5.0,<3.5.1.0a0|>=3.5.1,<3.5.2.0a0|>=3.5.2,<3.5.3.0a0|>=3.5.3,<3.5.4.0a0|>=3.6.2,<3.6.3.0a0|>=3.7.0,<3.7.1.0a0|>=3.7.1,<3.7.2.0a0|>=3.7.2,<3.7.3.0a0|>=3.8.0,<3.8.1.0a0|>=3.8.2,<3.8.3.0a0|>=3.8.1,<3.8.2.0a0|>=3.7.3,<3.7.4.0a0|>=3.6.3,<3.6.4.0a0|>=3.6.1,<3.6.2.0a0|>=3.6.0,<3.6.1.0a0|>=3.4.1,<3.4.2.0a0|>=3.3.3,<3.3.4.0a0']
+matplotlib -> matplotlib-base[version='2.1.2|2.1.2|2.1.2|2.2.3|2.2.3|2.2.3|2.2.4|2.2.4|2.2.4|2.2.4|2.2.4|2.2.4|2.2.4|2.2.4|2.2.4|2.2.4|3.0.1|3.0.2|3.0.2|3.0.2|3.0.2|3.0.2|3.0.3|3.0.3|3.0.3|3.0.3|3.1.0|3.1.0|3.1.0|3.1.0|3.1.1|3.1.1|3.1.1|3.1.1|3.1.1|3.1.1|3.1.1|3.1.1|3.1.2|3.1.2|3.1.2|3.1.2|3.1.2|3.1.2|3.1.2|3.1.2|3.1.2|3.1.3|3.1.3|3.1.3|>=3.2.1,<3.2.2.0a0|>=3.2.2,<3.2.3.0a0|>=3.3.1,<3.3.2.0a0|>=3.3.2,<3.3.3.0a0|>=3.3.4,<3.3.5.0a0|>=3.4.2,<3.4.3.0a0|>=3.4.3,<3.4.4.0a0|>=3.5.0,<3.5.1.0a0|>=3.5.1,<3.5.2.0a0|>=3.5.2,<3.5.3.0a0|>=3.5.3,<3.5.4.0a0|>=3.6.2,<3.6.3.0a0|>=3.7.0,<3.7.1.0a0|>=3.7.1,<3.7.2.0a0|>=3.7.2,<3.7.3.0a0|>=3.8.0,<3.8.1.0a0|>=3.8.2,<3.8.3.0a0|>=3.8.1,<3.8.2.0a0|>=3.7.3,<3.7.4.0a0|>=3.6.3,<3.6.4.0a0|>=3.6.1,<3.6.2.0a0|>=3.6.0,<3.6.1.0a0|>=3.4.1,<3.4.2.0a0|>=3.3.3,<3.3.4.0a0|>=3.3.0,<3.3.1.0a0|>=3.2.0,<3.2.1.0a0|3.1.3|3.1.3|3.1.3|>=2.2.5,<2.2.6.0a0',build='py27h250f245_1|py37h60b886d_1|py27h250f245_1|py37h250f245_2|py38h250f245_2|py36h167e16e_1000|py37h167e16e_1001|py37h167e16e_1002|py36h167e16e_1002|py37h5f35d83_0|py37hfd891ef_1|py36hfd891ef_0|py36he7580a8_1|py37h250f245_2|py37h250f245_0|py36h250f245_0|py36h250f245_0|py37h250f245_0|py38hef1b27d_1|py36hef1b27d_0|py37hef1b27d_0|py38hef1b27d_0|py36hef1b27d_1|py37hef1b27d_1|py38h250f245_0|py38h250f245_1|py37h250f245_1|py36h250f245_1|py38h250f245_0|py36h250f245_2|py38h250f245_2|py38h250f245_1|py37he7580a8_1|py37hfd891ef_0|py36hfd891ef_1|py36h5f35d83_0|py36h5f35d83_1|py37h5f35d83_1|py36h167e16e_0|py37h167e16e_0|py36h167e16e_1001|py37hc2fb212_1001|py36h250f245_2|py27h250f245_2|py36h250f245_1|py37h250f245_1|py36hfd891ef_0|py27hfd891ef_0|py37hfd891ef_0|py36h60b886d_1|py27h60b886d_1|py36h250f245_1|py37h250f245_1']
+
+Package xorg-xextproto conflicts for:
+gst-plugins-base -> xorg-libx11[version='>=1.8.7,<2.0a0'] -> xorg-xextproto[version='>=7.3.0,<8.0a0']
+qt-main -> xorg-libx11[version='>=1.8.7,<2.0a0'] -> xorg-xextproto[version='>=7.3.0,<8.0a0']
+
+Package dataclasses conflicts for:
+werkzeug -> dataclasses
+pyg -> pytorch=1.9 -> dataclasses
+gensim -> dataclasses
+tensorboard[version='>=2.11.0'] -> werkzeug[version='>=1.0.1'] -> dataclasses
+torchmetrics -> pytorch[version='>=1.8.1'] -> dataclasses
+
+Package yarl conflicts for:
+google-auth -> aiohttp[version='>=3.6.2,<4.0.0dev'] -> yarl[version='>=0.10.0,<0.11|>=0.11|>=1.0,<1.6.0|>=1.0,<2|>=1.0,<2.0']
+smart_open -> google-cloud-storage -> yarl[version='<1.6.0,>=1.0|>=1.0,<1.6.0']
+aiohttp -> yarl[version='>=0.10.0,<0.11|>=0.11|>=1.0,<1.6.0|>=1.0,<2|>=1.0,<2.0']
+
+Package unicodedata2 conflicts for:
+matplotlib-base -> fonttools[version='>=4.22.0'] -> unicodedata2[version='>=13.0.0|>=14.0.0']
+fonttools -> unicodedata2[version='>=12.1.0|>=13.0.0|>=14.0.0']
+
+Package libre2-11 conflicts for:
+grpcio -> libgrpc==1.60.0=hd6c4280_0 -> libre2-11[version='>=2023.6.2,<2024.0a0']
+re2 -> libre2-11==2023.06.02=h7a70373_0
+
+Package requests-oauthlib conflicts for:
+google-auth-oauthlib -> requests-oauthlib[version='>=0.7.0|>=0.7.0,<1dev']
+tensorboard[version='>=2.11.0'] -> google-auth-oauthlib[version='>=0.4.1,<1.1'] -> requests-oauthlib[version='>=0.7.0']
+
+Package xorg-libice conflicts for:
+pyqt -> qt-main=5.15 -> xorg-libice[version='>=1.1.1,<2.0a0']
+qt-main -> xorg-libsm -> xorg-libice=1.0
+qt-main -> xorg-libice[version='>=1.1.1,<2.0a0']
+
+Package tornado conflicts for:
+matplotlib-base -> tornado
+networkx -> matplotlib[version='>=3.3'] -> tornado[version='>=5']
+matplotlib -> tornado[version='>=5']
+
+Package dbus conflicts for:
+matplotlib -> pyqt[version='>=5'] -> dbus[version='>=1.10.22,<2.0a0|>=1.12.2,<2.0a0|>=1.13.12,<2.0a0|>=1.13.2,<2.0a0|>=1.13.6,<2.0a0']
+pyqt -> dbus[version='>=1.10.22,<2.0a0|>=1.12.2,<2.0a0|>=1.13.12,<2.0a0|>=1.13.2,<2.0a0|>=1.13.6,<2.0a0']
+pyqt -> qt-main=5.15 -> dbus[version='>=1.13.0,<2.0a0|>=1.13.18,<2.0a0']
+qt-main -> dbus[version='>=1.13.18,<2.0a0|>=1.13.6,<2.0a0']
+
+Package libllvm13 conflicts for:
+libclang -> libllvm13[version='>=13.0.0,<13.1.0a0|>=13.0.1,<13.1.0a0']
+qt-main -> libclang=13 -> libllvm13[version='>=13.0.0,<13.1.0a0|>=13.0.1,<13.1.0a0']
+
+Package mysql conflicts for:
+qt-main -> mysql=5.7
+pyqt -> qt-main=5.15 -> mysql=5.7
+
+Package fonttools conflicts for:
+matplotlib-base -> fonttools[version='>=4.22.0']
+networkx -> matplotlib-base[version='>=3.4'] -> fonttools[version='>=4.22.0']
+matplotlib -> matplotlib-base[version='>=3.8.0,<3.8.1.0a0'] -> fonttools[version='>=4.22.0']
+
+Package pillow conflicts for:
+networkx -> matplotlib-base[version='>=3.4'] -> pillow[version='>=6.2.0|>=8']
+matplotlib-base -> pillow[version='>=6.2.0|>=8']
+matplotlib -> matplotlib-base[version='>=3.8.0,<3.8.1.0a0'] -> pillow[version='>=6.2.0|>=8']
+
+Package xkeyboard-config conflicts for:
+qt-main -> libxkbcommon[version='>=1.0.1,<2.0a0'] -> xkeyboard-config
+libxkbcommon -> xkeyboard-config
+
+Package tbb4py conflicts for:
+mkl_random -> numpy-base[version='>=1.2.1,<2.0a0'] -> tbb4py
+numpy-base -> tbb4py
+numpy -> numpy-base==1.15.4=py27h81de0dd_0 -> tbb4py
+mkl_fft -> numpy-base[version='>=1.2.1,<2.0a0'] -> tbb4py
+
+Package zope.interface conflicts for:
+aiohttp -> attrs[version='>=17.3.0'] -> zope.interface
+attrs -> zope.interface
+
+Package smmap conflicts for:
+gitpython -> smmap[version='>=3.0.1,<4']
+wandb[version='>=0.14.0'] -> gitpython[version='>=1.0.0,!=3.1.29'] -> smmap[version='>=3.0.1,<4']
+gitpython -> gitdb[version='>=4.0.1,<5'] -> smmap[version='>=0.8.3|>=3.0.1|>=3.0.1,<6']
+gitdb -> smmap[version='>=0.8.3|>=3.0.1,<4|>=3.0.1|>=3.0.1,<6']
+
+Package cachetools conflicts for:
+tensorboard[version='>=2.11.0'] -> google-auth[version='>=1.6.3,<3'] -> cachetools[version='>=2.0.0,<3.2|>=2.0.0,<5.0|>=2.0.0,<6.0|>=2.0.0,<3dev']
+google-auth-oauthlib -> google-auth[version='>=1.0.0'] -> cachetools[version='>=2.0.0,<3.2|>=2.0.0,<5.0|>=2.0.0,<6.0|>=2.0.0,<3dev']
+google-auth -> cachetools[version='>=2.0.0,<3.2|>=2.0.0,<5.0|>=2.0.0,<6.0|>=2.0.0,<3dev']
+
+Package mako conflicts for:
+alembic -> mako
+optuna -> alembic[version='>=1.5.0'] -> mako
+
+Package matplotlib conflicts for:
+pytorch[version='>=2.0.0'] -> networkx -> matplotlib[version='>=3.3']
+networkx -> matplotlib[version='>=3.3']
+
+Package blinker conflicts for:
+requests-oauthlib -> oauthlib[version='>=3.0.0'] -> blinker[version='>=1.4.0']
+oauthlib -> blinker[version='>=1.4.0']
+
+Package functools32 conflicts for:
+tomli -> tomlkit -> functools32[version='>=3.2.3,<4.0.0']
+pyjwt -> flake8 -> functools32
+matplotlib -> functools32
+matplotlib-base -> functools32
+
+Package fontconfig conflicts for:
+qt-main -> fontconfig[version='>=2.13.1,<3.0a0|>=2.14.1,<3.0a0|>=2.14.2,<3.0a0|>=2.13.96,<3.0a0']
+pyqt -> qt-main=5.15 -> fontconfig[version='2.12.*|>=2.12.4,<3.0a0|>=2.12.6,<3.0a0|>=2.13.0,<3.0a0|>=2.13.1,<3.0a0|>=2.14.1,<3.0a0|>=2.14.2,<3.0a0|>=2.13.96,<3.0a0']
+
+Package pyasn1-modules conflicts for:
+google-auth-oauthlib -> google-auth[version='>=1.0.0'] -> pyasn1-modules[version='>=0.0.5,<1dev|>=0.2.1']
+tensorboard[version='>=2.11.0'] -> google-auth[version='>=1.6.3,<3'] -> pyasn1-modules[version='>=0.2.1']
+google-auth -> pyasn1-modules[version='>=0.0.5,<1dev|>=0.2.1']
+
+Package qt-main conflicts for:
+pyqt -> qt-webengine=5.15 -> qt-main[version='>=5.15,<6.0a0']
+matplotlib -> pyqt[version='>=5'] -> qt-main[version='5.15.*|>=5.15.2,<5.16.0a0|>=5.15.8,<5.16.0a0|>=5.15.6,<5.16.0a0|>=5.15.4,<5.16.0a0|>=5.15.3,<5.16.0a0']
+pyqt -> qt-main[version='5.15.*|>=5.15.2,<5.16.0a0|>=5.15.8,<5.16.0a0|>=5.15.6,<5.16.0a0|>=5.15.4,<5.16.0a0|>=5.15.3,<5.16.0a0']
+
+Package openjpeg conflicts for:
+matplotlib-base -> pillow[version='>=6.2.0'] -> openjpeg[version='>=2.3.0,<3.0a0|>=2.5.0,<3.0a0|>=2.5.0,<2.6.0a0|>=2.4.0,<3.0.0a0|>=2.4.0,<3.0a0']
+pillow -> openjpeg[version='>=2.3.0,<3.0a0|>=2.5.0,<3.0a0|>=2.5.0,<2.6.0a0|>=2.4.0,<3.0.0a0|>=2.4.0,<3.0a0']
+
+Package pandas conflicts for:
+pytorch[version='>=2.0.0'] -> networkx -> pandas[version='>=1.1|>=1.3']
+networkx -> pandas[version='>=1.1|>=1.3']
+
+Package sip conflicts for:
+pyqt -> pyqt5-sip==12.11.0=py39h6a678d5_1 -> sip
+pyqt -> sip[version='4.18|4.18.*|4.19.13.*|>=6.6.2,<6.7.0a0|>=6.7.12,<6.8.0a0|>=4.19.13,<=4.19.14|>=4.19.4,<=4.19.8|>=6.7.11,<6.8.0a0|>=6.7.10,<6.8.0a0|>=6.7.5,<6.8.0a0|>=6.7.2,<6.8.0a0|>=6.5.1,<6.6.0a0']
+matplotlib -> pyqt[version='>=5'] -> sip[version='4.18|4.18.*|4.19.13.*|>=6.6.2,<6.7.0a0|>=6.7.12,<6.8.0a0|>=4.19.13,<=4.19.14|>=4.19.4,<=4.19.8|>=6.7.11,<6.8.0a0|>=6.7.10,<6.8.0a0|>=6.7.5,<6.8.0a0|>=6.7.2,<6.8.0a0|>=6.5.1,<6.6.0a0']
+pyqt5-sip -> sip
+
+Package importlib_resources conflicts for:
+networkx -> matplotlib-base[version='>=3.4'] -> importlib_resources[version='>=3.2.0|>=5.2.0']
+optuna -> alembic[version='>=1.5.0'] -> importlib_resources
+matplotlib-base -> importlib_resources[version='>=3.2.0|>=5.2.0']
+matplotlib -> matplotlib-base[version='>=3.8.0,<3.8.1.0a0'] -> importlib_resources[version='>=3.2.0|>=5.2.0']
+alembic -> importlib_resources
+matplotlib-base -> importlib-resources[version='>=3.2.0'] -> importlib_resources[version='>=5.10.0,<5.10.1.0a0|>=5.10.1,<5.10.2.0a0|>=5.10.2,<5.10.3.0a0|>=5.12.0,<5.12.1.0a0|>=5.13.0,<5.13.1.0a0|>=6.0.0,<6.0.1.0a0|>=6.0.1,<6.0.2.0a0|>=6.1.0,<6.1.1.0a0|>=6.1.1,<6.1.2.0a0|>=5.9.0,<5.9.1.0a0|>=5.8.0,<5.8.1.0a0|>=5.7.1,<5.7.2.0a0|>=5.7.0,<5.7.1.0a0|>=5.6.0,<5.6.1.0a0']
+
+Package singledispatch conflicts for:
+alembic -> importlib_resources -> singledispatch
+matplotlib -> tornado[version='>=5'] -> singledispatch
+matplotlib-base -> tornado -> singledispatch
+importlib_resources -> singledispatch
+tornado -> singledispatch
+
+Package grpc-cpp conflicts for:
+tensorboard[version='>=2.11.0'] -> grpcio[version='>=1.48.2'] -> grpc-cpp[version='1.46.3|1.46.3|1.46.3|1.46.3|1.46.3|1.46.3|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.47.0|1.47.0|1.47.0|1.47.0|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.48.0|1.48.0|1.48.0|1.48.0|1.48.0|1.48.0|1.48.0|1.48.0|1.48.0|1.48.0|1.48.0|1.48.0|1.48.1|1.48.1|1.48.1|1.48.1|1.48.1|1.48.1|1.48.1|1.48.1|1.48.1|1.48.2',build='hc275302_1|h0b91f02_1|hbd84cd8_2|h00ec82a_2|h00ec82a_3|hbd84cd8_3|h6376a21_0|h63f9be0_0|hbad87ad_1|hc2bec63_2|h5a7f92c_3|hc2bec63_4|h30feacc_5|hbad87ad_6|h05bd8bd_6|hc2bec63_6|h30feacc_7|h05bd8bd_7|hc2bec63_7|h4fad500_9|hc275302_0|hbd84cd8_0|h6376a21_1|hbad87ad_2|hc2bec63_2|hc2bec63_3|hc2bec63_4|h30feacc_5|hc2bec63_6|h05bd8bd_6|hbad87ad_6|h30feacc_7|h4fad500_8|hbd84cd8_0|hdf6f840_1|he669f28_2|hc2bec63_3|hc2bec63_4|h30feacc_5|hbad87ad_1|h30feacc_1|h05bd8bd_1|h30feacc_2|h4fad500_3|h5bf31a4_0|he1ff14a_4|he1ff14a_3|he1ff14a_1|h05bd8bd_2|hc2bec63_1|h30feacc_0|h05bd8bd_0|h05bd8bd_5|hbad87ad_4|hbad87ad_3|he9be43d_2|h5f994e2_1|h00ec82a_0|h05bd8bd_7|h30feacc_6|h05bd8bd_5|hbad87ad_4|hbad87ad_3|h63f9be0_1|h00ec82a_0|h00ec82a_1|hbd84cd8_1|h0b91f02_0|h30feacc_8|h05bd8bd_8|hbad87ad_7|h30feacc_6|h05bd8bd_5|hbad87ad_4|h6fc47f4_3|hbad87ad_2|hc2bec63_1']
+grpcio -> grpc-cpp[version='1.46.3|1.46.3|1.46.3|1.46.3|1.46.3|1.46.3|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.46.4|1.47.0|1.47.0|1.47.0|1.47.0|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.47.1|1.48.0|1.48.0|1.48.0|1.48.0|1.48.0|1.48.0|1.48.0|1.48.0|1.48.0|1.48.0|1.48.0|1.48.0|1.48.1|1.48.1|1.48.1|1.48.1|1.48.1|1.48.1|1.48.1|1.48.1|1.48.1|1.48.2',build='hc275302_1|h0b91f02_1|hbd84cd8_2|h00ec82a_2|h00ec82a_3|hbd84cd8_3|h6376a21_0|h63f9be0_0|hbad87ad_1|hc2bec63_2|h5a7f92c_3|hc2bec63_4|h30feacc_5|hbad87ad_6|h05bd8bd_6|hc2bec63_6|h30feacc_7|h05bd8bd_7|hc2bec63_7|h4fad500_9|hc275302_0|hbd84cd8_0|h6376a21_1|hbad87ad_2|hc2bec63_2|hc2bec63_3|hc2bec63_4|h30feacc_5|hc2bec63_6|h05bd8bd_6|hbad87ad_6|h30feacc_7|h4fad500_8|hbd84cd8_0|hdf6f840_1|he669f28_2|hc2bec63_3|hc2bec63_4|h30feacc_5|hbad87ad_1|h30feacc_1|h05bd8bd_1|h30feacc_2|h4fad500_3|h5bf31a4_0|he1ff14a_4|he1ff14a_3|he1ff14a_1|h05bd8bd_2|hc2bec63_1|h30feacc_0|h05bd8bd_0|h05bd8bd_5|hbad87ad_4|hbad87ad_3|he9be43d_2|h5f994e2_1|h00ec82a_0|h05bd8bd_7|h30feacc_6|h05bd8bd_5|hbad87ad_4|hbad87ad_3|h63f9be0_1|h00ec82a_0|h00ec82a_1|hbd84cd8_1|h0b91f02_0|h30feacc_8|h05bd8bd_8|hbad87ad_7|h30feacc_6|h05bd8bd_5|hbad87ad_4|h6fc47f4_3|hbad87ad_2|hc2bec63_1']
+
+Package fribidi conflicts for:
+pillow -> fribidi[version='>=1.0.10,<2.0a0']
+matplotlib-base -> pillow[version='>=6.2.0'] -> fribidi[version='>=1.0.10,<2.0a0']
+
+Package aiohttp conflicts for:
+google-auth-oauthlib -> google-auth[version='>=1.0.0'] -> aiohttp[version='>=3.6.2,<4.0.0|>=3.6.2,<4.0.0dev']
+google-auth -> aiohttp[version='>=3.6.2,<4.0.0|>=3.6.2,<4.0.0dev']
+tensorboard[version='>=2.11.0'] -> google-auth[version='>=1.6.3,<3'] -> aiohttp[version='>=3.6.2,<4.0.0|>=3.6.2,<4.0.0dev']
+
+Package backports conflicts for:
+tornado -> ssl_match_hostname -> backports
+matplotlib -> backports.functools_lru_cache -> backports
+importlib-metadata -> configparser[version='>=3.5'] -> backports
+matplotlib-base -> backports.functools_lru_cache -> backports
+
+Package lcms2 conflicts for:
+pillow -> lcms2[version='>=2.11,<3.0a0|>=2.12,<3.0a0|>=2.15,<3.0a0|>=2.14,<3.0a0']
+matplotlib-base -> pillow[version='>=6.2.0'] -> lcms2[version='>=2.11,<3.0a0|>=2.12,<3.0a0|>=2.15,<3.0a0|>=2.14,<3.0a0']
+
+Package oauthlib conflicts for:
+google-auth-oauthlib -> requests-oauthlib[version='>=0.7.0'] -> oauthlib[version='>=0.6.2|>=3.0.0|>=2.1.0,<3.0.0']
+requests-oauthlib -> oauthlib[version='>=0.6.2|>=3.0.0|>=2.1.0,<3.0.0']
+
+Package multidict conflicts for:
+yarl -> multidict[version='>=2.0|>=4.0']
+aiohttp -> multidict[version='>=2.1.4|>=3.0.0|>=4.0,<5.0|>=4.5,<5.0|>=4.5,<7.0']
+google-auth -> aiohttp[version='>=3.6.2,<4.0.0dev'] -> multidict[version='>=2.1.4|>=3.0.0|>=4.0,<5.0|>=4.5,<5.0|>=4.5,<7.0']
+aiohttp -> yarl[version='>=1.0,<2.0'] -> multidict[version='>=2.0|>=4.0']
+
+Package gst-plugins-base conflicts for:
+qt-main -> gst-plugins-base[version='>=1.14.0,<1.15.0a0|>=1.14.1,<1.15.0a0|>=1.22.7,<1.23.0a0|>=1.22.6,<1.23.0a0|>=1.22.5,<1.23.0a0|>=1.22.4,<1.23.0a0|>=1.22.3,<1.23.0a0|>=1.22.0,<1.23.0a0|>=1.21.3,<1.22.0a0|>=1.21.2,<1.22.0a0|>=1.21.1,<1.22.0a0|>=1.20.3,<1.21.0a0|>=1.20.2,<1.21.0a0|>=1.20.1,<1.21.0a0|>=1.18.5,<1.19.0a0']
+pyqt -> qt-main=5.15 -> gst-plugins-base[version='>=1.12.2,<1.13.0a0|>=1.12.4,<1.13.0a0|>=1.14.0,<1.15.0a0|>=1.14.1,<1.15.0a0|>=1.22.7,<1.23.0a0|>=1.22.6,<1.23.0a0|>=1.22.5,<1.23.0a0|>=1.22.4,<1.23.0a0|>=1.22.3,<1.23.0a0|>=1.22.0,<1.23.0a0|>=1.21.3,<1.22.0a0|>=1.21.2,<1.22.0a0|>=1.21.1,<1.22.0a0|>=1.20.3,<1.21.0a0|>=1.20.2,<1.21.0a0|>=1.20.1,<1.21.0a0|>=1.18.5,<1.19.0a0|>=1.14.4,<1.15.0a0|>=1.12.5,<1.13.0a0|>=1.18.3,<1.19.0a0']
+
+Package threadpoolctl conflicts for:
+scikit-learn[version='>=1.2.0'] -> threadpoolctl[version='>=2.0.0']
+pyg -> scikit-learn -> threadpoolctl[version='>=2.0.0']
+
+Package future conflicts for:
+torchmetrics -> pytorch[version='>=1.8.1'] -> future
+pyg -> pytorch=1.13 -> future
+pytorch-lightning[version='>=2.0'] -> pytorch[version='>=1.11.0'] -> future
+
+Package pyjwt conflicts for:
+requests-oauthlib -> oauthlib[version='>=3.0.0'] -> pyjwt[version='>=1.0.0|>=2.0.0,<3']
+oauthlib -> pyjwt[version='>=1.0.0|>=2.0.0,<3']
+
+Package libclang conflicts for:
+pyqt -> qt-main=5.15 -> libclang[version='13.*|>=10.0.1,<11.0a0|>=14.0.6,<15.0a0|>=15.0.7,<16.0a0|>=16.0.4,<17.0a0|>=16.0.3,<17.0a0|>=16.0.0,<17.0a0|>=15.0.6,<16.0a0|>=15.0.5,<16.0a0|>=15.0.3,<16.0a0|>=14.0.4,<15.0a0|>=14.0.3,<15.0a0|>=13.0.1,<14.0a0|>=13.0.0,<14.0a0|>=11.0.1,<12.0a0|>=11.0.0,<12.0a0|>=9.0.0,<10.0a0']
+qt-main -> libclang[version='13.*|>=10.0.1,<11.0a0|>=14.0.6,<15.0a0|>=15.0.7,<16.0a0|>=16.0.4,<17.0a0|>=16.0.3,<17.0a0|>=16.0.0,<17.0a0|>=15.0.6,<16.0a0|>=15.0.5,<16.0a0|>=15.0.3,<16.0a0|>=14.0.4,<15.0a0|>=14.0.3,<15.0a0|>=13.0.1,<14.0a0|>=13.0.0,<14.0a0']
+
+Package ply conflicts for:
+pyqt5-sip -> sip -> ply
+sip -> ply
+pyqt -> sip[version='>=6.7.12,<6.8.0a0'] -> ply
+
+Package python-tzdata conflicts for:
+networkx -> pandas[version='>=1.1'] -> python-tzdata[version='>=2022.1|>=2022a']
+pyg -> pandas -> python-tzdata[version='>=2022.1|>=2022a']
+pandas -> python-tzdata[version='>=2022.1|>=2022a']The following specifications were found to be incompatible with your system:
+
+  - feature:/linux-64::__glibc==2.38=0
+  - feature:/linux-64::__unix==0=0
+  - feature:|@/linux-64::__glibc==2.38=0
+  - feature:|@/linux-64::__unix==0=0
+  - abseil-cpp -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - aiohttp -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - blas -> libgfortran-ng -> __glibc[version='>=2.17']
+  - bottleneck -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - brotli -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - brotli-bin -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - brotli-python -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - c-ares -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - cffi -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - click -> __unix
+  - click -> __win
+  - contourpy -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - cryptography -> libgcc-ng -> __glibc[version='>=2.17']
+  - cyrus-sasl -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - dbus -> libgcc-ng[version='>=7.3.0'] -> __glibc[version='>=2.17']
+  - expat -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - fontconfig -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - fonttools -> libgcc-ng[version='>=10.3.0'] -> __glibc[version='>=2.17']
+  - freetype -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - frozenlist -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - gensim -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - giflib -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - glib -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - gmp -> libgcc-ng[version='>=7.5.0'] -> __glibc[version='>=2.17']
+  - gmpy2 -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - google-auth-oauthlib -> click[version='>=6.0.0'] -> __unix
+  - google-auth-oauthlib -> click[version='>=6.0.0'] -> __win
+  - greenlet -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - grpc-cpp -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - grpcio -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - gst-plugins-base -> __glibc[version='>=2.17,<3.0.a0']
+  - gst-plugins-base -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - gstreamer -> __glibc[version='>=2.17,<3.0.a0']
+  - gstreamer -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - gtest -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - icu -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - intel-openmp -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - jpeg -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - kiwisolver -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - krb5 -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - lcms2 -> libgcc-ng[version='>=7.3.0'] -> __glibc[version='>=2.17']
+  - lerc -> libgcc-ng[version='>=7.5.0'] -> __glibc[version='>=2.17']
+  - libbrotlicommon -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libbrotlidec -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libbrotlienc -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libclang -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libclang13 -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libcups -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libdeflate -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libedit -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libffi -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libgcc-ng -> __glibc[version='>=2.17']
+  - libgfortran-ng -> __glibc[version='>=2.17']
+  - libllvm14 -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libpng -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libpq -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libprotobuf -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libstdcxx-ng -> __glibc[version='>=2.17']
+  - libtiff -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libuuid -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libwebp -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libwebp-base -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libxcb -> libgcc-ng[version='>=7.5.0'] -> __glibc[version='>=2.17']
+  - libxkbcommon -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - libxml2 -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - llvm-openmp -> libgcc-ng[version='>=7.3.0'] -> __glibc[version='>=2.17']
+  - lz4-c -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - markupsafe -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - matplotlib -> libgcc-ng[version='>=7.3.0'] -> __glibc[version='>=2.17']
+  - matplotlib-base -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - mkl -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - mkl_fft -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - mkl_random -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - mpc -> libgcc-ng[version='>=7.2.0'] -> __glibc[version='>=2.17']
+  - mpfr -> libgcc-ng[version='>=7.3.0'] -> __glibc[version='>=2.17']
+  - multidict -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - mysql -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - ncurses -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - numexpr -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - numpy -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - numpy-base -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - openjpeg -> libgcc-ng[version='>=7.5.0'] -> __glibc[version='>=2.17']
+  - openssl -> libgcc-ng[version='>=7.5.0'] -> __glibc[version='>=2.17']
+  - pandas -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - pcre -> libgcc-ng[version='>=7.5.0'] -> __glibc[version='>=2.17']
+  - pillow -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - protobuf -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - psutil -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - pyg -> pytorch=1.13 -> __glibc[version='>=2.17|>=2.17,<3.0.a0']
+  - pyqt -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17|>=2.17,<3.0.a0']
+  - pyqt5-sip -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - pysocks -> __unix
+  - pysocks -> __win
+  - python=3.9 -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - pytorch-lightning[version='>=2.0'] -> pytorch[version='>=1.11.0'] -> __cuda[version='>=11.8']
+  - pytorch-lightning[version='>=2.0'] -> pytorch[version='>=1.11.0'] -> __glibc[version='>=2.17|>=2.17,<3.0.a0']
+  - pytorch[version='>=2.0.0'] -> __glibc[version='>=2.17|>=2.17,<3.0.a0']
+  - pytorch[version='>=2.0.0'] -> sympy -> __unix
+  - pyyaml -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - qt-main -> __glibc[version='>=2.17,<3.0.a0']
+  - qt-main -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - re2 -> libgcc-ng[version='>=7.5.0'] -> __glibc[version='>=2.17']
+  - readline -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - scikit-learn[version='>=1.2.0'] -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - scipy -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - setproctitle -> libgcc-ng[version='>=7.3.0'] -> __glibc[version='>=2.17']
+  - sip -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - sqlalchemy -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - sqlite -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - sympy -> __unix
+  - tbb -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - tensorboard-data-server -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - tk -> libgcc-ng[version='>=7.5.0'] -> __glibc[version='>=2.17']
+  - torchmetrics -> pytorch[version='>=1.8.1'] -> __glibc[version='>=2.17|>=2.17,<3.0.a0']
+  - tornado -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - urllib3 -> pysocks[version='>=1.5.6,<2.0,!=1.5.7'] -> __unix
+  - urllib3 -> pysocks[version='>=1.5.6,<2.0,!=1.5.7'] -> __win
+  - wandb[version='>=0.14.0'] -> click[version='>=7.1,!=8.0.0'] -> __unix
+  - wandb[version='>=0.14.0'] -> click[version='>=7.1,!=8.0.0'] -> __win
+  - xz -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - yaml -> libgcc-ng[version='>=7.3.0'] -> __glibc[version='>=2.17']
+  - yarl -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - zlib -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+  - zstd -> libgcc-ng[version='>=11.2.0'] -> __glibc[version='>=2.17']
+
+Your installed version is: 2.38

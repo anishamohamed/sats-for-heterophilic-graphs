@@ -1,3 +1,29 @@
+# name: g2notnvidia
+
+# channels:
+#   - pytorch
+#   - pyg
+#   - conda-forge
+# dependencies:
+#   - python=3.9
+#   - pip=23.0.1
+#   - numpy=1.23.5
+#   - pandas=1.5.3
+#   - scipy=1.10.0
+#   - scikit-learn=1.2.1
+#   - pytorch=2.0.0
+#   - pytorch-lightning>=2.0
+#   - torchvision=0.15.0
+#   - torchaudio=2.0.0
+#   - pytorch
+#   - tqdm=4.64.1
+#   - wandb=0.14.0
+#   - optuna
+#   - einops
+#   - pyg=2.3.0
+#   - pip:
+#     - torch_scatter --no-index --find-links https://data.pyg.org/whl/torch-2.0.0+cu118.html
+
 name: g2-sat
 
 channels:

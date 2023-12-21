@@ -7,9 +7,9 @@ channels:
   
 dependencies:
   - python=3.9
-  - pytorch::pytorch>=2.0.0
+  - pytorch
   - pytorch-lightning>=2.0
-  - torch_geometric>=2.0
+  - pyg=2.3.0
   - numpy
   - pandas
   - scikit-learn>=1.2.0
