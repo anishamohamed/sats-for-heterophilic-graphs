@@ -39,9 +39,11 @@ class Attention(gnn.MessagePassing):
         se="gnn",
         k_hop=2,
         gradient_gating_p=.0,
+        shape_attn=False,
         **kwargs
     ):
         super().__init__(node_dim=0, aggr="add")
+        
         self.embed_dim = embed_dim
         self.bias = bias
         head_dim = embed_dim // num_heads
@@ -82,6 +84,9 @@ class Attention(gnn.MessagePassing):
 
         # anisha: 
         self.batch_first = False
+        
+        # Lukas
+        self.shape_attn = shape_attn
 
     def _reset_parameters(self):
         nn.init.xavier_uniform_(self.to_qk.weight)
@@ -180,6 +185,10 @@ class Attention(gnn.MessagePassing):
         qk_j = rearrange(qk_j, "n (h d) -> n h d", h=self.num_heads)
         v_j = rearrange(v_j, "n (h d) -> n h d", h=self.num_heads)
         attn = (qk_i * qk_j).sum(-1) * self.scale
+
+        if self.shape_attn:
+            attn -= 1 * self.scale **2
+
         if edge_attr is not None:
             attn = attn + edge_attr
         attn = utils.softmax(attn, index, ptr, size_i)
@@ -200,7 +209,7 @@ class Attention(gnn.MessagePassing):
             mask.unsqueeze(1).unsqueeze(2),
             float("-inf"),
         )
-
+        
         dots = self.attend(dots)
         dots = self.attn_dropout(dots)
 
@@ -408,6 +417,7 @@ class TransformerEncoderLayer(nn.TransformerEncoderLayer):
         se="gnn",
         k_hop=2,
         gradient_gating_p=.0,
+        shape_attention=False,
         **kwargs
     ):
         super().__init__(d_model, nhead, dim_feedforward, dropout, activation)
@@ -421,6 +431,7 @@ class TransformerEncoderLayer(nn.TransformerEncoderLayer):
             se=se,
             k_hop=k_hop,
             gradient_gating_p=gradient_gating_p,
+            shape_attn=shape_attention,
             **kwargs
         )
         self.batch_norm = batch_norm

@@ -66,6 +66,7 @@ class GraphTransformer(nn.Module):
         max_seq_len=None,
         global_pool="mean",
         gradient_gating_p: float=.0,
+        shape_attn= False,
         **kwargs
     ):
         super().__init__()
@@ -112,6 +113,7 @@ class GraphTransformer(nn.Module):
             gnn_type=gnn_type,
             se=se,
             gradient_gating_p=gradient_gating_p,
+            shape_attention=shape_attn,
             **kwargs
         )
         self.encoder = GraphTransformerEncoder(encoder_layer, num_layers)

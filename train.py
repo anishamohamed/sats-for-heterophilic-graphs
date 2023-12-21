@@ -24,7 +24,7 @@ import wandb
 import optuna
 from optuna.samplers import TPESampler
 
-os.environ["WANDB_API_KEY"] = "" # insert personal/group wandb key
+os.environ["WANDB_API_KEY"] = "43dac5c44e9d3eab9fd7f1a4d64e3f702eccf292" # insert personal/group wandb key
 
 def load_args():
     parser = argparse.ArgumentParser(
@@ -40,6 +40,7 @@ def load_args():
         "--dim-hidden", type=int, default=64, help="hidden dimension of Transformer"
     )
     parser.add_argument("--dropout", type=float, default=0.2, help="dropout")
+    parser.add_argument("--shape_attn", action="store_true", help="Use shaped attention as in Noci et al.")
     parser.add_argument("--epochs", type=int, default=2000, help="number of epochs")
     parser.add_argument("--lr", type=float, default=0.001, help="initial learning rate")
     parser.add_argument("--weight-decay", type=float, default=1e-5, help="weight decay")
@@ -59,6 +60,9 @@ def load_args():
     )
     parser.add_argument(
         "--layer-norm", action="store_true", help="use layer norm instead of batch norm"
+    )
+    parser.add_argument(
+        "--no_norm", action="store_true", help="disable all norms"
     )
     parser.add_argument(
         "--use-edge-attr", action="store_true", help="use edge features"
@@ -95,6 +99,8 @@ def load_args():
 
     args = vars(parser.parse_args())
     args["batch_norm"] = not args["layer_norm"]
+    if args["no_norm"]:
+        args["batch_norm"]=args["layer_norm"]=False
     return args
 
 def tune():
@@ -148,7 +154,7 @@ def tune():
             "global_pool": global_pool,
             "se": se,
             "batch_norm": batch_norm,
-            "gradient_gating_p": gradient_gating_p
+            "gradient_gating_p": gradient_gating_p,
         }
          
         print(args)
@@ -272,6 +278,8 @@ def run(args):
         deg=deg,
         global_pool=args["global_pool"],
         gradient_gating_p=args["gradient_gating_p"],
+        shape_attn=args["shape_attn"],
+        no_norm=args["no_norm"]
     )
 
     wrapper = GraphTransformerWrapper(
@@ -288,7 +296,7 @@ def run(args):
         max_epochs=args["epochs"],
         deterministic=True,
         logger=WandbLogger(
-            project="g2_sat_" + args["dataset"],
+            project="shaped" + args["dataset"],
             config=args,
         ),
         # callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=3),
