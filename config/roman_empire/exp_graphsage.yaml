@@ -9,23 +9,23 @@ model:
   d_model: 16
   num_heads: 1
   dim_feedforward: 32
-  dropout: 0.0 # [0.3, 0.5, 0.7]
+  dropout: [0.3, 0.5]
   num_layers: 1
-  batch_norm: True
+  batch_norm: False
   abs_pe: None
   abs_pe_dim: 0
   se: "gnn"
   gnn_type: "graphsage"
-  k_hop: 5 # [3, 8, 16]
+  k_hop: [3, 8, 16]
   in_embed: False
   use_global_pool: False
-  gradient_gating_p: 0.0 # [0.0, 1.0, 1.5]
+  gradient_gating_p: [0.0, 1.0, 1.5]
 
-epochs: 200
-lr: 0.001
+epochs: 5000
+lr: 0.0001
 weight_decay: 0.00001
 
 logger:
-  project: "roman_empire_sanity_check"
+  project: "roman_empire_graphsage"
   entity: "math_dl"
   wandb_key: "8f17d7bd011da005a1f4e9a75469497e3236f0b8" 

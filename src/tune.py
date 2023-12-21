@@ -10,7 +10,7 @@ from torch_geometric.seed import seed_everything
 from data.dataset import GraphDataset
 from data.utils import get_heterophilous_graph_data
 from model.abs_pe import POSENCODINGS
-from train import load_config, run_zinc, run_heterophilous_single_split, prepare_heterophilous_data
+from train import load_config, run_zinc, run_heterophilous_single_split, prepare_heterophilous_dataloaders
 import optuna
 from optuna.samplers import TPESampler
 
@@ -28,8 +28,8 @@ def convert_to_trial(trial: optuna.trial.Trial, config: dict):
 
 def objective_heterophilous(trial: optuna.trial.Trial, dataloader, config):
     trial_config = convert_to_trial(trial, config)
-    trial_config.update({"mask": 0}) # train on first mask id
-    return run_heterophilous_single_split(dataloader, trial_config)
+    # train on first mask id
+    return run_heterophilous_single_split(dataloader, 0, trial_config)
 
 def objective_zinc(trial: optuna.trial.Trial, config):
     trial_config = convert_to_trial(trial, config)
@@ -41,7 +41,7 @@ def tune(config_path):
     if config.get("logger") is not None:
         os.environ["WANDB_API_KEY"] = config["logger"].get("wandb_key")
 
-    seed_everything(config.get("seed"), 42)
+    seed_everything(config.get("seed", 42))
     config["dataset"] = config["dataset"].lower().replace("-", "_")
 
     if config["dataset"] == "zinc":
@@ -55,7 +55,7 @@ def tune(config_path):
         "tolokers",
         "questions",
     ]:
-        loader, config = prepare_heterophilous_data(config)
+        loader, config = prepare_heterophilous_dataloaders(config)
         objective = partial(objective_heterophilous, dataloader=loader, config=config)
         direction = "maximize"
 

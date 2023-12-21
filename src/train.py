@@ -144,7 +144,7 @@ def run_zinc(config):
     return trainer.callback_metrics["test/loss"].item()
 
 
-def run_heterophilous_single_split(dataloaders, config):
+def run_heterophilous_single_split(dataloaders, mask, config):
     if config.get("node_projection") is not None:
         in_size = MLP(
             in_channels=config.get("input_size"),
@@ -165,7 +165,7 @@ def run_heterophilous_single_split(dataloaders, config):
         config.get("lr"),
         config.get("weight_decay"),
         lr_scheduler=None,
-        mask=config.get("mask"),
+        mask=mask,
     )
 
     logger = (
@@ -205,8 +205,7 @@ def run_heterophilous(config):
 
     accuracy_list = list()
     for mask in range(NUM_SPLITS_HETERORPHILOUS):
-        config.update({"mask": mask})
-        acc = run_heterophilous_single_split(dataloaders, config)
+        acc = run_heterophilous_single_split(dataloaders, mask, config)
         accuracy_list.append(acc)
 
     accuracy_list = np.array(accuracy_list)
