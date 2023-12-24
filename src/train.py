@@ -4,7 +4,7 @@ from functools import partial
 import numpy as np
 
 import torch
-from torch import nn
+from torch import nn, optim
 from torch.utils.data import TensorDataset
 
 from torch_geometric.loader import DataLoader
@@ -133,7 +133,7 @@ def run_zinc(config):
     )
 
     if config.get("device") == "cuda":
-        torch.use_deterministic_algorithms(False)
+        torch.use_deterministic_algorithms(True)
 
     trainer.fit(wrapper, train_loader, val_loader)
     trainer.test(wrapper, test_loader)
@@ -159,12 +159,13 @@ def run_heterophilous_single_split(dataloaders, mask, config):
     model_config = config.get("model")
     model = GraphTransformer(in_size=in_size, **model_config)
 
+    lr_scheduler = partial(optim.lr_scheduler.StepLR, **config.get("scheduler")) if config.get("scheduler") is not None else None
     wrapper = HeterophilousGraphWrapper(
         model,
         config.get("abs_pe_method"),
         config.get("lr"),
         config.get("weight_decay"),
-        lr_scheduler=None,
+        lr_scheduler,
         mask=mask,
     )
 
@@ -182,13 +183,13 @@ def run_heterophilous_single_split(dataloaders, mask, config):
         max_epochs=config.get("epochs"),
         deterministic=True,
         logger=logger,
-        # callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=20),
+        callbacks=EarlyStopping(monitor="val/acc", mode="max", patience=500),
         check_val_every_n_epoch=1,
         log_every_n_steps=1,
     )
 
     if config.get("device") == "cuda":
-        torch.use_deterministic_algorithms(False)
+        torch.use_deterministic_algorithms(True)
     
     train_loader, val_loader, test_loader = dataloaders
     trainer.fit(wrapper, train_loader, val_loader) 
@@ -204,7 +205,7 @@ def run_heterophilous(config):
     dataloaders, config = prepare_heterophilous_dataloaders(config)
 
     accuracy_list = list()
-    for mask in range(NUM_SPLITS_HETERORPHILOUS):
+    for mask in [0]: # range(NUM_SPLITS_HETERORPHILOUS):
         acc = run_heterophilous_single_split(dataloaders, mask, config)
         accuracy_list.append(acc)
 

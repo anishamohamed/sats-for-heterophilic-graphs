@@ -6,7 +6,7 @@ def get_heterophilous_graph_data(name: str, root_dir: str):
         input_size = 300  # n_tags
         num_classes = 18
         data = datasets.HeterophilousGraphDataset(
-            root_dir, name="Roman-empire", # transform=T.NormalizeFeatures()
+            root_dir, name="Roman-empire"
         )
         # data[0]: Data(x=[22662, 300], edge_index=[2, 32927], y=[22662], train_mask=[22662, 10], val_mask=[22662, 10], test_mask=[22662, 10])
     elif name == "amazon_ratings":

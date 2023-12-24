@@ -10,9 +10,9 @@ model:
   num_heads: 1
   dim_feedforward: 32
   dropout: 0.5
-  num_layers: [4, 5, 6]
+  num_layers: 5
   batch_norm: False
-  abs_pe: None
+  abs_pe: null
   abs_pe_dim: 0
   se: "gnn"
   gnn_type: "graphsage"
@@ -21,9 +21,12 @@ model:
   use_global_pool: False
   gradient_gating_p: 0.0
 
-epochs: 5000
-lr: 0.0001
-weight_decay: 0.00001
+epochs: 10000
+lr: 0.0005
+weight_decay: 0
+scheduler:
+  step_size: 500
+  gamma: 0.2
 
 logger:
   project: "roman_empire_graphsage"
