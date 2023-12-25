@@ -132,8 +132,8 @@ def run_zinc(config):
         check_val_every_n_epoch=1,
     )
 
-    if config.get("device") == "cuda":
-        torch.use_deterministic_algorithms(True)
+    # if config.get("device") == "cuda":
+        # torch.use_deterministic_algorithms(True)
 
     trainer.fit(wrapper, train_loader, val_loader)
     trainer.test(wrapper, test_loader)
@@ -148,10 +148,11 @@ def run_heterophilous_single_split(dataloaders, mask, config):
     if config.get("node_projection") is not None:
         in_size = MLP(
             in_channels=config.get("input_size"),
-            hidden_channels=config.get("node_projection").get("hidden_channels"),
-            out_channels=config.get("node_projection").get("out_channels"),
-            num_layers=config.get("node_projection").get("num_layers"),
+            hidden_channels=config["node_projection"].get("hidden_channels"),
+            out_channels=config["model"].get("d_model"),
+            num_layers=config["node_projection"].get("num_layers"),
             act=nn.Mish(),
+            dropout=0.5,
             norm="batch_norm",
         )
     else:
@@ -159,7 +160,12 @@ def run_heterophilous_single_split(dataloaders, mask, config):
     model_config = config.get("model")
     model = GraphTransformer(in_size=in_size, **model_config)
 
-    lr_scheduler = partial(optim.lr_scheduler.StepLR, **config.get("scheduler")) if config.get("scheduler") is not None else None
+    lr_scheduler = partial(
+        optim.lr_scheduler.LambdaLR, lr_lambda=(
+            lambda epoch: 1.0 if epoch <= config["scheduler"].get("warmup") else 0.2
+        )
+    ) if config.get("scheduler") is not None else None
+    # lr_scheduler = partial(optim.lr_scheduler.StepLR, **config.get("scheduler")) if config.get("scheduler") is not None else None
     wrapper = HeterophilousGraphWrapper(
         model,
         config.get("abs_pe_method"),
@@ -181,15 +187,15 @@ def run_heterophilous_single_split(dataloaders, mask, config):
     trainer = pl.Trainer(
         accelerator=config.get("device"),
         max_epochs=config.get("epochs"),
-        deterministic=True,
+        # deterministic=True,
         logger=logger,
-        callbacks=EarlyStopping(monitor="val/acc", mode="max", patience=500),
+        callbacks=EarlyStopping(monitor="val/acc", mode="max", patience=300),
         check_val_every_n_epoch=1,
         log_every_n_steps=1,
     )
 
-    if config.get("device") == "cuda":
-        torch.use_deterministic_algorithms(True)
+    # if config.get("device") == "cuda":
+        # torch.use_deterministic_algorithms(True)
     
     train_loader, val_loader, test_loader = dataloaders
     trainer.fit(wrapper, train_loader, val_loader) 

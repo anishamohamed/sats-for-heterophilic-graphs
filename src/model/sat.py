@@ -4,7 +4,7 @@ from torch import nn
 import torch_geometric.nn as gnn
 from model.sat_block import TransformerEncoderLayer
 from einops import repeat
-from typing import Union, Callable
+from typing import Union, Callable, Optional
 
 
 class GraphTransformerEncoder(nn.TransformerEncoder):
@@ -23,6 +23,7 @@ class GraphTransformerEncoder(nn.TransformerEncoder):
         return_attn=False,
     ):
         output = x
+        xs = [output]
 
         for mod in self.layers:
             output = mod(
@@ -38,9 +39,11 @@ class GraphTransformerEncoder(nn.TransformerEncoder):
                 ptr=ptr,
                 return_attn=return_attn,
             )
+            xs.append(output)
+
         if self.norm is not None:
-            output = self.norm(output)
-        return output
+            xs[-1] = self.norm(xs[-1])
+        return xs
 
 
 class GraphTransformer(nn.Module):
@@ -66,6 +69,7 @@ class GraphTransformer(nn.Module):
         max_seq_len=None,
         global_pool="mean",
         gradient_gating_p: float = 0.0,
+        jk: Optional[str] = None,
         **kwargs
     ):
         super().__init__()
@@ -101,7 +105,6 @@ class GraphTransformer(nn.Module):
         else:
             kwargs["edge_dim"] = None
 
-        # self.gnn_type = gnn_type
         self.se = se
         encoder_layer = TransformerEncoderLayer(
             d_model,
@@ -125,6 +128,8 @@ class GraphTransformer(nn.Module):
             self.pooling = None
         self.use_global_pool = use_global_pool
 
+        self.jk = gnn.models.JumpingKnowledge(mode=jk, channels=d_model, num_layers=3) if jk is not None else lambda xs: xs[-1]
+        
         self.max_seq_len = max_seq_len
         if max_seq_len is None:
             self.classifier = nn.Sequential(
@@ -212,7 +217,7 @@ class GraphTransformer(nn.Module):
             )  # cls_tokens: (batch_size, d_model)
             output = torch.cat((output, cls_tokens))  # output: (2*batch_size, d_model)
 
-        output = self.encoder(
+        xs = self.encoder(
             output,
             edge_index,
             complete_edge_index,
@@ -225,6 +230,7 @@ class GraphTransformer(nn.Module):
             ptr=data.ptr,
             return_attn=return_attn,
         )
+        output = self.jk(xs)
 
         # readout step
         if self.use_global_pool:

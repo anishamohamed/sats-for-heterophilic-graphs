@@ -6,24 +6,27 @@ root_dir: "datasets"
 degree: False
 
 model:
-  d_model: 16
+  d_model: 32
   num_heads: 1
-  dim_feedforward: 32
+  dim_feedforward: 64
   dropout: 0.5
   num_layers: 5
   batch_norm: False
   abs_pe: null
   abs_pe_dim: 0
   se: "gnn"
-  gnn_type: "graphsage"
+  gnn_type: "pna2"
   k_hop: 3
   in_embed: False
   use_global_pool: False
   gradient_gating_p: 0.0
+  jk: "lstm"
 
 epochs: 10000
 lr: 0.0005
 weight_decay: 0.00001
+# scheduler:
+#  warmup: 1000
 
 logger:
   project: "roman_empire_graphsage"

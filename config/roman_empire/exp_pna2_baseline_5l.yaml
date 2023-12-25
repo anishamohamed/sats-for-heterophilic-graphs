@@ -5,23 +5,27 @@ root_dir: "datasets"
 
 degree: False
 
+node_projection:
+  hidden_channels: 64
+  num_layers: 3
 model:
-  d_model: 16
+  d_model: 32
   num_heads: 1
-  dim_feedforward: 32
+  dim_feedforward: 64
   dropout: 0.5
   num_layers: 5
   batch_norm: False
   abs_pe: null
   abs_pe_dim: 0
   se: "gnn"
-  gnn_type: "graphsage"
-  k_hop: 3
-  in_embed: False
+  gnn_type: "pna2"
+  k_hop: [3, 8, 16, 32]
+  in_embed: True
   use_global_pool: False
-  gradient_gating_p: 0.0
+  gradient_gating_p: [0.0, 0.5, 1.0, 2.0, 3.0]
+  jk: "lstm"
 
-epochs: 10000
+epochs: 3000
 lr: 0.0005
 weight_decay: 0.00001
 
