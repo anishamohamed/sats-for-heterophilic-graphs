@@ -223,11 +223,11 @@ def run_sbm(config):
     num_class = 6 if config.get("dataset") == "cluster" else 2
     input_size = 7 if config.get("dataset") == "cluster" else 3
 
-    print("Input size: " + str(input_size))
     model_conf = config.get("model")
     train_dset = GraphDataset(datasets.GNNBenchmarkDataset(config.get("root_dir"),
     name=config.get("dataset").upper(), split='train'), degree=True, k_hop=model_conf.get("k_hop"), se=model_conf.get("se"),
     cache_path=config.get("root_dir") + 'train')
+    
     train_loader = DataLoader(train_dset, batch_size=config.get("batch_size"), shuffle=True)
 
     val_dset = GraphDataset(datasets.GNNBenchmarkDataset(config.get("root_dir"),
@@ -240,9 +240,9 @@ def run_sbm(config):
     cache_path=config.get("root_dir") + 'test')
 
     test_loader = DataLoader(test_dset, batch_size=config.get("batch_size"), shuffle=False)
-
+   
     abs_pe_encoder = None
-    # TODO does this if statement actually work
+    
     if config.get("abs_pe") and config.get("abs_pe_dim") > 0:
         abs_pe_method = POSENCODINGS[config.get("abs_pe")]
         abs_pe_encoder = abs_pe_method(config.get("abs_pe_dim"), normalization="sym")
@@ -258,17 +258,17 @@ def run_sbm(config):
         for i in range(len(train_dset))])
     
     def criterion(input, target):
-            V = target.size(0)
-            label_count = torch.bincount(target)
-            label_count = label_count[label_count.nonzero()].squeeze()
-            cluster_sizes = torch.zeros(num_class).long()
-            if config.get("device") == "cuda":
-                cluster_sizes = cluster_sizes.cuda()
-            cluster_sizes[torch.unique(target)] = label_count
-            weight = (V - cluster_sizes).float() / V
-            weight *= (cluster_sizes > 0).float()
-            cri = nn.CrossEntropyLoss(weight=weight)
-            return cri(input, target)
+        V = target.size(0)
+        label_count = torch.bincount(target)
+        label_count = label_count[label_count.nonzero()].squeeze()
+        cluster_sizes = torch.zeros(num_class).long()
+        if config.get("device") == "cuda":
+            cluster_sizes = cluster_sizes.cuda()
+        cluster_sizes[torch.unique(target)] = label_count
+        weight = (V - cluster_sizes).float() / V
+        weight *= (cluster_sizes > 0).float()
+        cri = nn.CrossEntropyLoss(weight=weight)
+        return cri(input, target)
     
     model_config = config.get("model")
     model_config.update(
@@ -280,7 +280,6 @@ def run_sbm(config):
         }
     )
     model = GraphTransformer(**model_config)
-   
     lr_scheduler = partial(
         ZincLRScheduler, lr=config.get("lr"), warmup=config.get("warmup")
     )
@@ -296,7 +295,7 @@ def run_sbm(config):
 
     logger = (
         WandbLogger(
-            project=config["logger"].get("project") or "g2_sat_" + config.get("dataset"),
+            project=config["logger"].get("project") or "sat_" + config.get("dataset"),
             entity=config["logger"].get("entity"),
             config=config,
         )
@@ -306,7 +305,7 @@ def run_sbm(config):
     trainer = pl.Trainer(
         accelerator=config.get("device"),
         max_epochs=config.get("epochs"),
-        deterministic=True,
+        deterministic=False,
         logger=logger,
         # callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=20),
         check_val_every_n_epoch=1,

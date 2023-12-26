@@ -27,4 +27,4 @@ batch_size: 128
 epochs: 2000
 
 logger:
-  wandb_key: "8f17d7bd011da005a1f4e9a75469497e3236f0b8" 
+  wandb_key: "43dac5c44e9d3eab9fd7f1a4d64e3f702eccf292" 

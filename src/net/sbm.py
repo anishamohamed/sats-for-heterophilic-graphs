@@ -31,6 +31,9 @@ class SBMWrapper(pl.LightningModule):
         self.val_samples = 0
         self.test_samples = 0
 
+        self.val_acc = 0.0
+        self.test_acc = 0.0
+
         self.save_hyperparameters(ignore=["model", "criterion"])
 
     def forward(self, batch):
@@ -45,11 +48,14 @@ class SBMWrapper(pl.LightningModule):
             batch.abs_pe = batch.abs_pe * sign_flip.unsqueeze(0)
 
         output = self(batch)
-        loss = self.criterion(output, batch.y)
+        loss = self.criterion(output, batch.y.squeeze())
         size = len(batch.y)
 
         self.train_loss += loss.item() * size
         self.train_samples += size
+        
+        correct = torch.sum(torch.argmax(output, dim=-1) == batch.y.squeeze())
+        self.log("train/acc", correct / len(batch.y))
 
         return loss
 
@@ -62,11 +68,14 @@ class SBMWrapper(pl.LightningModule):
 
     def validation_step(self, batch, batch_idx):
         output = self(batch)
-        loss = self.criterion(output, batch.y)
+        loss = self.criterion(output, batch.y.squeeze())
         size = len(batch.y)
 
         self.val_loss += loss.item() * size
         self.val_samples += size
+
+        correct = torch.sum(torch.argmax(output, dim=-1) == batch.y.squeeze())
+        self.log("val/acc", correct / len(batch.y))
 
     def on_validation_epoch_end(self):
         val_loss = self.val_loss / self.val_samples
@@ -77,11 +86,14 @@ class SBMWrapper(pl.LightningModule):
 
     def test_step(self, batch, batch_idx):
         output = self(batch)
-        loss = self.criterion(output, batch.y)
+        loss = self.criterion(output, batch.y.squeeze())
         size = len(batch.y)
 
         self.test_loss += loss.item() * size
         self.test_samples += size
+
+        correct = torch.sum(torch.argmax(output, dim=-1) == batch.y.squeeze())
+        self.log("test/acc", correct / len(batch.y))
 
     def on_test_epoch_end(self):
         test_loss = self.test_loss / self.test_samples
