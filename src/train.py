@@ -21,6 +21,7 @@ from data.utils import get_heterophilous_graph_data
 from model.sat import GraphTransformer
 from model.abs_pe import POSENCODINGS
 from net.zinc import ZINCWrapper
+from net.sbm import SBMWrapper
 from net.utils import ZincLRScheduler
 from net.heterophilous import HeterophilousGraphWrapper
 
@@ -218,6 +219,110 @@ def run_heterophilous(config):
     accuracy_list = np.array(accuracy_list)
     print(f"Accuracy: {np.mean(accuracy_list)} +- {np.std(accuracy_list)}")
 
+def run_sbm(config):
+    num_class = 6 if config.get("dataset") == "cluster" else 2
+    input_size = 7 if config.get("dataset") == "cluster" else 3
+
+    print("Input size: " + str(input_size))
+    model_conf = config.get("model")
+    train_dset = GraphDataset(datasets.GNNBenchmarkDataset(config.get("root_dir"),
+    name=config.get("dataset").upper(), split='train'), degree=True, k_hop=model_conf.get("k_hop"), se=model_conf.get("se"),
+    cache_path=config.get("root_dir") + 'train')
+    train_loader = DataLoader(train_dset, batch_size=config.get("batch_size"), shuffle=True)
+
+    val_dset = GraphDataset(datasets.GNNBenchmarkDataset(config.get("root_dir"),
+        name=config.get("dataset").upper(), split='val'), degree=True, k_hop=model_conf.get("k_hop"), se=model_conf.get("se"),
+        cache_path=config.get("root_dir") + 'val')
+    val_loader = DataLoader(val_dset, batch_size=config.get("batch_size"), shuffle=False)
+    
+    test_dset = GraphDataset(datasets.GNNBenchmarkDataset(config.get("root_dir"),
+    name=config.get("dataset").upper(), split='test'), degree=True, k_hop=model_conf.get("k_hop"), se=model_conf.get("se"),
+    cache_path=config.get("root_dir") + 'test')
+
+    test_loader = DataLoader(test_dset, batch_size=config.get("batch_size"), shuffle=False)
+
+    abs_pe_encoder = None
+    # TODO does this if statement actually work
+    if config.get("abs_pe") and config.get("abs_pe_dim") > 0:
+        abs_pe_method = POSENCODINGS[config.get("abs_pe")]
+        abs_pe_encoder = abs_pe_method(config.get("abs_pe_dim"), normalization="sym")
+        if abs_pe_encoder is not None:
+            abs_pe_encoder.apply_to(train_dset)
+            abs_pe_encoder.apply_to(val_dset)
+            abs_pe_encoder.apply_to(test_dset)
+    else:
+        abs_pe_method = None
+
+    deg = torch.cat([
+        degree(train_dset[i].edge_index[1], num_nodes=train_dset[i].num_nodes)
+        for i in range(len(train_dset))])
+    
+    def criterion(input, target):
+            V = target.size(0)
+            label_count = torch.bincount(target)
+            label_count = label_count[label_count.nonzero()].squeeze()
+            cluster_sizes = torch.zeros(num_class).long()
+            if config.get("device") == "cuda":
+                cluster_sizes = cluster_sizes.cuda()
+            cluster_sizes[torch.unique(target)] = label_count
+            weight = (V - cluster_sizes).float() / V
+            weight *= (cluster_sizes > 0).float()
+            cri = nn.CrossEntropyLoss(weight=weight)
+            return cri(input, target)
+    
+    model_config = config.get("model")
+    model_config.update(
+        {
+            "in_size": input_size,
+            "num_class": num_class,
+            "num_edge_features": 0,
+            "deg": deg,  # to be propagated to gnn layers...
+        }
+    )
+    model = GraphTransformer(**model_config)
+   
+    lr_scheduler = partial(
+        ZincLRScheduler, lr=config.get("lr"), warmup=config.get("warmup")
+    )
+
+    wrapper = SBMWrapper(
+        model,
+        abs_pe_method,
+        config.get("lr"),
+        config.get("weight_decay"),
+        lr_scheduler,
+        criterion
+    )
+
+    logger = (
+        WandbLogger(
+            project=config["logger"].get("project") or "g2_sat_" + config.get("dataset"),
+            entity=config["logger"].get("entity"),
+            config=config,
+        )
+        if config.get("logger") is not None
+        else False
+    )
+    trainer = pl.Trainer(
+        accelerator=config.get("device"),
+        max_epochs=config.get("epochs"),
+        deterministic=True,
+        logger=logger,
+        # callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=20),
+        check_val_every_n_epoch=1,
+    )
+
+    # if config.get("device") == "cuda":
+        # torch.use_deterministic_algorithms(True)
+
+    trainer.fit(wrapper, train_loader, val_loader)
+    trainer.test(wrapper, test_loader)
+
+    if logger:
+        wandb.finish()
+
+    return trainer.callback_metrics["test/loss"].item()
+
 
 def prepare_heterophilous_dataloaders(config):
     data, input_size, num_class = get_heterophilous_graph_data(config.get("dataset"), config.get("root_dir"))
@@ -276,6 +381,9 @@ def run(config_path):
         "questions",
     ]:
         run_heterophilous(config)
+
+    elif config["dataset"] in ["pattern", "cluster"]:
+        run_sbm(config)
 
     else:
         raise Exception("Unknown dataset")
