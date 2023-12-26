@@ -277,6 +277,9 @@ def run(config_path):
     ]:
         run_heterophilous(config)
 
+    elif config["dataset"] in ["pattern", "cluster"]:
+        run_sbm(config)
+
     else:
         raise Exception("Unknown dataset")
 

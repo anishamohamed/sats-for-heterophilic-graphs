@@ -11,5 +11,5 @@
 module load gcc/8.2.0 python_gpu/3.10.4 hdf5/1.10.1 eth_proxy cuda/11.8.0 cudnn/8.8.1.3
 
 source  $HOME/miniconda/bin/activate g2-sat
-python src/tune.py config/roman_empire/exp_pna2_baseline_5l.yaml
+python src/tune.py config/roman_empire/exp_pna2.yaml
 conda deactivate

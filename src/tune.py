@@ -65,7 +65,7 @@ def tune(config_path):
     study = optuna.create_study(
         direction=direction, sampler=TPESampler(constant_liar=True)
     )
-    study.optimize(objective, n_trials=200)
+    study.optimize(objective, n_trials=2)
 
     best_params = study.best_params
     print(f"Best: {study.best_value}")
