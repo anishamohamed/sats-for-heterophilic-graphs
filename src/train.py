@@ -139,25 +139,22 @@ def run_zinc(config):
 def run_sbm(config):
     model_config = config.get("model")
     train_data = datasets.GNNBenchmarkDataset(config.get("root_dir"), name=config.get("dataset").upper(), split="train")
+    val_data = datasets.GNNBenchmarkDataset(config.get("root_dir"), name=config.get("dataset").upper(), split="val") 
+    test_data = datasets.GNNBenchmarkDataset(config.get("root_dir"), name=config.get("dataset").upper(), split="test") 
     train_dataset = GraphDataset(
         train_data,
         degree=True,
         k_hop=model_config.get("k_hop"),
         se=model_config.get("se"),
     )
-    print(train_data[0].x.shape, train_data[0].y)
     val_dataset = GraphDataset(
-        datasets.GNNBenchmarkDataset(
-            config.get("root_dir"), name=config.get("dataset").upper(), split="val"
-        ),
+        val_data,
         degree=True,
         k_hop=model_config.get("k_hop"),
         se=model_config.get("se"),
     )
     test_dataset = GraphDataset(
-        datasets.GNNBenchmarkDataset(
-            config.get("root_dir"), name=config.get("dataset").upper(), split="test"
-        ),
+        test_data,
         degree=True,
         k_hop=model_config.get("k_hop"),
         se=model_config.get("se"),
@@ -194,36 +191,22 @@ def run_sbm(config):
     model_config.update(
         {
             "use_edge_attr": False,
-            "use_global_pool": True,  # graph classification task
+            "use_global_pool": False,  # node classification task
             "deg": deg,  # to be propagated to gnn layers...
         }
     )
     model = GraphTransformer(**model_config)
-
-    def criterion(predictions, target, num_class=model_config.get("num_class")):
-        print(f"pred: {predictions.shape}, target: {target.shape}")
-        V = target.size(0)
-        label_count = torch.bincount(target)
-        label_count = label_count[label_count.nonzero()].squeeze()
-        cluster_sizes = torch.zeros(num_class).long()
-        if config.get("device") == "cuda":
-            cluster_sizes = cluster_sizes.cuda()
-        cluster_sizes[torch.unique(target)] = label_count
-        weight = (V - cluster_sizes).float() / V
-        weight *= (cluster_sizes > 0).float()
-        ce = nn.CrossEntropyLoss(weight=weight)
-        return ce(predictions, target)
 
     lr_scheduler = partial(
         CustomLRScheduler, lr=config.get("lr"), warmup=config.get("warmup")
     )
     wrapper = SBMWrapper(
         model,
+        model_config.get("num_class"),
         abs_pe_method,
         config.get("lr"),
         config.get("weight_decay"),
         lr_scheduler,
-        criterion,
     )
 
     trainer = pl.Trainer(

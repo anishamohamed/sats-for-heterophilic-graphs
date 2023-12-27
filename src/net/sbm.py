@@ -9,20 +9,19 @@ class SBMWrapper(pl.LightningModule):
     def __init__(
         self,
         model: GraphTransformer,
+        num_class: int,
         abs_pe: Optional[str],
         learning_rate: float,
         weight_decay: float,
         lr_scheduler: nn.Module,
-        criterion
     ):
         super().__init__()
         self.model = model
+        self.num_class = num_class
         self.abs_pe = abs_pe
         self.learning_rate = learning_rate
         self.weight_decay = weight_decay
         self.lr_scheduler = lr_scheduler
-
-        self.criterion = criterion
 
         self.train_loss = 0.0
         self.val_loss = 0.0
@@ -67,7 +66,6 @@ class SBMWrapper(pl.LightningModule):
         self.train_samples = 0
 
     def validation_step(self, batch, batch_idx):
-        print(f"x: {batch.x.shape}, y: {batch.y.shape}, {batch.y}")
         output = self(batch)
         loss = self.criterion(output, batch.y.squeeze())
         size = len(batch.y)
@@ -116,3 +114,15 @@ class SBMWrapper(pl.LightningModule):
             return [optimizer], [scheduler]
         else:
             return optimizer
+
+    def criterion(self, y_hat, y):
+        V = y.size(0)
+        label_count = torch.bincount(y)
+        label_count = label_count[label_count.nonzero()].squeeze()
+        cluster_sizes = torch.zeros(self.num_class).long()
+        cluster_sizes = cluster_sizes.to(self.device)
+        cluster_sizes[torch.unique(y)] = label_count
+        weight = (V - cluster_sizes).float() / V
+        weight *= (cluster_sizes > 0).float()
+        ce = nn.CrossEntropyLoss(weight=weight)
+        return ce(y_hat, y)
