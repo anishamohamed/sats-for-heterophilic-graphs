@@ -138,14 +138,14 @@ def run_zinc(config):
 
 def run_sbm(config):
     model_config = config.get("model")
+    train_data = datasets.GNNBenchmarkDataset(config.get("root_dir"), name=config.get("dataset").upper(), split="train")
     train_dataset = GraphDataset(
-        datasets.GNNBenchmarkDataset(
-            config.get("root_dir"), name=config.get("dataset").upper(), split="train"
-        ),
+        train_data,
         degree=True,
         k_hop=model_config.get("k_hop"),
         se=model_config.get("se"),
     )
+    print(train_data[0].x.shape, train_data[0].y)
     val_dataset = GraphDataset(
         datasets.GNNBenchmarkDataset(
             config.get("root_dir"), name=config.get("dataset").upper(), split="val"
