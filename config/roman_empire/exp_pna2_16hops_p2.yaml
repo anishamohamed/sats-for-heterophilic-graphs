@@ -19,7 +19,7 @@ model:
   abs_pe_dim: 0
   se: "gnn"
   gnn_type: "pna2"
-  k_hop: 3
+  k_hop: 16
   in_embed: True
   use_global_pool: False
   gradient_gating_p: 2.0

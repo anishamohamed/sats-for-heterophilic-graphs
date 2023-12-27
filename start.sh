@@ -11,5 +11,15 @@
 module load gcc/8.2.0 python_gpu/3.10.4 hdf5/1.10.1 eth_proxy cuda/11.8.0 cudnn/8.8.1.3
 
 source  $HOME/miniconda/bin/activate g2-sat
-python src/tune.py config/roman_empire/exp_pna2.yaml
+python src/train.py config/roman_empire/exp_pna2_8hops_p1.yaml
+python src/train.py config/roman_empire/exp_pna2_8hops_p2.yaml
+python src/train.py config/roman_empire/exp_pna2_8hops_p3.yaml
+python src/train.py config/roman_empire/exp_pna2_16hops.yaml
+python src/train.py config/roman_empire/exp_pna2_16hops_p1.yaml
+python src/train.py config/roman_empire/exp_pna2_16hops_p2.yaml
+python src/train.py config/roman_empire/exp_pna2_16hops_p3.yaml
+python src/train.py config/roman_empire/exp_pna2_32hops.yaml
+python src/train.py config/roman_empire/exp_pna2_32hops_p1.yaml
+python src/train.py config/roman_empire/exp_pna2_32hops_p2.yaml
+python src/train.py config/roman_empire/exp_pna2_32hops_p3.yaml
 conda deactivate
