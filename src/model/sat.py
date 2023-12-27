@@ -79,6 +79,10 @@ class GraphTransformer(nn.Module):
     ):
         super().__init__()
 
+        print("NOW")
+        print(d_model)
+        print(in_size)
+
         self.abs_pe = abs_pe
         self.abs_pe_dim = abs_pe_dim
         if abs_pe and abs_pe_dim > 0:
@@ -94,6 +98,8 @@ class GraphTransformer(nn.Module):
             self.embedding = nn.Linear(
                 in_features=in_size, out_features=d_model, bias=False
             )
+
+        print(self.embedding)
 
         self.use_edge_attr = use_edge_attr
         if use_edge_attr:
@@ -256,7 +262,7 @@ class GraphTransformer(nn.Module):
             for i in range(self.max_seq_len):
                 pred_list.append(self.classifier[i](output))
             return pred_list
-        
+
         if  return_embedding:
             return self.classifier(output), output
         else:

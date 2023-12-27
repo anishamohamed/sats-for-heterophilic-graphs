@@ -1,0 +1,36 @@
+seed: 42
+
+dataset: "minesweeper"
+root_dir: "datasets"
+
+degree: True
+
+node_projection:
+  hidden_channels: 64
+  num_layers: 3
+
+model:
+  d_model: 32
+  num_heads: 1
+  dim_feedforward: 64
+  dropout: 0.5
+  num_layers: 6
+  batch_norm: True
+  abs_pe: None
+  abs_pe_dim: 0
+  se: "gnn"
+  gnn_type: "pna2"
+  k_hop: 3
+  in_embed: True
+  use_global_pool: False
+  gradient_gating_p: 0
+  jk: "lstm"
+
+epochs: 2000
+lr: 0.0005
+weight_decay: 0.00001
+
+logger:
+  project: "minesweeper_tuning"
+  entity: "math_dl"
+  wandb_key: "8d1858950e90ce55fa13ff00157a1f54f7d8708b" 

@@ -139,8 +139,8 @@ def run_zinc(config):
 def run_sbm(config):
     model_config = config.get("model")
     train_data = datasets.GNNBenchmarkDataset(config.get("root_dir"), name=config.get("dataset").upper(), split="train")
-    val_data = datasets.GNNBenchmarkDataset(config.get("root_dir"), name=config.get("dataset").upper(), split="val") 
-    test_data = datasets.GNNBenchmarkDataset(config.get("root_dir"), name=config.get("dataset").upper(), split="test") 
+    val_data = datasets.GNNBenchmarkDataset(config.get("root_dir"), name=config.get("dataset").upper(), split="val")
+    test_data = datasets.GNNBenchmarkDataset(config.get("root_dir"), name=config.get("dataset").upper(), split="test")
     train_dataset = GraphDataset(
         train_data,
         degree=True,
@@ -257,7 +257,7 @@ def run_heterophilous_single_split(dataloaders, mask, config):
         max_epochs=config.get("epochs"),
         deterministic=config.get("deterministic"),
         logger=config.get("logger"),
-        callbacks=EarlyStopping(monitor="val/acc", mode="max", patience=300),
+        callbacks=EarlyStopping(monitor="val/acc", mode="max", patience= 300),
         check_val_every_n_epoch=1,
         log_every_n_steps=1,
     )
