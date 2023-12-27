@@ -8,25 +8,24 @@ project:
 #   out_channels: 64
 #   num_layers: 2
 model:
-  d_model: 64
+  d_model: 48
   num_heads: 8
-  dim_feedforward: 128
-  dropout: 0.2
-  num_layers: 6
+  dim_feedforward: 96
+  dropout: 0.4
+  num_layers: 16
   batch_norm: True
   abs_pe: "rw"
-  abs_pe_dim: 7
+  abs_pe_dim: 3
   se: "gnn"
-  gnn_type: "pna3"
+  gnn_type: "pna2"
   k_hop: 3
   in_embed: False
   use_global_pool: False
   gradient_gating_p: 0.0
 
 batch_size: 32
-warmup: 5000
-epochs: 10000
-lr: 0.0003
+epochs: 200
+lr: 0.0005
 weight_decay: 0.00001
 
 logger:

@@ -12,7 +12,6 @@ class SBMWrapper(pl.LightningModule):
         abs_pe: Optional[str],
         learning_rate: float,
         weight_decay: float,
-        lr_scheduler: nn.Module,
         criterion
     ):
         super().__init__()
@@ -20,8 +19,6 @@ class SBMWrapper(pl.LightningModule):
         self.abs_pe = abs_pe
         self.learning_rate = learning_rate
         self.weight_decay = weight_decay
-        self.lr_scheduler = lr_scheduler
-
         self.criterion = criterion
 
         self.train_loss = 0.0
@@ -103,15 +100,7 @@ class SBMWrapper(pl.LightningModule):
         self.test_samples = 0
 
     def configure_optimizers(self):
-        optimizer = optim.AdamW(
+        return optim.AdamW(
             self.parameters(), lr=self.learning_rate, weight_decay=self.weight_decay
         )
-        scheduler = (
-            {"scheduler": self.lr_scheduler(optimizer), "interval": "step"}
-            if self.lr_scheduler
-            else None
-        )
-        if scheduler:
-            return [optimizer], [scheduler]
-        else:
-            return optimizer
+        

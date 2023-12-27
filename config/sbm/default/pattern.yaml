@@ -24,11 +24,10 @@ model:
   gradient_gating_p: 0.0
 
 batch_size: 32
-warmup: 5000
-epochs: 10000
+epochs: 1
 lr: 0.0003
 weight_decay: 0.00001
 
 logger:
   wandb_key: "43dac5c44e9d3eab9fd7f1a4d64e3f702eccf292" 
-  project: cluster
+  project: pattern

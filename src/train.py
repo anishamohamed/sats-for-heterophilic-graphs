@@ -280,23 +280,20 @@ def run_sbm(config):
         }
     )
     model = GraphTransformer(**model_config)
-    lr_scheduler = partial(
-        ZincLRScheduler, lr=config.get("lr"), warmup=config.get("warmup")
-    )
 
     wrapper = SBMWrapper(
         model,
         abs_pe_method,
         config.get("lr"),
         config.get("weight_decay"),
-        lr_scheduler,
         criterion
     )
-
+    print(config["logger"].get("project"))
     logger = (
         WandbLogger(
             project=config["logger"].get("project") or "sat_" + config.get("dataset"),
             entity=config["logger"].get("entity"),
+            name=config["logger"].get("run_name"),
             config=config,
         )
         if config.get("logger") is not None
