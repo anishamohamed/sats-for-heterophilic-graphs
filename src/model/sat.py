@@ -79,10 +79,6 @@ class GraphTransformer(nn.Module):
     ):
         super().__init__()
 
-        print("NOW")
-        print(d_model)
-        print(in_size)
-
         self.abs_pe = abs_pe
         self.abs_pe_dim = abs_pe_dim
         if abs_pe and abs_pe_dim > 0:
