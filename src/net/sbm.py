@@ -13,7 +13,7 @@ class SBMWrapper(pl.LightningModule):
         learning_rate: float,
         weight_decay: float,
         lr_scheduler: nn.Module,
-        criterion: Optional[callable],
+        criterion
     ):
         super().__init__()
         self.model = model
@@ -22,7 +22,7 @@ class SBMWrapper(pl.LightningModule):
         self.weight_decay = weight_decay
         self.lr_scheduler = lr_scheduler
 
-        self.criterion = criterion or nn.CrossEntropyLoss()
+        self.criterion = criterion
 
         self.train_loss = 0.0
         self.val_loss = 0.0
@@ -53,7 +53,7 @@ class SBMWrapper(pl.LightningModule):
 
         self.train_loss += loss.item() * size
         self.train_samples += size
-
+        
         correct = torch.sum(torch.argmax(output, dim=-1) == batch.y.squeeze())
         self.log("train/acc", correct / len(batch.y))
 
@@ -67,6 +67,7 @@ class SBMWrapper(pl.LightningModule):
         self.train_samples = 0
 
     def validation_step(self, batch, batch_idx):
+        print(f"x: {batch.x.shape}, y: {batch.y.shape}, {batch.y}")
         output = self(batch)
         loss = self.criterion(output, batch.y.squeeze())
         size = len(batch.y)

@@ -28,7 +28,7 @@ from net.heterophilous import HeterophilousGraphWrapper
 import yaml
 import wandb
 
-NUM_SPLITS_HETERORPHILOUS = 10
+NUM_SPLITS_HETERORPHILOUS = 1 # 10
 
 
 def load_config(path):
@@ -163,16 +163,6 @@ def run_sbm(config):
         se=model_config.get("se"),
     )
 
-    train_loader = DataLoader(
-        train_dataset, batch_size=config.get("batch_size"), shuffle=True
-    )
-    val_loader = DataLoader(
-        val_dataset, batch_size=config.get("batch_size"), shuffle=False
-    )
-    test_loader = DataLoader(
-        test_dataset, batch_size=config.get("batch_size"), shuffle=False
-    )
-
     abs_pe_encoder = None
     if config.get("abs_pe") and config.get("abs_pe_dim") > 0:
         abs_pe_method = POSENCODINGS[config.get("abs_pe")]
@@ -190,6 +180,17 @@ def run_sbm(config):
             for i in range(len(train_dataset))
         ]
     )
+
+    train_loader = DataLoader(
+        train_dataset, batch_size=config.get("batch_size"), shuffle=True
+    )
+    val_loader = DataLoader(
+        val_dataset, batch_size=config.get("batch_size"), shuffle=False
+    )
+    test_loader = DataLoader(
+        test_dataset, batch_size=config.get("batch_size"), shuffle=False
+    )
+
     model_config.update(
         {
             "use_edge_attr": False,
@@ -199,24 +200,20 @@ def run_sbm(config):
     )
     model = GraphTransformer(**model_config)
 
-    if config.get("weight_class"):
-        num_classes = model_config.get("num_class")
+    def criterion(predictions, target, num_class=model_config.get("num_class")):
+        print(f"pred: {predictions.shape}, target: {target.shape}")
+        V = target.size(0)
+        label_count = torch.bincount(target)
+        label_count = label_count[label_count.nonzero()].squeeze()
+        cluster_sizes = torch.zeros(num_class).long()
+        if config.get("device") == "cuda":
+            cluster_sizes = cluster_sizes.cuda()
+        cluster_sizes[torch.unique(target)] = label_count
+        weight = (V - cluster_sizes).float() / V
+        weight *= (cluster_sizes > 0).float()
+        ce = nn.CrossEntropyLoss(weight=weight)
+        return ce(predictions, target)
 
-        def criterion(input, target):
-            V = target.size(0)
-            label_count = torch.bincount(target)
-            label_count = label_count[label_count.nonzero()].squeeze()
-            cluster_sizes = torch.zeros(num_classes).long()
-            if config.get("device") == "cuda":
-                cluster_sizes = cluster_sizes.cuda()
-            cluster_sizes[torch.unique(target)] = label_count
-            weight = (V - cluster_sizes).float() / V
-            weight *= (cluster_sizes > 0).float()
-            ce = nn.CrossEntropyLoss(weight=weight)
-            return ce(input, target)
-
-    else:
-        criterion = None
     lr_scheduler = partial(
         CustomLRScheduler, lr=config.get("lr"), warmup=config.get("warmup")
     )
@@ -262,8 +259,8 @@ def run_heterophilous_single_split(dataloaders, mask, config):
         )
     else:
         in_size = config.get("input_size")
-    model_config = config.get("model")
-    model = GraphTransformer(in_size=in_size, **model_config)
+    config.get("model").update({"in_size": in_size})
+    model = GraphTransformer(**config.get("model"))
     wrapper = HeterophilousGraphWrapper(
         model,
         config.get("abs_pe_method"),
@@ -345,12 +342,15 @@ def run(config_path):
     config = load_config(config_path)
     seed_everything(config.get("seed", 42))
 
-    config.update({"device": "cuda" if torch.cuda.is_available() else "cpu"})
-    config["deterministic"] = config.get("gnn_type") not in NON_DETERMINISTIC_GNN_TYPES
+    config["device"] = "cuda" if torch.cuda.is_available() else "cpu"
+    config["deterministic"] = config.get("model").get("gnn_type") not in NON_DETERMINISTIC_GNN_TYPES
 
     config["dataset"] = config.get("dataset").lower().replace("-", "_")
-    config["input_size"] = INPUT_SIZE[config["dataset"]]
-    config.get("model").update({"num_class": NUM_CLASSES[config["dataset"]]})
+    config["input_size"] = INPUT_SIZE.get(config["dataset"])
+    config.get("model").update({
+        "in_size": INPUT_SIZE.get(config["dataset"]),
+        "num_class": NUM_CLASSES.get(config["dataset"])
+    })
 
     if config.get("logger") is not None:
         os.environ["WANDB_API_KEY"] = config["logger"].get("wandb_key")

@@ -24,7 +24,4 @@ lr: 0.001
 weight_decay: 0.00001
 warmup: 5000
 batch_size: 128
-epochs: 2000
-
-logger:
-  wandb_key: "8f17d7bd011da005a1f4e9a75469497e3236f0b8" 
+epochs: 1
