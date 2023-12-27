@@ -1,0 +1,30 @@
+seed: 42
+
+dataset: "cluster"
+root_dir: "datasets"
+
+model:
+  d_model: 64
+  num_heads: 8
+  dim_feedforward: 128
+  dropout: 0.2
+  num_layers: 6
+  batch_norm: True
+  abs_pe: "rw"
+  abs_pe_dim: 7
+  se: "gnn"
+  gnn_type: "pna3"
+  k_hop: 3
+  in_embed: False
+  use_global_pool: False
+  gradient_gating_p: 0.0
+
+batch_size: 32
+warmup: 5000
+epochs: 10000
+lr: 0.0003
+weight_decay: 0.00001
+
+logger:
+  wandb_key: "8f17d7bd011da005a1f4e9a75469497e3236f0b8" 
+  project: cluster

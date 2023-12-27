@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+
+# Original code from: https://github.com/BorgwardtLab/SAT/blob/main/sat/models.py
+# Copyright (c) 2022, Machine Learning and Computational Biology Lab. All rights reserved.
+# Licensed under BSD 3-Clause License
+
 import torch
 from torch import nn
 import torch_geometric.nn as gnn
@@ -128,8 +133,12 @@ class GraphTransformer(nn.Module):
             self.pooling = None
         self.use_global_pool = use_global_pool
 
-        self.jk = gnn.models.JumpingKnowledge(mode=jk, channels=d_model, num_layers=3) if jk is not None else lambda xs: xs[-1]
-        
+        self.jk = (
+            gnn.models.JumpingKnowledge(mode=jk, channels=d_model, num_layers=3)
+            if jk is not None
+            else lambda xs: xs[-1]
+        )
+
         self.max_seq_len = max_seq_len
         if max_seq_len is None:
             self.classifier = nn.Sequential(
@@ -142,7 +151,7 @@ class GraphTransformer(nn.Module):
             for i in range(max_seq_len):
                 self.classifier.append(nn.Linear(d_model, num_class))
 
-    def forward(self, data, return_attn=False):
+    def forward(self, data, return_embedding=False):
         x, edge_index, edge_attr = data.x, data.edge_index, data.edge_attr
 
         # Strucure embeddings
@@ -170,7 +179,9 @@ class GraphTransformer(nn.Module):
             if node_depth is None
             else self.embedding(
                 x,
-                node_depth.view(-1,),
+                node_depth.view(
+                    -1,
+                ),
             )
         )  # output: (batch_size, d_model)
 
@@ -228,7 +239,7 @@ class GraphTransformer(nn.Module):
             subgraph_indicator_index=subgraph_indicator_index,
             subgraph_edge_attr=subgraph_edge_attr,
             ptr=data.ptr,
-            return_attn=return_attn,
+            return_attn=False,
         )
         output = self.jk(xs)
 
@@ -245,4 +256,8 @@ class GraphTransformer(nn.Module):
             for i in range(self.max_seq_len):
                 pred_list.append(self.classifier[i](output))
             return pred_list
-        return self.classifier(output)
+        
+        if  return_embedding:
+            return self.classifier(output), output
+        else:
+            return self.classifier(output)

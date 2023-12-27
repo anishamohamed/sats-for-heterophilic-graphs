@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+
+# Original code from: https://github.com/BorgwardtLab/SAT/blob/main/sat/layers.py
+# Copyright (c) 2022, Machine Learning and Computational Biology Lab. All rights reserved.
+# Licensed under BSD 3-Clause License
+
 import torch
 import numpy as np
 from torch import nn

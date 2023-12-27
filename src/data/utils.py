@@ -1,13 +1,32 @@
 from torch_geometric import datasets
 import torch_geometric.transforms as T
 
+INPUT_SIZE = {
+    "cluster": 7,
+    "pattern": 3,
+    "roman_empire": 300,
+    "amazon_ratings": 300,
+    "minesweeper": 7,
+    "tolokers": 10,
+    "questions": 301,
+}
+
+NUM_CLASSES = {
+    "cluster": 6,
+    "pattern": 2,
+    "roman_empire": 18,
+    "amazon_ratings": 5,
+    "minesweeper": 2,
+    "tolokers": 2,
+    "questions": 2,
+}
+
+
 def get_heterophilous_graph_data(name: str, root_dir: str):
     if name == "roman_empire":
         input_size = 300  # n_tags
         num_classes = 18
-        data = datasets.HeterophilousGraphDataset(
-            root_dir, name="Roman-empire"
-        )
+        data = datasets.HeterophilousGraphDataset(root_dir, name="Roman-empire")
         # data[0]: Data(x=[22662, 300], edge_index=[2, 32927], y=[22662], train_mask=[22662, 10], val_mask=[22662, 10], test_mask=[22662, 10])
     elif name == "amazon_ratings":
         input_size = 300
@@ -37,5 +56,5 @@ def get_heterophilous_graph_data(name: str, root_dir: str):
         data = datasets.HeterophilousGraphDataset(
             root_dir, name="Questions", transform=T.NormalizeFeatures()
         )
-    
+
     return data, input_size, num_classes

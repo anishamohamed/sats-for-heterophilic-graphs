@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+
+# Original code from: https://github.com/BorgwardtLab/SAT/blob/main/sat/gnn_layers.py
+# Copyright (c) 2022, Machine Learning and Computational Biology Lab. All rights reserved.
+# Licensed under BSD 3-Clause License
+
 from torch import nn
 import torch.nn.functional as F
 import torch_geometric.nn as gnn
@@ -21,6 +26,8 @@ GNN_TYPES = [
 ]
 
 EDGE_GNN_TYPES = ["gine", "gcn", "pna", "pna2", "pna3", "mpnn", "pna4"]
+
+NON_DETERMINISTIC_GNN_TYPES = ["pna", "pna2", "pna3", "pna4"]
 
 
 def get_simple_gnn_layer(gnn_type, embed_dim, **kwargs):

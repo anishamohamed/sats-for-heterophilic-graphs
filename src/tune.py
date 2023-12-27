@@ -10,30 +10,39 @@ from torch_geometric.seed import seed_everything
 from data.dataset import GraphDataset
 from data.utils import get_heterophilous_graph_data
 from model.abs_pe import POSENCODINGS
-from train import load_config, run_zinc, run_heterophilous_single_split, prepare_heterophilous_dataloaders
+from train import (
+    load_config,
+    run_zinc,
+    run_heterophilous_single_split,
+    prepare_heterophilous_dataloaders,
+)
 import optuna
 from optuna.samplers import TPESampler
+
 
 def convert_to_trial(trial: optuna.trial.Trial, config: dict):
     trial_config = config.copy()
     for key, value in config.items():
         if isinstance(value, list):
             trial_config.update({key: trial.suggest_categorical(key, value)})
-        if isinstance(value, dict): # config[model], config[node_projection]
+        if isinstance(value, dict):  # config[model], config[node_projection]
             trial_config[key] = trial_config[key].copy()
             for k, v in value.items():
                 if isinstance(v, list):
                     trial_config[key].update({k: trial.suggest_categorical(k, v)})
     return trial_config
 
+
 def objective_heterophilous(trial: optuna.trial.Trial, dataloader, config):
     trial_config = convert_to_trial(trial, config)
     # train on first mask id
     return run_heterophilous_single_split(dataloader, 0, trial_config)
 
+
 def objective_zinc(trial: optuna.trial.Trial, config):
     trial_config = convert_to_trial(trial, config)
     return run_zinc(trial_config)
+
 
 def tune(config_path):
     config = load_config(config_path)
@@ -61,7 +70,7 @@ def tune(config_path):
 
     else:
         raise Exception("Unknown dataset")
-    
+
     study = optuna.create_study(
         direction=direction, sampler=TPESampler(constant_liar=True)
     )

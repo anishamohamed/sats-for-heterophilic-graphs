@@ -14,6 +14,7 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         weight_decay: float,
         lr_scheduler: nn.Module,
         mask: int,
+        compute_dirichlet: bool = False,
     ):
         super().__init__()
 
@@ -23,14 +24,16 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         self.weight_decay = weight_decay
         self.lr_scheduler = lr_scheduler
         self.mask = mask
+        self.compute_dirichlet = compute_dirichlet
 
         self.criterion = nn.CrossEntropyLoss()
 
         self.save_hyperparameters(ignore=["model", "criterion"])
 
-    def forward(self, data):
+    def forward(self, data, stage=None):
         # data: (num_nodes, num_features)
-        return self.model(data)
+        return_embedding = self.compute_dirichlet and stage == "test"
+        return self.model(data, return_embedding=return_embedding)
 
     def training_step(self, data, data_idx):
         if self.abs_pe == "lap":
@@ -40,7 +43,7 @@ class HeterophilousGraphWrapper(pl.LightningModule):
             sign_flip[sign_flip < 0.5] = -1.0
             data.abs_pe = data.abs_pe * sign_flip.unsqueeze(0)
 
-        output = self(data)[data.train_mask[:, self.mask]]
+        output = self(data, stage="train")[data.train_mask[:, self.mask]]
         y = data.y[data.train_mask[:, self.mask]].squeeze()
 
         loss = self.criterion(output, y)
@@ -51,17 +54,16 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         return loss
 
     def validation_step(self, data, data_idx):
-        output = self(data)[data.val_mask[:, self.mask]]
+        output = self(data, stage="val")[data.val_mask[:, self.mask]]
         y = data.y[data.val_mask[:, self.mask]].squeeze()
 
         loss = self.criterion(output, y)
         self.log("val/loss", loss.item(), prog_bar=True)
-        predictions = torch.argmax(output, dim=-1)
         correct = torch.sum(torch.argmax(output, dim=-1) == y)
         self.log("val/acc", correct / len(y))
 
     def test_step(self, data, data_idx):
-        output = self(data)[data.test_mask[:, self.mask]]
+        output = self(data, stage="test")[data.test_mask[:, self.mask]]
         y = data.y[data.test_mask[:, self.mask]].squeeze()
 
         loss = self.criterion(output, y)
