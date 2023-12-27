@@ -16,7 +16,7 @@ from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.callbacks import EarlyStopping
 
 from data.dataset import GraphDataset
-from data.utils import INPUT_SIZE, NUM_CLASSES, get_heterophilous_graph_data
+from data.utils import INPUT_SIZE, NUM_CLASSES, ROC_METRIC_DATASETS, get_heterophilous_graph_data
 from model.sat import GraphTransformer
 from model.abs_pe import POSENCODINGS
 from model.gnn_layers import NON_DETERMINISTIC_GNN_TYPES
@@ -251,6 +251,7 @@ def run_heterophilous_single_split(dataloaders, mask, config):
         config.get("weight_decay"),
         lr_scheduler=None,
         mask=mask,
+        compute_roc=config.get("dataset") in ROC_METRIC_DATASETS,
     )
     trainer = pl.Trainer(
         accelerator=config.get("device"),

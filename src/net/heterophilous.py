@@ -3,6 +3,7 @@ from torch import nn, optim
 import pytorch_lightning as pl
 from typing import Optional
 from model.sat import GraphTransformer
+from sklearn.metrics import roc_auc_score
 
 
 class HeterophilousGraphWrapper(pl.LightningModule):
@@ -14,6 +15,7 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         weight_decay: float,
         lr_scheduler: nn.Module,
         mask: int,
+        compute_roc: bool = False,
         compute_dirichlet: bool = False,
     ):
         super().__init__()
@@ -24,6 +26,7 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         self.weight_decay = weight_decay
         self.lr_scheduler = lr_scheduler
         self.mask = mask
+        self.compute_roc = compute_roc
         self.compute_dirichlet = compute_dirichlet
 
         self.criterion = nn.CrossEntropyLoss()
@@ -59,8 +62,12 @@ class HeterophilousGraphWrapper(pl.LightningModule):
 
         loss = self.criterion(output, y)
         self.log("val/loss", loss.item(), prog_bar=True)
-        correct = torch.sum(torch.argmax(output, dim=-1) == y)
+        predictions = torch.argmax(output, dim=-1)
+        correct = torch.sum(predictions == y)
         self.log("val/acc", correct / len(y))
+        if self.compute_roc:
+            self.log("val/rocauc", roc_auc_score(y_true=y.cpu().numpy(), y_score=predictions.cpu().numpy()).item())
+
 
     def test_step(self, data, data_idx):
         output = self(data, stage="test")[data.test_mask[:, self.mask]]
@@ -68,8 +75,11 @@ class HeterophilousGraphWrapper(pl.LightningModule):
 
         loss = self.criterion(output, y)
         self.log("test/loss", loss.item(), prog_bar=True)
-        correct = torch.sum(torch.argmax(output, dim=-1) == y)
+        predictions = torch.argmax(output, dim=-1)
+        correct = torch.sum(predictions == y)
         self.log("test/acc", correct / len(y))
+        if self.compute_roc:
+            self.log("test/rocauc", roc_auc_score(y_true=y.cpu().numpy(), y_score=predictions.cpu().numpy()).item())
 
     def configure_optimizers(self):
         optimizer = optim.AdamW(

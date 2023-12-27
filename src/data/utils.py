@@ -21,6 +21,8 @@ NUM_CLASSES = {
     "questions": 2,
 }
 
+ROC_METRIC_DATASETS = ["minesweeper", "tolokers", "questions"]
+
 
 def get_heterophilous_graph_data(name: str, root_dir: str):
     if name == "roman_empire":

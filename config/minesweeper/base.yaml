@@ -1,37 +1,32 @@
 seed: 42
 
-dataset: "roman-empire"
+dataset: "minesweeper"
 root_dir: "datasets"
 
-degree: False
+degree: True
 
-node_projection:
-  hidden_channels: 64
-  num_layers: 3
 model:
   d_model: 32
   num_heads: 1
   dim_feedforward: 64
   dropout: 0.5
-  num_layers: 5
-  batch_norm: False
-  abs_pe: null
+  num_layers: 6
+  batch_norm: True
+  abs_pe: None
   abs_pe_dim: 0
   se: "gnn"
   gnn_type: "pna2"
   k_hop: 3
-  in_embed: False
+  in_embed: True
   use_global_pool: False
-  gradient_gating_p: 0.0
+  gradient_gating_p: 0
   jk: "lstm"
 
-epochs: 10000
+epochs: 2000
 lr: 0.0005
 weight_decay: 0.00001
-# scheduler:
-#  warmup: 1000
 
 logger:
-  project: "roman_empire_graphsage"
+  project: "minesweeper_anisha"
   entity: "math_dl"
   wandb_key: "8f17d7bd011da005a1f4e9a75469497e3236f0b8" 
