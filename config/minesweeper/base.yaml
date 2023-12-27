@@ -5,6 +5,10 @@ root_dir: "datasets"
 
 degree: True
 
+node_projection:
+  hidden_channels: 64
+  num_layers: 3
+
 model:
   d_model: 32
   num_heads: 1
