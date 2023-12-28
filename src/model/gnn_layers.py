@@ -4,6 +4,7 @@
 # Copyright (c) 2022, Machine Learning and Computational Biology Lab. All rights reserved.
 # Licensed under BSD 3-Clause License
 
+import torch
 from torch import nn
 import torch.nn.functional as F
 import torch_geometric.nn as gnn
@@ -36,6 +37,10 @@ def get_simple_gnn_layer(gnn_type, embed_dim, **kwargs):
         return gnn.GraphConv(embed_dim, embed_dim)
     elif gnn_type == "graphsage":
         return gnn.SAGEConv(embed_dim, embed_dim)
+    elif gnn_type == "dirgraphsage":
+        alpha = kwargs.get("alpha", 0.5)
+        learn_alpha = kwargs.get("learn_alpha", True)
+        return DirSageConv(embed_dim, embed_dim, alpha, learn_alpha)
     elif gnn_type == "gcn":
         if edge_dim is None:
             return gnn.GCNConv(embed_dim, embed_dim)
@@ -87,6 +92,23 @@ def get_simple_gnn_layer(gnn_type, embed_dim, **kwargs):
             post_layers=1,
             divide_input=True,
             edge_dim=edge_dim,
+        )
+        return layer
+    elif gnn_type == "dirpna":
+        aggregators = ["mean", "sum", "max"]
+        scalers = ["identity"]
+        deg = kwargs.get("deg", None)
+        alpha = kwargs.get("alpha", 0.5)
+        learn_alpha = kwargs.get("learn_alpha", True)
+        layer = DirPNAConv(
+            embed_dim,
+            embed_dim,
+            aggregators=aggregators,
+            scalers=scalers,
+            deg=deg,
+            edge_dim=edge_dim,
+            alpha=alpha,
+            learn_alpha=learn_alpha
         )
         return layer
     elif gnn_type == "pna3":
@@ -144,6 +166,76 @@ def get_simple_gnn_layer(gnn_type, embed_dim, **kwargs):
     else:
         raise ValueError("Not implemented!")
 
+class DirSageConv(nn.Module):
+    def __init__(self, input_dim, output_dim, alpha, learn_alpha):
+        super(DirSageConv, self).__init__()
+
+        self.input_dim = input_dim
+        self.output_dim = output_dim
+
+        self.conv_src_to_dst = gnn.SAGEConv(input_dim, output_dim, flow="source_to_target", root_weight=False)
+        self.conv_dst_to_src = gnn.SAGEConv(input_dim, output_dim, flow="target_to_source", root_weight=False)
+        self.lin_self = nn.Linear(input_dim, output_dim)
+        self.alpha = nn.Parameter(torch.ones(1) * alpha, requires_grad=learn_alpha)
+
+    def forward(self, x, edge_index):
+        return (
+            self.lin_self(x)
+            + (1 - self.alpha) * self.conv_src_to_dst(x, edge_index)
+            + self.alpha * self.conv_dst_to_src(x, edge_index)
+        )
+
+class DirPNAConv(nn.Module):
+    def __init__(self,
+                input_dim,
+                output_dim,
+                aggregators,
+                scalers,
+                deg,
+                edge_dim,
+                alpha,
+                learn_alpha,
+                ):
+        super(DirPNAConv, self).__init__()
+
+        self.input_dim = input_dim
+        self.output_dim = output_dim
+
+        self.conv_src_to_dst = gnn.PNAConv(
+            input_dim,
+            output_dim,
+            aggregators=aggregators,
+            scalers=scalers,
+            deg=deg,
+            towers=4,
+            pre_layers=1,
+            post_layers=1,
+            divide_input=True,
+            edge_dim=edge_dim,
+            flow="source_to_target",
+        )
+        self.conv_dst_to_src = gnn.PNAConv(
+            input_dim,
+            output_dim,
+            aggregators=aggregators,
+            scalers=scalers,
+            deg=deg,
+            towers=4,
+            pre_layers=1,
+            post_layers=1,
+            divide_input=True,
+            edge_dim=edge_dim,
+            flow="target_to_source",
+        )
+        self.lin_self = nn.Linear(input_dim, output_dim)
+        self.alpha = nn.Parameter(torch.ones(1) * alpha, requires_grad=learn_alpha)
+
+    def forward(self, x, edge_index):
+        return (
+            self.lin_self(x)
+            + (1 - self.alpha) * self.conv_src_to_dst(x, edge_index)
+            + self.alpha * self.conv_dst_to_src(x, edge_index)
+        )
 
 class GCNConv(gnn.MessagePassing):
     def __init__(self, embed_dim, edge_dim):

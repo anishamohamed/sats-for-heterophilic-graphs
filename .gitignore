@@ -4,4 +4,4 @@ datasets/
 wandb/
 dl.err
 dl.out
-checkpoints
+checkpoints/

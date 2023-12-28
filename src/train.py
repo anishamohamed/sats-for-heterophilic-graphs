@@ -2,6 +2,7 @@ import sys
 import os
 from functools import partial
 import numpy as np
+import uuid
 
 import torch
 from torch import nn
@@ -13,7 +14,7 @@ from torch_geometric.utils import degree
 from torch_geometric.seed import seed_everything
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import WandbLogger
-from pytorch_lightning.callbacks import EarlyStopping
+from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 
 from data.dataset import GraphDataset
 from data.utils import INPUT_SIZE, NUM_CLASSES, get_heterophilous_graph_data
@@ -252,12 +253,21 @@ def run_heterophilous_single_split(dataloaders, mask, config):
         lr_scheduler=None,
         mask=mask,
     )
+
+    if not os.path.exists("checkpoint"):
+        os.mkdir("checkpoint")
+    model_checkpoint_callback = ModelCheckpoint(
+        monitor="val/acc",
+        mode="max",
+        dirpath=f"checkpoint/{str(uuid.uuid4())}/",
+    )
+
     trainer = pl.Trainer(
         accelerator=config.get("device"),
         max_epochs=config.get("epochs"),
         deterministic=config.get("deterministic"),
         logger=config.get("logger"),
-        callbacks=EarlyStopping(monitor="val/acc", mode="max", patience= 300),
+        callbacks=[EarlyStopping(monitor="val/acc", mode="max", patience= 300), model_checkpoint_callback],
         check_val_every_n_epoch=1,
         log_every_n_steps=1,
     )

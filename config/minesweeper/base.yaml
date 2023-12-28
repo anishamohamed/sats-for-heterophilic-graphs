@@ -19,12 +19,14 @@ model:
   abs_pe: None
   abs_pe_dim: 0
   se: "gnn"
-  gnn_type: "pna2"
+  gnn_type: "dirpna"
   k_hop: 3
   in_embed: True
   use_global_pool: False
   gradient_gating_p: 0
   jk: "lstm"
+  alpha: 0.5
+  learn_alpha: True
 
 epochs: 2000
 lr: 0.0005

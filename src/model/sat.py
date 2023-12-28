@@ -95,8 +95,6 @@ class GraphTransformer(nn.Module):
                 in_features=in_size, out_features=d_model, bias=False
             )
 
-        print(self.embedding)
-
         self.use_edge_attr = use_edge_attr
         if use_edge_attr:
             edge_dim = kwargs.get("edge_dim", 32)
