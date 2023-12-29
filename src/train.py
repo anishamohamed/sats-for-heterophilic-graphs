@@ -304,7 +304,7 @@ def run_sbm(config):
         max_epochs=config.get("epochs"),
         deterministic=False,
         logger=logger,
-        # callbacks=EarlyStopping(monitor="val/loss", mode="min", patience=20),
+        callbacks=EarlyStopping(monitor="val/acc", mode="max", patience=20),
         check_val_every_n_epoch=1,
     )
 

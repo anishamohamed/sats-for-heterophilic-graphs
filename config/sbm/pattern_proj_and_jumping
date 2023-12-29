@@ -3,31 +3,32 @@ seed: 42
 dataset: "pattern"
 root_dir: "datasets"
 project: 
-# node_projection:
-#   hidden_channels: 64
-#   out_channels: 64
-#   num_layers: 2
+node_projection:
+  hidden_channels: 64
+  num_layers: 3
+
 model:
   d_model: 64
   num_heads: 8
   dim_feedforward: 128
   dropout: 0.2
-  num_layers: 6
+  num_layers: 4
   batch_norm: True
   abs_pe: "rw"
   abs_pe_dim: 7
   se: "gnn"
-  gnn_type: "pna3"
+  gnn_type: "graphsage" # modified from defaut
   k_hop: 3
   in_embed: False
   use_global_pool: False
   gradient_gating_p: 0.0
+  jk: "lstm"
 
 batch_size: 32
-epochs: 200
+epochs: 100
 lr: 0.0003
 weight_decay: 0.00001
 
 logger:
-  wandb_key: "43dac5c44e9d3eab9fd7f1a4d64e3f702eccf292" 
-  project: pattern
+  wandb_key: 43dac5c44e9d3eab9fd7f1a4d64e3f702eccf292
+  project: pattern_jumping_projection
