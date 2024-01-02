@@ -28,7 +28,7 @@ GNN_TYPES = [
 
 EDGE_GNN_TYPES = ["gine", "gcn", "pna", "pna2", "pna3", "mpnn", "pna4"]
 
-NON_DETERMINISTIC_GNN_TYPES = ["gcn", "pna", "pna2", "pna3", "pna4"]
+NON_DETERMINISTIC_GNN_TYPES = ["gcn", "pna", "pna2", "pna3", "pna4", "dirpna"]
 
 
 def get_simple_gnn_layer(gnn_type, embed_dim, **kwargs):

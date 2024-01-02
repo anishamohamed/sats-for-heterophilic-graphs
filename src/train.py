@@ -252,6 +252,7 @@ def run_heterophilous_single_split(dataloaders, mask, config):
         config.get("weight_decay"),
         lr_scheduler=None,
         mask=mask,
+        compute_dirichlet=True,
     )
 
     if not os.path.exists("checkpoint"):

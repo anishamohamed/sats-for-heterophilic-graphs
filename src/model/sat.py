@@ -242,6 +242,7 @@ class GraphTransformer(nn.Module):
             return_attn=False,
         )
         output = self.jk(xs)
+        node_embedding = output
 
         # readout step
         if self.use_global_pool:
@@ -258,6 +259,6 @@ class GraphTransformer(nn.Module):
             return pred_list
 
         if  return_embedding:
-            return self.classifier(output), output
+            return self.classifier(output), node_embedding
         else:
             return self.classifier(output)

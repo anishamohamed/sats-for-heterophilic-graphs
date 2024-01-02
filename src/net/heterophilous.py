@@ -1,5 +1,6 @@
 import torch
 from torch import nn, optim
+import torch_geometric
 import pytorch_lightning as pl
 from typing import Optional
 from model.sat import GraphTransformer
@@ -62,10 +63,16 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         predictions = torch.argmax(output, dim=-1)
         correct = torch.sum(predictions == y)
         self.log("val/acc", correct / len(y))
-        self.log("val/rocauc", roc_auc_score(y_true=y.cpu().numpy(), y_score=predictions.cpu().numpy()).item())
+        # self.log("val/rocauc", roc_auc_score(y_true=y.cpu().numpy(), y_score=predictions.cpu().numpy()).item())
 
     def test_step(self, data, data_idx):
-        output = self(data, stage="test")[data.test_mask[:, self.mask]]
+        if self.compute_dirichlet:
+            output, embedding = self(data, stage="test")
+            dirichlet = self.dirichlet_energy(embedding, data.edge_index)
+            print(f"\nDirichlet: {dirichlet}")
+            output = output[data.test_mask[:, self.mask]]
+        else:
+            output = self(data, stage="test")[data.test_mask[:, self.mask]]
         y = data.y[data.test_mask[:, self.mask]].squeeze()
 
         loss = self.criterion(output, y)
@@ -73,7 +80,7 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         predictions = torch.argmax(output, dim=-1)
         correct = torch.sum(predictions == y)
         self.log("test/acc", correct / len(y))
-        self.log("test/rocauc", roc_auc_score(y_true=y.cpu().numpy(), y_score=predictions.cpu().numpy()).item())
+        # self.log("test/rocauc", roc_auc_score(y_true=y.cpu().numpy(), y_score=predictions.cpu().numpy()).item())
 
     def configure_optimizers(self):
         optimizer = optim.AdamW(
@@ -88,3 +95,34 @@ class HeterophilousGraphWrapper(pl.LightningModule):
             return [optimizer], [scheduler]
         else:
             return optimizer
+
+    def dirichlet_energy(self, X, edge_index):
+        """
+        Compute the Dirichlet energy of a graph.
+        We can use the graph Laplacian to compute the Dirichlet energy of a graph.
+        See an example derivation here: https://math.stackexchange.com/questions/3581263/trying-to-understand-relationship-between-dirichlet-energy-of-graphs-and-discret
+
+        Parameters
+        ----------
+        X : torch.Tensor
+            The node features.
+        edge_index : torch.Tensor
+            The edge indices.
+
+        Returns
+        -------
+        torch.Tensor
+            The Dirichlet energy.
+        """
+        X = X.double()
+        # Compute the adjacency matrix.
+        A = torch_geometric.utils.to_dense_adj(edge_index).double()
+        # Compute the degree matrix.
+        D = torch.diag(torch.sum(A, axis=1))
+        # Compute the Laplacian matrix.
+        L = D - A
+        # Compute the Dirichlet energy.
+        d_e = torch.matmul(torch.matmul(X.T, L), X).squeeze(0)
+        trace = torch.trace(torch.abs(d_e)) # aggregate the feature space
+
+        return trace
