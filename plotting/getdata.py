@@ -24,7 +24,7 @@ for run in runs:
     
     # Collect data in a list
     data_rows.append({
-        'gating': run.config['model']['gradient_gating_p'],  # Accessing gating value from run config
+        'Gating parameter': run.config['model']['gradient_gating_p'],  # Accessing gating value from run config
         'k_hop': run.config['model']['k_hop'],              # Accessing k_hop value from run config
         'max_val_acc': 100 * max_val_acc                     # Multiplying by 100 for percentage
     })
@@ -32,14 +32,21 @@ for run in runs:
 # Convert the list to a DataFrame
 df = pd.DataFrame(data_rows)
 
-# Plotting
-g = sns.catplot(
-    data=df, kind="bar",
-    x="k_hop", y="max_val_acc", hue="gating", errorbar=None,
-    palette="dark", alpha=.6, height=6
+# Catplot
+# g = sns.catplot(
+#     data=df, kind="bar",
+#     x="k_hop", y="max_val_acc", hue="gating", errorbar=None,
+#     palette="dark", alpha=.6, height=6
+# )
+# g.set_axis_labels("Number of k hops", "Maximum accuracy reached [%]")
+g = sns.lineplot(
+    data=df,
+    x="k_hop", y="max_val_acc", hue="Gating parameter",
+    palette="dark", marker="o", dashes=False
 )
-g.despine(left=True)
-g.set_axis_labels("Number of k hops", "Maximum accuracy reached [%]")
-g.legend.set_title("Gating parameter")
+
+g.set_xlabel("Number of k hops")
+g.set_ylabel("Maximum accuracy reached [%]")
+sns.despine(left=True)
 
 plt.show()
