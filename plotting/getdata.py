@@ -16,7 +16,6 @@ runs = api.runs(project_path)
 data_rows = []
 
 for run in runs:
-
     # Extract Validation Accuracy Data
     history = run.scan_history()  # Adjust the sample size as needed
     
@@ -40,7 +39,7 @@ g = sns.catplot(
     palette="dark", alpha=.6, height=6
 )
 g.despine(left=True)
-g.set_axis_labels("", "Maximum accuracy reached [%]")
-g.legend.set_title("")
+g.set_axis_labels("Number of k hops", "Maximum accuracy reached [%]")
+g.legend.set_title("Gating parameter")
 
 plt.show()
