@@ -13,7 +13,7 @@ Run the installation script in order to install all the required packages.
 Train and test the model by creating an appriate YAML file and running the following command.
 
 ```bash
-src/train.py path/to/config
+python src/train.py path/to/config
 ```
 
 Our best configurations for each of the tested dataset are in the folder `config`.
