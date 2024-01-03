@@ -30,6 +30,6 @@ lr: 0.0005
 weight_decay: 0.00001
 
 logger:
-  project: "roman_empire_pna2"
+  project: "roman_empire_pna2_dir"
   entity: "math_dl"
   wandb_key: "8f17d7bd011da005a1f4e9a75469497e3236f0b8" 

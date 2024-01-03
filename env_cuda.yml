@@ -1,4 +1,4 @@
-name: g2-sat
+name: exp-sat
 
 channels:
   - pytorch

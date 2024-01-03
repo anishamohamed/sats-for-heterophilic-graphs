@@ -5,9 +5,6 @@ root_dir: "datasets"
 
 degree: False
 
-node_projection:
-  hidden_channels: 64
-  num_layers: 3
 model:
   d_model: 32
   num_heads: 1
@@ -18,12 +15,12 @@ model:
   abs_pe: null
   abs_pe_dim: 0
   se: "gnn"
-  gnn_type: "pna2"
-  k_hop: 16
+  gnn_type: "dirpna"
+  k_hop: 3
   in_embed: True
   use_global_pool: False
-  gradient_gating_p: 3.0
-  jk: "lstm"
+  gradient_gating_p: 2.0
+  jk: null
 
 epochs: 3000
 lr: 0.0005

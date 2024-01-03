@@ -22,10 +22,10 @@ model:
   k_hop: 3
   in_embed: True
   use_global_pool: False
-  gradient_gating_p: 1.0
+  gradient_gating_p: 0.0
   jk: "lstm"
 
-epochs: 1 # 3000
+epochs: 3000
 lr: 0.0005
 weight_decay: 0.00001
 

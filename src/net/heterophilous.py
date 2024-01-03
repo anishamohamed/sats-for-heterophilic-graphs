@@ -1,6 +1,7 @@
 import torch
 from torch import nn, optim
 import torch_geometric
+from torch_geometric.utils import get_laplacian
 import pytorch_lightning as pl
 from typing import Optional
 from model.sat import GraphTransformer
@@ -15,7 +16,8 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         weight_decay: float,
         lr_scheduler: nn.Module,
         mask: int,
-        compute_dirichlet: bool = False,
+        compute_dirichlet: bool = True,
+        compute_roc: bool = False,
     ):
         super().__init__()
 
@@ -26,6 +28,7 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         self.lr_scheduler = lr_scheduler
         self.mask = mask
         self.compute_dirichlet = compute_dirichlet
+        self.compute_roc = compute_roc
 
         self.criterion = nn.CrossEntropyLoss()
 
@@ -63,13 +66,15 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         predictions = torch.argmax(output, dim=-1)
         correct = torch.sum(predictions == y)
         self.log("val/acc", correct / len(y))
-        # self.log("val/rocauc", roc_auc_score(y_true=y.cpu().numpy(), y_score=predictions.cpu().numpy()).item())
+
+        if self.compute_roc:
+            self.log("val/rocauc", roc_auc_score(y_true=y.cpu().numpy(), y_score=predictions.cpu().numpy()).item())
 
     def test_step(self, data, data_idx):
         if self.compute_dirichlet:
             output, embedding = self(data, stage="test")
             dirichlet = self.dirichlet_energy(embedding, data.edge_index)
-            print(f"\nDirichlet: {dirichlet}")
+            print(f"\nDirichlet: {dirichlet[0]}, {dirichlet[1]}")
             output = output[data.test_mask[:, self.mask]]
         else:
             output = self(data, stage="test")[data.test_mask[:, self.mask]]
@@ -80,7 +85,9 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         predictions = torch.argmax(output, dim=-1)
         correct = torch.sum(predictions == y)
         self.log("test/acc", correct / len(y))
-        # self.log("test/rocauc", roc_auc_score(y_true=y.cpu().numpy(), y_score=predictions.cpu().numpy()).item())
+
+        if self.compute_roc:
+            self.log("test/rocauc", roc_auc_score(y_true=y.cpu().numpy(), y_score=predictions.cpu().numpy()).item())
 
     def configure_optimizers(self):
         optimizer = optim.AdamW(
@@ -114,15 +121,16 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         torch.Tensor
             The Dirichlet energy.
         """
-        X = X.double()
+        # X = X.double()
         # Compute the adjacency matrix.
-        A = torch_geometric.utils.to_dense_adj(edge_index).double()
+        # A = torch_geometric.utils.to_dense_adj(edge_index).double()
         # Compute the degree matrix.
-        D = torch.diag(torch.sum(A, axis=1))
+        # D = torch.diag(torch.sum(A, axis=1))
         # Compute the Laplacian matrix.
-        L = D - A
+        L = get_laplacian(edge_index, normalization="sym")
+        # L = D - A
         # Compute the Dirichlet energy.
         d_e = torch.matmul(torch.matmul(X.T, L), X).squeeze(0)
         trace = torch.trace(torch.abs(d_e)) # aggregate the feature space
-
-        return trace
+        trace2 = torch.trace(d_e)
+        return trace, trace2

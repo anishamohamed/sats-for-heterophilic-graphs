@@ -17,7 +17,7 @@ from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 
 from data.dataset import GraphDataset
-from data.utils import INPUT_SIZE, NUM_CLASSES, get_heterophilous_graph_data
+from data.utils import INPUT_SIZE, NUM_CLASSES, BINARY_CLASSIFICATION_DATASETS, get_heterophilous_graph_data
 from model.sat import GraphTransformer
 from model.abs_pe import POSENCODINGS
 from model.gnn_layers import NON_DETERMINISTIC_GNN_TYPES
@@ -253,14 +253,7 @@ def run_heterophilous_single_split(dataloaders, mask, config):
         lr_scheduler=None,
         mask=mask,
         compute_dirichlet=True,
-    )
-
-    if not os.path.exists("checkpoint"):
-        os.mkdir("checkpoint")
-    model_checkpoint_callback = ModelCheckpoint(
-        monitor="val/acc",
-        mode="max",
-        dirpath=f"checkpoint/{str(uuid.uuid4())}/",
+        compute_roc=config.get("dataset") in BINARY_CLASSIFICATION_DATASETS,
     )
 
     trainer = pl.Trainer(
@@ -268,7 +261,7 @@ def run_heterophilous_single_split(dataloaders, mask, config):
         max_epochs=config.get("epochs"),
         deterministic=config.get("deterministic"),
         logger=config.get("logger"),
-        callbacks=[EarlyStopping(monitor="val/acc", mode="max", patience= 300), model_checkpoint_callback],
+        callbacks=[EarlyStopping(monitor="val/acc", mode="max", patience=300)],
         check_val_every_n_epoch=1,
         log_every_n_steps=1,
     )
@@ -287,18 +280,6 @@ def run_heterophilous_single_split(dataloaders, mask, config):
 
 
 def run_heterophilous(config):
-    dataloaders, config = prepare_heterophilous_dataloaders(config)
-
-    accuracy_list = list()
-    for mask in range(NUM_SPLITS_HETERORPHILOUS):
-        acc = run_heterophilous_single_split(dataloaders, mask, config)
-        accuracy_list.append(acc)
-
-    accuracy_list = np.array(accuracy_list)
-    print(f"Accuracy: {np.mean(accuracy_list)} +- {np.std(accuracy_list)}")
-
-
-def prepare_heterophilous_dataloaders(config):
     data = get_heterophilous_graph_data(config.get("dataset"), config.get("root_dir"))
     dataset = GraphDataset(
         data,
@@ -329,7 +310,15 @@ def prepare_heterophilous_dataloaders(config):
         }
     )
     loader = DataLoader(dataset, batch_size=1, collate_fn=lambda batch: batch[0])
-    return (loader, loader, loader), config
+    dataloaders =  (loader, loader, loader)
+
+    accuracy_list = list()
+    for mask in range(NUM_SPLITS_HETERORPHILOUS):
+        acc = run_heterophilous_single_split(dataloaders, mask, config)
+        accuracy_list.append(acc)
+
+    accuracy_list = np.array(accuracy_list)
+    print(f"Accuracy: {np.mean(accuracy_list)} +- {np.std(accuracy_list)}")
 
 
 def run(config_path):
