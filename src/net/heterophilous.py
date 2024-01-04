@@ -1,7 +1,7 @@
 import torch
 from torch import nn, optim
 import torch_geometric
-from torch_geometric.utils import get_laplacian
+from torch_geometric.utils import get_laplacian, to_scipy_sparse_matrix
 import pytorch_lightning as pl
 from typing import Optional
 from model.sat import GraphTransformer
@@ -121,14 +121,13 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         torch.Tensor
             The Dirichlet energy.
         """
-        # X = X.double()
+        X = X.double()
         # Compute the adjacency matrix.
-        # A = torch_geometric.utils.to_dense_adj(edge_index).double()
+        A = torch_geometric.utils.to_dense_adj(edge_index).double()
         # Compute the degree matrix.
-        # D = torch.diag(torch.sum(A, axis=1))
-        # Compute the Laplacian matrix.
-        L = get_laplacian(edge_index, normalization="sym")
-        # L = D - A
+        D = torch.diag(torch.sum(A, axis=1))
+        # Compute the Laplacian matrix
+        L = D - A
         # Compute the Dirichlet energy.
         d_e = torch.matmul(torch.matmul(X.T, L), X).squeeze(0)
         trace = torch.trace(torch.abs(d_e)) # aggregate the feature space
