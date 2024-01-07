@@ -29,7 +29,7 @@ from net.heterophilous import HeterophilousGraphWrapper
 import yaml
 import wandb
 
-NUM_SPLITS_HETERORPHILOUS = 1 # 10
+NUM_SPLITS_HETERORPHILOUS = 1
 
 
 def load_config(path):

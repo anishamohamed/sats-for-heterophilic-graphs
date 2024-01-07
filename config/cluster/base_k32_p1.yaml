@@ -13,11 +13,12 @@ model:
   abs_pe: "rw"
   abs_pe_dim: 3
   se: "gnn"
-  gnn_type: "pna2"
-  k_hop: 3
+  gnn_type: "dirpna"
+  k_hop: 32
   in_embed: False
   use_global_pool: False
-  gradient_gating_p: 0.0
+  gradient_gating_p: 1.0
+  jk: "lstm"
 
 batch_size: 64
 warmup: 5000

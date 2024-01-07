@@ -18,6 +18,7 @@ model:
   in_embed: False
   use_global_pool: False
   gradient_gating_p: 0.0
+  jk: "lstm"
 
 batch_size: 64
 warmup: 5000
