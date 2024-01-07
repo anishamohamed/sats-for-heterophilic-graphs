@@ -14,7 +14,7 @@ from torch_geometric.utils import degree
 from torch_geometric.seed import seed_everything
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import WandbLogger
-from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
+from pytorch_lightning.callbacks import EarlyStopping
 
 from data.dataset import GraphDataset
 from data.utils import INPUT_SIZE, NUM_CLASSES, BINARY_CLASSIFICATION_DATASETS, get_heterophilous_graph_data
@@ -28,7 +28,7 @@ from net.heterophilous import HeterophilousGraphWrapper
 import yaml
 import wandb
 
-NUM_SPLITS_HETERORPHILOUS = 1
+NUM_SPLITS_HETERORPHILOUS = 10
 
 
 def load_config(path):
@@ -151,7 +151,6 @@ def run_heterophilous_single_split(dataloaders, mask, config):
         config.get("weight_decay"),
         lr_scheduler=None,
         mask=mask,
-        compute_dirichlet=True,
         compute_roc=config.get("dataset") in BINARY_CLASSIFICATION_DATASETS,
     )
 

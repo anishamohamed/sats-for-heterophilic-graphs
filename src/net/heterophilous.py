@@ -16,7 +16,6 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         weight_decay: float,
         lr_scheduler: nn.Module,
         mask: int,
-        compute_dirichlet: bool = True,
         compute_roc: bool = False,
     ):
         super().__init__()
@@ -27,7 +26,6 @@ class HeterophilousGraphWrapper(pl.LightningModule):
         self.weight_decay = weight_decay
         self.lr_scheduler = lr_scheduler
         self.mask = mask
-        self.compute_dirichlet = compute_dirichlet
         self.compute_roc = compute_roc
 
         self.criterion = nn.CrossEntropyLoss()
@@ -36,8 +34,7 @@ class HeterophilousGraphWrapper(pl.LightningModule):
 
     def forward(self, data, stage=None):
         # data: (num_nodes, num_features)
-        return_embedding = self.compute_dirichlet and stage == "test"
-        return self.model(data, return_embedding=return_embedding)
+        return self.model(data, return_embedding=False)
 
     def training_step(self, data, data_idx):
         if self.abs_pe == "lap":
@@ -71,13 +68,7 @@ class HeterophilousGraphWrapper(pl.LightningModule):
             self.log("val/rocauc", roc_auc_score(y_true=y.cpu().numpy(), y_score=predictions.cpu().numpy()).item())
 
     def test_step(self, data, data_idx):
-        if self.compute_dirichlet:
-            output, embedding = self(data, stage="test")
-            dirichlet = self.dirichlet_energy(embedding, data.edge_index)
-            print(f"\nDirichlet: {dirichlet[0]}, {dirichlet[1]}")
-            output = output[data.test_mask[:, self.mask]]
-        else:
-            output = self(data, stage="test")[data.test_mask[:, self.mask]]
+        output = self(data, stage="test")[data.test_mask[:, self.mask]]
         y = data.y[data.test_mask[:, self.mask]].squeeze()
 
         loss = self.criterion(output, y)
@@ -102,34 +93,3 @@ class HeterophilousGraphWrapper(pl.LightningModule):
             return [optimizer], [scheduler]
         else:
             return optimizer
-
-    def dirichlet_energy(self, X, edge_index):
-        """
-        Compute the Dirichlet energy of a graph.
-        We can use the graph Laplacian to compute the Dirichlet energy of a graph.
-        See an example derivation here: https://math.stackexchange.com/questions/3581263/trying-to-understand-relationship-between-dirichlet-energy-of-graphs-and-discret
-
-        Parameters
-        ----------
-        X : torch.Tensor
-            The node features.
-        edge_index : torch.Tensor
-            The edge indices.
-
-        Returns
-        -------
-        torch.Tensor
-            The Dirichlet energy.
-        """
-        X = X.double()
-        # Compute the adjacency matrix.
-        A = torch_geometric.utils.to_dense_adj(edge_index).double()
-        # Compute the degree matrix.
-        D = torch.diag(torch.sum(A, axis=1))
-        # Compute the Laplacian matrix
-        L = D - A
-        # Compute the Dirichlet energy.
-        d_e = torch.matmul(torch.matmul(X.T, L), X).squeeze(0)
-        trace = torch.trace(torch.abs(d_e)) # aggregate the feature space
-        trace2 = torch.trace(d_e)
-        return trace, trace2
