@@ -21,7 +21,6 @@ from data.utils import INPUT_SIZE, NUM_CLASSES, BINARY_CLASSIFICATION_DATASETS, 
 from model.sat import GraphTransformer
 from model.abs_pe import POSENCODINGS
 from model.gnn_layers import NON_DETERMINISTIC_GNN_TYPES
-from net.zinc import ZINCWrapper
 from net.sbm import SBMWrapper
 from net.utils import CustomLRScheduler
 from net.heterophilous import HeterophilousGraphWrapper
@@ -36,106 +35,6 @@ def load_config(path):
     with open(path, "r") as config_file:
         config = yaml.safe_load(config_file)
     return config
-
-
-def run_zinc(config):
-    # dataset specific parameters
-    input_size = 28  # n_tags
-    num_edge_features = 4
-    num_class = 1
-    train_data = datasets.ZINC(config.get("root_dir"), subset=True, split="train")
-    val_data = datasets.ZINC(config.get("root_dir"), subset=True, split="val")
-    test_data = datasets.ZINC(config.get("root_dir"), subset=True, split="test")
-
-    train_dataset = GraphDataset(
-        train_data,
-        degree=False,  # because it's graph classification
-        k_hop=config.get("k_hop"),
-        se=config.get("se"),
-        return_complete_index=True,
-    )
-    val_dataset = GraphDataset(
-        val_data,
-        degree=False,
-        k_hop=config.get("k_hop"),
-        se=config.get("se"),
-        return_complete_index=True,
-    )
-    test_dataset = GraphDataset(
-        test_data,
-        degree=False,
-        k_hop=config.get("k_hop"),
-        se=config.get("se"),
-        return_complete_index=True,
-    )
-
-    abs_pe_encoder = None
-    if config.get("model").get("abs_pe") and config.get("model").get("abs_pe_dim") > 0:
-        abs_pe_method = POSENCODINGS[config.get("model").get("abs_pe")]
-        abs_pe_encoder = abs_pe_method(
-            config.get("model").get("abs_pe_dim"), normalization="sym"
-        )
-        if abs_pe_encoder is not None:
-            abs_pe_encoder.apply_to(train_dataset)
-            abs_pe_encoder.apply_to(val_dataset)
-            abs_pe_encoder.apply_to(test_dataset)
-    else:
-        abs_pe_method = None
-
-    deg = torch.cat(
-        [degree(data.edge_index[1], num_nodes=data.num_nodes) for data in train_dataset]
-    )
-
-    train_loader = DataLoader(
-        train_dataset, batch_size=config.get("batch_size"), shuffle=True
-    )
-    val_loader = DataLoader(
-        val_dataset, batch_size=config.get("batch_size"), shuffle=False
-    )
-    test_loader = DataLoader(
-        test_dataset, batch_size=config.get("batch_size"), shuffle=False
-    )
-
-    model_config = config.get("model")
-    model_config.update(
-        {
-            "in_size": input_size,
-            "num_class": num_class,
-            "num_edge_features": num_edge_features,
-            "deg": deg,  # to be propagated to gnn layers...
-        }
-    )
-    model = GraphTransformer(**model_config)
-
-    lr_scheduler = partial(
-        CustomLRScheduler, lr=config.get("lr"), warmup=config.get("warmup")
-    )
-    wrapper = ZINCWrapper(
-        model,
-        abs_pe_method,
-        config.get("lr"),
-        config.get("weight_decay"),
-        lr_scheduler,
-    )
-    trainer = pl.Trainer(
-        accelerator=config.get("device"),
-        max_epochs=config.get("epochs"),
-        deterministic=config.get("deterministic"),
-        logger=config.get("logger"),
-        check_val_every_n_epoch=1,
-    )
-
-    if config.get("deterministic") and config.get("device") == "cuda":
-        torch.use_deterministic_algorithms(True)
-
-    trainer.fit(wrapper, train_loader, val_loader)
-    trainer.test(wrapper, test_loader)
-
-    if config.get("logger"):
-        wandb.finish()
-
-    return trainer.callback_metrics["test/loss"].item()
-
 
 def run_sbm(config):
     model_config = config.get("model")
@@ -350,9 +249,8 @@ def run(config_path):
     else:
         config["logger"] = False
 
-    if config["dataset"] == "zinc":
-        run_zinc(config)
-
+    if config["dataset"] in ["pattern", "cluster"]:
+        run_sbm(config)
     elif config["dataset"] in [
         "roman_empire",
         "amazon_ratings",
@@ -361,10 +259,6 @@ def run(config_path):
         "questions",
     ]:
         run_heterophilous(config)
-
-    elif config["dataset"] in ["pattern", "cluster"]:
-        run_sbm(config)
-
     else:
         raise Exception("Unknown dataset")
 
