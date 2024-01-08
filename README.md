@@ -32,7 +32,7 @@ python src/train.py config/roman_empire/best_dir.yaml # enhanced w/ directionali
 python src/train.py config/roman_empire/best_undir.yaml # enhanced w/out directionality
 ```
 
-### Node classification on CLUSTER datasets
+### Node classification on CLUSTER
 ```bash
 python src/train.py config/cluster/base.yaml # baseline
 python src/train.py config/cluster/best.yaml # enhanced
