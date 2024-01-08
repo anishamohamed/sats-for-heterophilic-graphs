@@ -3,7 +3,7 @@
 This project aims at leveraging different deep learning techniques on [Structure-Aware Transformers](https://arxiv.org/abs/2202.03036) (SATs) in order to produce more informative structural embeddings.
 
 ## Installation
-Run the installation script in order to install all the required packages.
+Run the installation script in order to install all the required packages in a Conda environment.
 
 ```bash
 ./install_env.sh
